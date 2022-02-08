@@ -37,7 +37,11 @@ declare global {
 	namespace Cypress {
 		interface Chainable {
 			caritasMockedLogin(
-				args?: CaritasMockedLoginArgs
+				args?: CaritasMockedLoginArgs,
+				testCredentials?: {
+					testUsername: string;
+					testPassword: string;
+				}
 			): Chainable<Element>;
 		}
 	}
