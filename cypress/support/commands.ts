@@ -95,14 +95,12 @@ Cypress.Commands.add(
 		}
 
 		if (args.type === 'consultant') {
-			cy.fixture('service.users.data.defaultconsultants').then(
-				(userData) => {
-					cy.intercept('GET', config.endpoints.userData, {
-						...userData,
-						...args.userData
-					});
-				}
-			);
+			cy.fixture('service.users.data.consultants').then((userData) => {
+				cy.intercept('GET', config.endpoints.userData, {
+					...userData,
+					...args.userData
+				});
+			});
 
 			if (!args.sessionsCallback) {
 				sessions = args.sessions || [
