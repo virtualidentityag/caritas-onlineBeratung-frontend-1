@@ -11,7 +11,13 @@ import { mockWebSocket } from './websocket';
 import { UserDataInterface } from '../../src/globalState';
 
 interface CaritasMockedLoginArgs {
-	type?: 'asker' | 'consultant';
+	type?:
+		| 'asker'
+		| 'group-chat-asker'
+		| 'consultant'
+		| 'group-chat-consultant'
+		| 'main-consultant'
+		| 'peer-consultant';
 	auth?: {
 		expires_in?: number;
 		refresh_expires_in?: number;
@@ -39,7 +45,9 @@ declare global {
 
 Cypress.Commands.add(
 	'caritasMockedLogin',
-	(args: CaritasMockedLoginArgs = {}) => {
+	(args: CaritasMockedLoginArgs = {}, testCredentials = {}) => {
+		const { testUsername = 'username', testPassword = 'password' } =
+			testCredentials;
 		mockWebSocket();
 
 		cy.fixture('auth.token').then((auth) =>
@@ -66,13 +74,26 @@ Cypress.Commands.add(
 		}
 
 		if (!args.type || args.type === 'asker') {
-			cy.fixture('service.users.data.askers').then((userData) => {
+			cy.fixture('service.users.data.basic-users').then((userData) => {
 				cy.intercept('GET', config.endpoints.userData, {
 					...userData,
 					...args.userData
 				});
 			});
+		}
 
+		if (!args.type || args.type === 'group-chat-asker') {
+			cy.fixture('service.users.data.group-chat-askers').then(
+				(userData) => {
+					cy.intercept('GET', config.endpoints.userData, {
+						...userData,
+						...args.userData
+					});
+				}
+			);
+		}
+
+		if (args.type === 'asker' || args.type === 'group-chat-asker') {
 			if (!args.sessionsCallback) {
 				sessions = args.sessions || [generateAskerSession()];
 				cy.intercept('GET', config.endpoints.askerSessions, (req) => {
@@ -95,7 +116,47 @@ Cypress.Commands.add(
 					...args.userData
 				});
 			});
+		}
 
+		if (args.type === 'main-consultant') {
+			cy.fixture('service.users.data.main-consultants').then(
+				(userData) => {
+					cy.intercept('GET', config.endpoints.userData, {
+						...userData,
+						...args.userData
+					});
+				}
+			);
+		}
+
+		if (args.type === 'group-chat-consultant') {
+			cy.fixture('service.users.data.group-chat-consultants').then(
+				(userData) => {
+					cy.intercept('GET', config.endpoints.userData, {
+						...userData,
+						...args.userData
+					});
+				}
+			);
+		}
+
+		if (args.type === 'peer-consultant') {
+			cy.fixture('service.users.data.peer-consultants').then(
+				(userData) => {
+					cy.intercept('GET', config.endpoints.userData, {
+						...userData,
+						...args.userData
+					});
+				}
+			);
+		}
+
+		if (
+			args.type === 'consultant' ||
+			args.type === 'main-consultant' ||
+			args.type === 'group-chat-consultant' ||
+			args.type === 'peer-consultant'
+		) {
 			if (!args.sessionsCallback) {
 				sessions = args.sessions || [
 					generateConsultantSession(),
@@ -183,9 +244,11 @@ Cypress.Commands.add(
 
 		cy.visit('/login');
 
-		cy.get('.loginForm');
-		cy.get('#username').type('username', { force: true });
-		cy.get('#passwordInput').type('password', { force: true });
+		cy.get('#loginRoot');
+		cy.get('#username').type(testUsername, { force: true });
+		cy.get('#passwordInput').type(testPassword, {
+			force: true
+		});
 		cy.get('.button__primary').click();
 		cy.wait('@authToken');
 		cy.get('#appRoot').should('be.visible');
