@@ -1,0 +1,45 @@
+{
+	"userId": "kreuzbund1",
+	"userName": "kreuzbund1",
+	"firstName": "Kreuzbund",
+	"lastName": "Consultant 1",
+	"email": "kreuzbund1@consultant.de",
+	"languages": ["aa", "de"],
+	"absenceMessage": null,
+	"agencies": [
+		{
+			"id": 1125,
+			"name": "Kreuzbund Selbsthilfegruppe",
+			"postcode": "88046",
+			"city": "Friedrichshafen",
+			"description": "Kreuzbund Selbsthilfegruppe",
+			"teamAgency": false,
+			"offline": false,
+			"consultingType": 15
+		}
+	],
+	"userRoles": ["consultant", "group-chat-consultant"],
+	"grantedAuthorities": [
+		"AUTHORIZATION_VIEW_AGENCY_CONSULTANTS",
+		"AUTHORIZATION_START_CHAT",
+		"AUTHORIZATION_UPDATE_CHAT",
+		"AUTHORIZATION_CONSULTANT_DEFAULT",
+		"AUTHORIZATION_ASSIGN_CONSULTANT_TO_SESSION",
+		"AUTHORIZATION_CREATE_NEW_CHAT",
+		"AUTHORIZATION_STOP_CHAT"
+	],
+	"consultingTypes": null,
+	"hasAnonymousConversations": false,
+	"hasArchive": false,
+	"twoFactorAuth": {
+		"isEnabled": true,
+		"isActive": false,
+		"secret": "rEID2oMr06uU0MkAorBNSsdlx4AsTl9I",
+		"qrCode": "iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACvklEQVR4Xu2WsW4jMQwF1emX1UmdfllFgL0ZKrbjLVKdCASwEsc2hwEI8vFpy/Xr+Sr3yPv58Hvk/Xz4PfJ+/gQfpdRr9DlXnZxRR+szgjl8+rtKaT2CM1gEk/jgG9G+fB+d8vhkMI9TYB90qS5/ig1K5iSsVuhSnav0XXQS93fRFNg1WqvDKUU8hYcc7uem3zv+n9yzOi/rm7tV3+EUjjALq0FjWJLqcFAo0SweylCQI+jYeZeFpnAXcxFsYRHqRJFe6zm/wzzU6bEjK6S5c7P45TZqDdTaSkciyy1N4ysa1HkHlIoyrI/sJD6pzziR6VzYzrYTUjjF6M2RQ+5QJWp1JnGH4jjwB99DpE2LzuIak5qAt4CxKz2Lj3gumH6YIZauPMMoU/hUm1saVKc+t0R6ElcbyAJJ0KCojt5QdBbHHGJCw/H4sdiulz+c5qsYwJ2Wg+oxp2EoiXMh8XIosZ1Fkc4tlixON+r2BNxhd+uHfg/ztauhO02XKl5V9Ud9p7kDiutpOhZsyirp0mM+pzmBUAbh6lZyWXX/pydx2qInsqFhEWQwKK+pJO61TFe6+6EuRviDeTncEoueTHPGTvMZ5Xrq4zDXnq2HFmGN9AmFMqtX/Ye5O8FOdtcyGoVWG16ZxUeIQXGyI8NVGW7HeuzHca4srkBW2WNNfuznab62N4udS5SJXz7rO87tB5GwSa7qoVHq2Gk8FvPbGRQG35v2nMR73NDEZNPHkxEGlcXxhKiPLtkguuSe4hA5nP0Y+sGuy9X0Eak++3Oae9xIbdHLguKaF/WjP6e56mQh3QrPFVY5X88Hp/nUIatbSigejF3X134c58NZTB4TJvNBHSQr2FS+G2SxfCaTvz2Rry4hCZOYNsfvWdyUZmCBa2SjmT6TeOhza5OdoLhojhrJ4b+cD79H3s+H3yPv58/zfwK72i6L0mpUAAAAAElFTkSuQmCC",
+		"type": null,
+		"isToEncourage": false
+	},
+	"formalLanguage": true,
+	"absent": false,
+	"inTeamAgency": false
+}

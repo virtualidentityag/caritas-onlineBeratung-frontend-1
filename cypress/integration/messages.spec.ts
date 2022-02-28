@@ -29,7 +29,7 @@ describe('Messages', () => {
 			cy.caritasMockedLogin();
 
 			cy.get('[data-cy=sessions-list-items-wrapper]').click();
-			cy.get('.textarea__attachmentInput').attachFile('empty.pdf');
+			cy.get('.textarea__attachmentSelect').attachFile('empty.pdf');
 			cy.get('.textarea__iconWrapper').click();
 
 			cy.wait('@attachmentUpload');

@@ -1,0 +1,46 @@
+{
+	"userId": "mainconsultant",
+	"userName": "mainconsultant",
+	"firstName": "main",
+	"lastName": "consultant",
+	"email": "maincon@sulta.nt",
+	"languages": ["de", "af", "am"],
+	"absenceMessage": "asdaew",
+	"agencies": [
+		{
+			"id": 5,
+			"name": "komm-pass Drogenberatung Düsseldorf",
+			"postcode": "40210",
+			"city": "Düsseldorf",
+			"description": "komm-pass ist Ihr Ansprechpartner- bei Problemen mit illegalen Drogen- für Betroffene und Angehörige",
+			"teamAgency": false,
+			"offline": true,
+			"consultingType": 0
+		}
+	],
+	"userRoles": ["main-consultant", "consultant", "peer-consultant"],
+	"grantedAuthorities": [
+		"AUTHORIZATION_USE_FEEDBACK",
+		"AUTHORIZATION_VIEW_AGENCY_CONSULTANTS",
+		"AUTHORIZATION_VIEW_ALL_FEEDBACK_SESSIONS",
+		"AUTHORIZATION_ASSIGN_CONSULTANT_TO_ENQUIRY",
+		"AUTHORIZATION_VIEW_ALL_PEER_SESSIONS",
+		"AUTHORIZATION_CONSULTANT_DEFAULT",
+		"AUTHORIZATION_ASSIGN_CONSULTANT_TO_SESSION",
+		"AUTHORIZATION_ASSIGN_CONSULTANT_TO_PEER_SESSION"
+	],
+	"consultingTypes": null,
+	"hasAnonymousConversations": true,
+	"hasArchive": true,
+	"twoFactorAuth": {
+		"isEnabled": true,
+		"isActive": false,
+		"secret": "t6oMFud1hN8JhDadqSjVty8cpIMEogA5",
+		"qrCode": "iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACyklEQVR4Xu2Xu47bMBBF2fGX1ZEdf5lFAOackW1FKrYKB1jAXGetzJniYh6X2rJ+PH/KM3I/X/6M3M+XPyP38yt4L6X24yitt3m0yXNdw2ASH3xmHaO3NdsktxylGszivcoWGtHWugnVYCLnzIZKtR2lHC2Zd4J1NrpChdpsEczifmwObVm2CaVnMIc7ihbodh7z+8T/k3uYT1pzLoZb8gqncCL0p9oXN5XfbGm7+rObq4yfRo/0B2jkKDKFT+vCdtbuV6M3dSI3j1MTHAp/RKZ7wojy85mP3Twk4cuYI74UHmmbxqd/27m1OA2qFHsFJevSt5efzrgUaIWEtKpf87OZU5XFaMwWz7RHxTUsKoUP22LS9OvwP80ZvfTv5aewZj+cEyfT9bzmdzN3MwkDaYoDWk917/rs5uqbYY+WyHJpTl5SOZxgd0WYC8KUJdTmcYoyXQdn1AQ/S79K47jC+Wbgrcx46BNV5Slcc+iv1ViOx9QbuwkpfPp2slwQn6I+3hEkJ3GL0+PNMGbj9XC0JB4wbkf75KigzhsqiXe3MV5KvB3whuWiUq4krh1P/yboYYoj8p2UJI4tkoA/YM1Y5WGnaM6lfzM3bmFWoJgXW5THoXZGRwqjipuifPxxN1deifcicg4bRVbMSQ7vURT1keB7oRsao5LDV8hr2DO6NGhaRc8kSdz70D1lPl0TUjHKT32284mgmFLag0bnU4PO4iO8iBBXZPgzremuahIH0x7sWEdWa5iV25LEfUIOc2pxjuKChkXl8G5huvuAU5ATdxQT+67Pbu5hNi1PLMaMC2oYTuHuJPEq58RtxXhe+jfz4cfdUBSFwpqaQtO4hhTvpnFIxCP4aolcPa6kpenqY0JXIu+Oh3cENZp2ZvzjT7u5KS1CtAhzQCUVqh99mzmNqZ2qAFmM06L999a3m/9wvvwZuZ8vf0bu59fzvx4TCg3MMLtUAAAAAElFTkSuQmCC",
+		"type": null,
+		"isToEncourage": false
+	},
+	"formalLanguage": false,
+	"absent": false,
+	"inTeamAgency": true
+}

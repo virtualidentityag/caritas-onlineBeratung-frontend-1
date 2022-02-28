@@ -91,7 +91,8 @@ export const generateAskerSession = ({
 			feedbackRead: null,
 			isTeamSession: isTeamSession === undefined ? true : isTeamSession,
 			monitoring: true,
-			attachment: null
+			attachment: null,
+			registrationType: 'ANONYMOUS'
 		},
 		chat: null,
 		agency: {
