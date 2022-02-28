@@ -1,0 +1,62 @@
+{
+	"userId": "u25peer",
+	"userName": "u25peer",
+	"firstName": "Maximilian",
+	"lastName": "Mustermann",
+	"email": "pete.peer.u25@caritas123.de",
+	"languages": ["de"],
+	"absenceMessage": null,
+	"agencies": [
+		{
+			"id": 8,
+			"name": "Caritas- Suchthilfe Oberberg e.V. - Gummersbach",
+			"postcode": "51643",
+			"city": "Gummersbach",
+			"description": null,
+			"teamAgency": false,
+			"offline": false,
+			"consultingType": 0
+		},
+		{
+			"id": 101,
+			"name": "U25 Beratungsstelle",
+			"postcode": "25252",
+			"city": "Teenagetown",
+			"description": "U25 DEV Test-Beratungsstelle",
+			"teamAgency": true,
+			"offline": false,
+			"consultingType": 1
+		},
+		{
+			"id": 807,
+			"name": "Rat und Hilfe - die Schwangerschaftsberatung der katholischen Kirche, Mönchengladbach",
+			"postcode": "41063",
+			"city": "Mönchengladbach",
+			"description": null,
+			"teamAgency": false,
+			"offline": false,
+			"consultingType": 2
+		}
+	],
+	"userRoles": ["consultant", "peer-consultant"],
+	"grantedAuthorities": [
+		"AUTHORIZATION_USE_FEEDBACK",
+		"AUTHORIZATION_VIEW_AGENCY_CONSULTANTS",
+		"AUTHORIZATION_CONSULTANT_DEFAULT",
+		"AUTHORIZATION_ASSIGN_CONSULTANT_TO_SESSION"
+	],
+	"consultingTypes": null,
+	"hasAnonymousConversations": true,
+	"hasArchive": true,
+	"twoFactorAuth": {
+		"isEnabled": true,
+		"isActive": false,
+		"secret": "WkkopdeDkET0bROcw8pyGNWLQ1x2c3Mg",
+		"qrCode": "iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAAC0UlEQVR4Xu2WsY4jIRBEyfhlMsj4ZYKTuPd6dsfnCTY6WlrJaGR7urBU6qouKPvH9ac8K+/rgz8r7+uDPyvv61fgo5Q6V92r9NX6qqPVPS0m4dNnztFaAS51lMYfop6DjwpapQfP0txQLWbie65Ok6YbCjyT8UGxro4qXZ49ilk4z0ISDFIxC999XqLl4OHP53r697n+I+5aCvI1GE7JVzkFpyIjZxNSg09+9Zc+p3FkWZZbMBONPe27P6dxGqMvKLNBrsxqw6x3fw7jyjHZtZ3NZkgMGLI5CR+2YsgIWrSmXzLNm/9hHG/EhwFVSunj2jW+9TmN+25zaiRkuJPCVKAUfCEKQHTEnEIrRbrz6TSON2t4dDukiGWn9GsSPnrscR7hhDDFJrWXPw/j4c1mRvBFkxwQtFo1Cb/GUkdwNDkpLcZU1jm4w2FIA/U4IwXXrc9pnIDu6ONAejeIJ4TKwiEnqWkoYlUmxIQSycERxQ45GvIyJ6Z5nYTjRu9nGBJnzuhPsXL78zB+Xcs0ZbQpNlS9koSHLLSEoYTY8pqkYsZGCm429IhjQ4ptCra0aA4OEa/nRER0SKN0LbOz8KpFoUg0d52CQIizvv1xGnc+0cWiNf2CRCiUhHs/cUYwphShxlvkZRY+pLcjGkIoj6p/+Z3FryjSpwQUCkVEeE1IwqU3TCbc6YQO70bw3Uk4+eCEckqjj2PSVQvRknA4mU9YQ5XQqCjOtGsp+I5c0A84pMmTNzkn4bTGVO5m4tIWS4++7gfHca4jAkNuQN5Ort05+LAxQ3PSpDgc48fdn9O4C26eEzEYKw6o+crnwzhc8GTzjs5UTA+KsOdMwmc8O0htT8dmNr/4HcehwlxAMxY8fXFW8/AQJjzCbMov4ikRx6H9OqBVh+J7f47ivvF6aeIJEe2qN7/DOMKYh3JjVoPkFVlJ+A/rgz8r7+uDPyvv69fjfwEk5Sk5Kh/yjwAAAABJRU5ErkJggg==",
+		"type": null,
+		"isToEncourage": false
+	},
+	"formalLanguage": false,
+	"absent": false,
+	"inTeamAgency": true
+}
