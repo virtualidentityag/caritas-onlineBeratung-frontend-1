@@ -244,7 +244,7 @@ Cypress.Commands.add(
 
 		cy.visit('/login');
 
-		cy.get('#loginRoot');
+		cy.get('.loginForm');
 		cy.get('#username').type(testUsername, { force: true });
 		cy.get('#passwordInput').type(testPassword, {
 			force: true

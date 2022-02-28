@@ -1,0 +1,692 @@
+[
+	{
+		"id": 0,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Suchtberatung",
+			"short": "Sucht",
+			"long": "Suchtberatung",
+			"welcome": "Willkommen bei der Suchtberatung!",
+			"registrationDropdown": "Suchtberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 1,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "[U25]",
+			"short": "[U25]",
+			"long": "Beratung für suizidgefährdete junge Menschen [U25]",
+			"welcome": "Willkommen bei der Beratung für suizidgefährdete junge Menschen [U25]!",
+			"registrationDropdown": "Beratung für suizidgefährdete junge Menschen [U25]"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": "https://www.u25.de/helpmail/",
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": true,
+			"notes": {
+				"agencySelection": null,
+				"password": "Bitte notiere Dir Deine Zugangsdaten – ein Passwort-Reset ist nicht möglich!"
+			},
+			"mandatoryFields": { "age": true, "state": true }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": false,
+		"isAnonymousConversationAllowed": false,
+		"isSetEmailAllowed": false,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 2,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Schwangerschaftsberatung",
+			"short": "Schwangerschaft",
+			"long": "Schwangerschaftsberatung",
+			"welcome": "Willkommen bei der Schwangerschaftsberatung!",
+			"registrationDropdown": "Schwangerschaftsberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": true
+	},
+	{
+		"id": 3,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Eltern und Familien",
+			"short": "Eltern Familie",
+			"long": "Beratung für Eltern und Familien",
+			"welcome": "Willkommen bei der Beratung für Eltern und Familien!",
+			"registrationDropdown": "Eltern und Familien"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/eltern-familie/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 4,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Kurberatung",
+			"short": "Kurberatung",
+			"long": "Kurberatung für Mütter und Väter",
+			"welcome": "Willkommen bei der Kurberatung für Mütter und Väter!",
+			"registrationDropdown": "Kurberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 5,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Schuldnerberatung",
+			"short": "Schulden",
+			"long": "Beratung zum Thema Schulden",
+			"welcome": "Willkommen bei der Beratung zum Thema Schulden!",
+			"registrationDropdown": "Schuldnerberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/schuldnerberatung/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": true
+	},
+	{
+		"id": 6,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Sozialberatung",
+			"short": "ASB",
+			"long": "Allgemeine Sozialberatung",
+			"welcome": "Willkommen bei der Allgemeinen Sozialberatung!",
+			"registrationDropdown": "Sozialberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/allgemeine-soziale-beratung/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 7,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Leben im Alter",
+			"short": "Alter",
+			"long": "Leben im Alter",
+			"welcome": "Willkommen bei Leben im Alter!",
+			"registrationDropdown": "Leben im Alter"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/leben-im-alter/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 8,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Beeinträchtigung",
+			"short": "Beeinträchtigung",
+			"long": "Leben mit Behinderung und psychischer Erkrankung",
+			"welcome": "Willkommen bei Leben mit Behinderung und psychischer Erkrankung!",
+			"registrationDropdown": "Beeinträchtigung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/behinderung-und-psychische-erkrankung/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 9,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Go on – Start up!",
+			"short": "Go on – Start up!",
+			"long": "Go on – Start up!",
+			"welcome": "Go on – Start up! Dein Chat zwischen Schule und Beruf.",
+			"registrationDropdown": "Go on – Start up!"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 10,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Rechtliche Betreuung und Vorsorge",
+			"short": "(rechtl.) Betreuung",
+			"long": "Rechtliche Betreuung und Vorsorge",
+			"welcome": "Willkommen bei der Rechtlichen Betreuung und Vorsorge!",
+			"registrationDropdown": "Rechtliche Betreuung und Vorsorge"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 11,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Straffälligenhilfe",
+			"short": "Straffälligenhilfe",
+			"long": "Beratung für Angehörige von Straffälligen",
+			"welcome": "Willkommen bei der Beratung für Angehörige von Straffälligen!",
+			"registrationDropdown": "Straffälligenhilfe"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 12,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "HIV / AIDS",
+			"short": "HIV",
+			"long": "HIV/AIDS-Beratung",
+			"welcome": "Willkommen bei der HIV/AIDS-Beratung!",
+			"registrationDropdown": "HIV / AIDS"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 13,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Kinder-Reha",
+			"short": "Kinder-Reha",
+			"long": "Kinder- und Jugend-Rehabilitation",
+			"welcome": "Willkommen bei der Kinder- und Jugend-Rehabilitation!",
+			"registrationDropdown": "Kinder-Reha"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 14,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Kinder Jugendliche",
+			"short": "Kinder Jugendliche",
+			"long": "Beratung für Kinder und Jugendliche",
+			"welcome": "Willkommen bei der Beratung für Kinder und Jugendliche!",
+			"registrationDropdown": "Kinder Jugendliche"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/kinder-jugendliche/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 15,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Sucht",
+			"short": "Sucht",
+			"long": "Sucht-Selbsthilfe – Kreuzbund-Chat",
+			"welcome": "Willkommen bei der Sucht-Selbsthilfe – Kreuzbund-Chat!",
+			"registrationDropdown": "Sucht-Selbsthilfe - Kreuzbund"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": {
+			"isGroupChat": true,
+			"groupChatRules": [
+				"In der Sucht-Selbsthilfe duzen wir uns, sowohl in den Gruppen vor Ort als auch hier im Chat. Wer damit Probleme hat, teile das im Chat mit – wir stellen uns gerne darauf ein!",
+				"Menschen sind verschieden, ihre Meinungen sind es auch. Aufeinander zu achten sowie wertschätzende Chat-Beiträge gewährleisten ein helfendes Miteinander.",
+				"Moderator_innen haben die Aufgabe, dafür zu sorgen, dass sich die Chat-Teilnehmenden austauschen können. Sie bieten gegebenenfalls auch Sucht-Themen zur Diskussion an. Ihren Aufforderungen ist zu folgen, beispielsweise dann, wenn Chat-Regeln nicht eingehalten werden."
+			]
+		},
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": false,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": false,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 16,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Migrationsberatung",
+			"short": "Migrationsberatung",
+			"long": "Migrationsberatung",
+			"welcome": "Willkommen bei der Migrationsberatung!",
+			"registrationDropdown": "Migrationsberatung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/migration/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 17,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Auswanderung",
+			"short": "Auswanderung",
+			"long": "Aus-/Rück- & Weiterwanderung",
+			"welcome": "Willkommen bei der Aus-/Rück- & Weiterwanderung!",
+			"registrationDropdown": "Auswanderung"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": {
+				"agencySelection": "Sollten Sie im Ausland leben, geben Sie bitte die Postleitzahl eines Bezugsortes in Deutschland (zukünftiger Wohnort, Heimatort…) an.",
+				"password": null
+			},
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": true
+	},
+	{
+		"id": 18,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Hospiz-Palliativ-Trauer",
+			"short": "Hospiz-Palliativ",
+			"long": "Hospiz-, Palliativ- und Trauerberatung",
+			"welcome": "Willkommen bei der Hospiz-, Palliativ- und Trauerberatung!",
+			"registrationDropdown": "Hospiz-Palliativ-Trauer"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.caritas.de/hilfeundberatung/onlineberatung/hospiz-palliativ/adressen"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 19,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Regionale Angebote",
+			"short": "Regionale Angebote",
+			"long": "Regionale Angebote",
+			"welcome": "Willkommen bei den Regionalen Angeboten!",
+			"registrationDropdown": "Regionale Angebote"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": true,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": false,
+		"isAnonymousConversationAllowed": false,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 20,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Jungen und Männer",
+			"short": "Jungen und Männer",
+			"long": "Jungen- und Männerberatung",
+			"welcome": "Willkommen bei der Jungen- und Männerberatung!",
+			"registrationDropdown": "Jungen und Männer"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": "https://www.skmev.de/beratung-hilfe/jungen-und-maennerarbeit/"
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": true,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 21,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "Selbsthilfe Vechta",
+			"short": "Selbsthilfe",
+			"long": "Kontakt- und Beratungsstelle Selbsthilfe",
+			"welcome": "Willkommen bei der Kontakt- und Beratungsstelle Selbsthilfe!",
+			"registrationDropdown": "Selbsthilfe Vechta"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": null,
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": true,
+			"autoSelectPostcode": false,
+			"notes": { "agencySelection": null, "password": null },
+			"mandatoryFields": { "age": false, "state": false }
+		},
+		"groupChat": {
+			"isGroupChat": true,
+			"groupChatRules": [
+				"In der Selbsthilfe duzen wir uns, sowohl in den Gruppen vor Ort als auch hier im Chat. Wer damit Probleme hat, teile das im Chat mit – wir stellen uns gerne darauf ein!",
+				"Menschen sind verschieden, ihre Meinungen sind es auch. Aufeinander zu achten sowie wertschätzende Chat-Beiträge gewährleisten ein helfendes Miteinander.",
+				"Moderator_innen haben die Aufgabe, dafür zu sorgen, dass sich die Chat-User_innen austauschen können. Ihren Aufforderungen ist zu folgen, beispielsweise dann, wenn Chat-Regeln nicht eingehalten werden."
+			]
+		},
+		"isSubsequentRegistrationAllowed": true,
+		"isAnonymousConversationAllowed": false,
+		"isSetEmailAllowed": true,
+		"showAskerProfile": false,
+		"isVideoCallAllowed": false
+	},
+	{
+		"id": 22,
+		"description": null,
+		"furtherInformation": null,
+		"titles": {
+			"default": "#gemeinsamstatteinsam",
+			"short": "#gse",
+			"long": "#gemeinsamstatteinsam – Onlineberatung für junge Menschen in besonderen Zeiten",
+			"welcome": "Willkommen bei #gemeinsamstatteinsam – Onlineberatung für junge Menschen in besonderen Zeiten!",
+			"registrationDropdown": "#gemeinsamstatteinsam"
+		},
+		"urls": {
+			"requiredAidMissingRedirectUrl": "https://www.u25.de/helpmail/",
+			"registrationPostcodeFallbackUrl": null
+		},
+		"registration": {
+			"minPostcodeSize": 5,
+			"autoSelectAgency": false,
+			"autoSelectPostcode": true,
+			"notes": {
+				"agencySelection": null,
+				"password": "Bitte notiere Dir Deine Zugangsdaten – ein Passwort-Reset ist nicht möglich!"
+			},
+			"mandatoryFields": { "age": true, "state": true }
+		},
+		"groupChat": { "isGroupChat": false, "groupChatRules": null },
+		"isSubsequentRegistrationAllowed": false,
+		"isAnonymousConversationAllowed": false,
+		"isSetEmailAllowed": false,
+		"showAskerProfile": true,
+		"isVideoCallAllowed": false
+	}
+]

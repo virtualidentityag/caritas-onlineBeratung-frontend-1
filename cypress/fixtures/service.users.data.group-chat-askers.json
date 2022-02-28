@@ -1,0 +1,94 @@
+{
+	"userId": "kreuzbund-asker1",
+	"userName": "kreuzbund-asker1",
+	"firstName": null,
+	"lastName": null,
+	"email": "asker1@domain.de",
+	"languages": null,
+	"absenceMessage": null,
+	"agencies": null,
+	"userRoles": ["user"],
+	"grantedAuthorities": ["AUTHORIZATION_USER_DEFAULT"],
+	"consultingTypes": {
+		"0": {
+			"sessionData": {
+				"addictiveDrugs": null,
+				"age": null,
+				"gender": null,
+				"relation": null
+			},
+			"isRegistered": true,
+			"agency": {
+				"id": 29,
+				"name": "Caritasverband für Stuttgart e.V. Fachdienst Drogen, Stuttgart",
+				"postcode": "70178",
+				"city": "Stuttgart",
+				"description": "Der Fachdienst Drogen ist spezialisiert auf Probleme mit illegalen Drogen. Onlineberatung findet auch zu anderen suchtbezogenen Themen statt.",
+				"teamAgency": false,
+				"offline": false,
+				"consultingType": 0
+			}
+		},
+		"1": { "sessionData": null, "isRegistered": false, "agency": null },
+		"2": { "sessionData": null, "isRegistered": false, "agency": null },
+		"3": { "sessionData": null, "isRegistered": false, "agency": null },
+		"4": { "sessionData": null, "isRegistered": false, "agency": null },
+		"5": { "sessionData": null, "isRegistered": false, "agency": null },
+		"6": { "sessionData": null, "isRegistered": false, "agency": null },
+		"7": { "sessionData": null, "isRegistered": false, "agency": null },
+		"8": { "sessionData": null, "isRegistered": false, "agency": null },
+		"9": { "sessionData": null, "isRegistered": false, "agency": null },
+		"10": { "sessionData": null, "isRegistered": false, "agency": null },
+		"11": { "sessionData": null, "isRegistered": false, "agency": null },
+		"12": { "sessionData": null, "isRegistered": false, "agency": null },
+		"13": { "sessionData": null, "isRegistered": false, "agency": null },
+		"14": { "sessionData": null, "isRegistered": false, "agency": null },
+		"15": {
+			"sessionData": null,
+			"isRegistered": true,
+			"agency": {
+				"id": 1125,
+				"name": "Kreuzbund Selbsthilfegruppe",
+				"postcode": "88046",
+				"city": "Friedrichshafen",
+				"description": "Kreuzbund Selbsthilfegruppe",
+				"teamAgency": false,
+				"offline": false,
+				"consultingType": 15
+			}
+		},
+		"16": { "sessionData": null, "isRegistered": false, "agency": null },
+		"17": { "sessionData": null, "isRegistered": false, "agency": null },
+		"18": { "sessionData": null, "isRegistered": false, "agency": null },
+		"19": { "sessionData": null, "isRegistered": false, "agency": null },
+		"20": {
+			"sessionData": {},
+			"isRegistered": true,
+			"agency": {
+				"id": 1734,
+				"name": "Jungen und maennerberatung",
+				"postcode": "88048",
+				"city": "Friedrichshafen",
+				"description": null,
+				"teamAgency": false,
+				"offline": false,
+				"consultingType": 20
+			}
+		},
+		"21": { "sessionData": null, "isRegistered": false, "agency": null },
+		"22": { "sessionData": null, "isRegistered": false, "agency": null }
+	},
+	"hasAnonymousConversations": false,
+	"hasArchive": false,
+	"twoFactorAuth": {
+		"isEnabled": true,
+		"isActive": false,
+		"secret": "l5Uj3kvbsJuGNhCwpAj164aivskRbz3x",
+		"qrCode": "iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAADIElEQVR4Xu2WsW4kIRBEyfhlMsj4ZQJL3HvN2KfdkxwdHVhG412WwlKpurp6yv52fZT3k9f1i7+fvK6fgI9S6p5zDz7dz1X6quc4A588c1R+99FH6+Nc8TgHH3Xy0edcdTSB1SePx1n4qKuHQDBVnFWlnIdzBKu9yt/65OFe6eCtoY0iVaGX+t3Ew5P/rhf/voPzP+KxZAhB2wKT8PSv/ryNeyKX1Re9UVQJe47GJgvXGjZma0V6rBK1SsGpBHZAn4kqcx1goVE9+tzGMSRqQMimoCZGVF3VlknBp21pNFZI0ZzNWqEShym4RGaYQ1MUHdL8KI8/buM78mkYksZzRKMmxTQpOOf+YZOQh2pJNcySgi8KMmXmiJKazRquffxzG682pzJ5c6BQf2p28vE2TjBRGTsiqqJDuAPJ+dTvMq4k9dSF+jQr4/Uvf97G9edJJLewZT5HeVYObkVMhA1BwiHq49knv9v41pvyUxHvoA5f0k3B3TfFwCm0KO9o20nFet4fLuNkU3EyUBhbc2mT7cQeR5/b+Kc96BK+/RX3YpeBm41mwaI53QnJcT71uY1zHjXBH1V+Z+PBo99tnPqcoVijLNEcplR/+F3GfSUgmHoEpFOSfJCeHFNw3wuKklgm3KFFu3Y9+lzHHY4t7hT7lObEKSFPCo4cI4oCTw69h1bm5pMP13FnEoD1gSHNESFpaGbgkJv2pupMZxPvKUiz5ZiBk0ye4saHYpdyiaGRgfNOQEu0mBGnOMWXFeyRgw+ZQBJdUEaL+JISrZKCs4sSadAoim6VXRJOEFmiZlN4EX8W+9VplYNbHecT5sAXMSa2U+uT32UcOwjBSIPUmM/8j6MiBQ9CGgJlWghEeUZkVAbu99aXMSZ7RFUxn7BsBr6jLR2MRysVOrujz3XcXxao9O1Y3qbViImRgocYdEcXnKbVJJxm8M3AUWMKGsqy4niFYx59ruOyUpRIR5Ph6Y5x9EnBhyVZTubqZIBc1CsLP91hROhWp4OOPfl4HfdK1w9y41rp1GebWCn4sBRVkpz70C1GJHAK/t36xd9PXtePx/8AyIWJy6FKWiwAAAAASUVORK5CYII=",
+		"type": null,
+		"isToEncourage": true
+	},
+	"formalLanguage": true,
+	"absent": false,
+	"inTeamAgency": false
+}
