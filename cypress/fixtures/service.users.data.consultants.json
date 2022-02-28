@@ -1,6 +1,6 @@
 {
-	"userId": "consultant1",
-	"userName": "consultant1",
+	"userId": "consultant",
+	"userName": "consultant",
 	"firstName": "firstName",
 	"lastName": "lastName",
 	"email": "con@sulta.nt",
@@ -19,6 +19,14 @@
 	],
 	"grantedAuthorities": ["AUTHORIZATION_CONSULTANT_DEFAULT"],
 	"hasAnonymousConversations": false,
+	"twoFactorAuth": {
+		"isEnabled": true,
+		"isActive": false,
+		"secret": "tqHT4jIffOJCEIfo1IcmdILibigsMsQR",
+		"qrCode": "iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACxUlEQVR4Xu2Yu24kMQwElemXlUmZflnBAXNV1HofEzgTAQOrW8CzbB3QILubY5fr1/Ov3Cuf54vfK5/ni98rn+dP4KOUulrloa/SVx08T4tJ+OQzh0BddfptlOqPLHzwbZUmRYujcTeKeTg9WX1CkRa1UlpPxql2RhLHKW3SSTgfBtRKnxON0CqkYTEJhxeyuB2LSbhn9bFHgkYLneq7nILjhlG3OWHVtKhqbT0L9xmDeqWpzx4q7c/5HMa1RR2RUTRmQS/UsX7mcxqXlgzn5T8nda22JZqDMxdDGWatekGDDGpJOMTUiPlEdxwUesUyVxIOFVTZlGW/TErDgsKT/2GciSDJbQgHY0ixIJ7zOY6HGNAItiQYCMrihkjDwxqyI6K46zc98vLHYXw5n37FcjQVYjkvr+Tg+5vhaHP2DUS7ehYeASVNd4OtKrrkzZ9n8eVAArZXXimK48nvNP5YxprUYMIr3Up78T+LX0N70BOu8ixWTOeZhM8QpA0ymqI/hMR48T+Ny2+ELWcQDa5v/A7j1+ZT91iYyyOhfvidxt1Iy43IpNpuld16438W94Z0loy0yhVJwZccnHcxPFHdz2zF5i8LJiZ3cvAwqNQ0aPdnffQpB58RT9XXhFCHy4KUeOXTYXy4nx/5GLEI3+YLSxKuGqsh7XAwSVi0xX9KwZFjhGPMyYefTqXh8kIcWxZkhYzjZgoeO5Gu6BFkUdVnBFYSbkDhDWG5YRGSwn4l4fJrYmESwGJQv+nnNF5sSkcmQRF4R3ZPwhnE3L8TuKjWDsdIqhzcY0DapfCKL+pRycEpIQdnE3+ZcU8ozzR87lhkJHRq1CFTHvqVhQ/ZFBckpNY2CufJLwOv5kNTHr4e0SloJuI7EtElrwqK1ZxKw/nMSAT3EtwcFt2ZSfjWp/7k+RHRPcySg/9yvvi98nm++L3yef48/h/dbPe20hUgjQAAAABJRU5ErkJggg==",
+		"type": null,
+		"isToEncourage": false
+	},
 	"consultingTypes": null,
 	"formalLanguage": true,
 	"absent": false,
