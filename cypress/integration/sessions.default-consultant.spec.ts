@@ -126,15 +126,3 @@ describe('Default consultant sessions', () => {
 		cy.get('.overlay__content').contains('button', 'ok').click();
 	});
 });
-
-describe('Peer Beratungen', () => {
-	it('should check Ratsuchende and Archiv tabs', () => {
-		loginGenerateSessions(3);
-		cy.intercept(config.endpoints.consultantTeamSessions, {});
-		cy.intercept(config.endpoints.teamSessionsBase, {});
-		cy.get('.navigation__title').contains('Beratungen').click();
-		cy.get('.sessionsList__tabs').contains('span', 'Ratsuchende').click();
-		cy.get('.sessionsList__tabs').contains('span', 'Archiv').click();
-		// to-do: recreate group chat
-	});
-});
