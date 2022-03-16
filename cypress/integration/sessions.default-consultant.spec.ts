@@ -1,16 +1,55 @@
 import { config, apiUrl } from '../../src/resources/scripts/config';
 import { generateMultipleConsultantSessions } from '../support/sessions';
 
+const defaultConsultantMockedLogin = (amountOfSessions: number) => {
+	const sessions = generateMultipleConsultantSessions(amountOfSessions);
+	cy.fixture('service.consultant.stats').then((consultantStats) => {
+		cy.intercept(config.endpoints.consultantStatistics, consultantStats);
+	});
+	cy.caritasMockedLogin({
+		type: 'consultant',
+		sessions
+	});
+};
+
 describe('Default consultant sessions', () => {
-	const loginGenerateSessions = (amountOfSessions: number) => {
-		const sessions = generateMultipleConsultantSessions(amountOfSessions);
-		cy.caritasMockedLogin({
-			type: 'consultant',
-			sessions
-		});
-	};
+	beforeEach(() => {
+		cy.fixture('services.default-consultanttypes.full.json').then(
+			(defaultConsultingFullType) => {
+				cy.intercept(
+					`${config.endpoints.consultingTypeServiceBase}/1/full`,
+					defaultConsultingFullType
+				);
+
+				cy.fixture('services.default-consultanttypes.basic.json').then(
+					(defaultConsultingBasicType) =>
+						cy.intercept(
+							`${config.endpoints.consultingTypeServiceBase}/basic`,
+							[
+								defaultConsultingBasicType,
+								defaultConsultingFullType
+							]
+						)
+				);
+			}
+		);
+	});
+
+	it('should login', () => {
+		defaultConsultantMockedLogin(3);
+	});
+
+	it('should show Meine Nachrichten, Profil, Erstanfragen', () => {
+		cy.get('.navigation__item ').contains('Meine Nachrichten');
+		cy.get('.navigation__item ').contains('Profil');
+		cy.get('.navigation__item ').contains('Erstanfragen');
+	});
+	it('should check if Team Beratungen is shown', () => {
+		cy.get('.navigation__item ').contains('Team Beratungen');
+	});
+
 	it('should check Ratsuchende and Archiv tabs', () => {
-		loginGenerateSessions(3);
+		defaultConsultantMockedLogin(3);
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.intercept(config.endpoints.sendMessage, {});
 		cy.get('.sessionsListItem__content').first().click();
@@ -28,7 +67,7 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should check RS profile access', () => {
-		loginGenerateSessions(3);
+		defaultConsultantMockedLogin(3);
 		cy.intercept(`${apiUrl}/service/users/sessions/1/monitoring`, {});
 		cy.intercept(config.endpoints.messages, {});
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
@@ -57,7 +96,7 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should send chat message', () => {
-		loginGenerateSessions(3);
+		defaultConsultantMockedLogin(3);
 		cy.intercept(config.endpoints.sendMessage, {});
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 
@@ -103,7 +142,7 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should document/monitor user data', () => {
-		loginGenerateSessions(3);
+		defaultConsultantMockedLogin(3);
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.intercept(`${apiUrl}/service/users/sessions/1/monitoring`, {});
 		cy.intercept(config.endpoints.messages, {});
@@ -116,7 +155,7 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should delete chat from menu', () => {
-		loginGenerateSessions(3);
+		defaultConsultantMockedLogin(3);
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.get('.sessionsListItem__content').first().click();
 		cy.get('span[id="iconH"]').click();
