@@ -30,5 +30,10 @@
 	"consultingTypes": null,
 	"formalLanguage": true,
 	"absent": false,
-	"inTeamAgency": true
+	"inTeamAgency": true,
+	"hasArchive": true,
+
+	"groupChat": {
+		"isGroupChat": true
+	}
 }

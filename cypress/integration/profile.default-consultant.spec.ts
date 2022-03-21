@@ -1,0 +1,160 @@
+import { generateMultipleConsultantSessions } from '../support/sessions';
+import { config } from '../../src/resources/scripts/config';
+
+const defaultConsultantMockedLogin = (amountOfSessions: number) => {
+	const sessions = generateMultipleConsultantSessions(amountOfSessions);
+	cy.fixture('service.consultant.stats').then((consultantStats) => {
+		cy.intercept(config.endpoints.consultantStatistics, consultantStats);
+	});
+	cy.caritasMockedLogin({
+		type: 'consultant',
+		sessions
+	});
+};
+
+describe('Default consultant', () => {
+	beforeEach(() => {
+		cy.fixture('services.default-consultanttypes.full.json').then(
+			(defaultConsultingFullType) => {
+				cy.intercept(
+					`${config.endpoints.consultingTypeServiceBase}/1/full`,
+					defaultConsultingFullType
+				);
+
+				cy.fixture('services.default-consultanttypes.basic.json').then(
+					(defaultConsultingBasicType) =>
+						cy.intercept(
+							`${config.endpoints.consultingTypeServiceBase}/basic`,
+							[
+								defaultConsultingBasicType,
+								defaultConsultingFullType
+							]
+						)
+				);
+			}
+		);
+	});
+
+	describe('Profile', () => {
+		it('should login, check impressum and privacy data links', () => {
+			defaultConsultantMockedLogin(3);
+			cy.get('.navigation__item ').contains('Profil').click();
+			cy.contains('Impressum')
+				.closest('a')
+				.should(
+					'have.attr',
+					'href',
+					'https://www.caritas.de/impressum'
+				);
+			cy.contains('Datenschutzerklärung')
+				.closest('a')
+				.should(
+					'have.attr',
+					'href',
+					'https://www.caritas.de/hilfeundberatung/onlineberatung/datenschutz'
+				);
+		});
+
+		it('should enable absence mode and set message', () => {
+			cy.intercept(config.endpoints.setAbsence, {});
+			cy.get('#absenceForm').get('#isAbsent').click();
+			cy.get('input[id="absence"]')
+				.focus()
+				.type(
+					'Having a well deserved rest in the Antartica with some penguins'
+				);
+			cy.get('#absenceButton').click();
+			cy.get('.overlay__buttons')
+				.get('button')
+				.contains('Schließen')
+				.click();
+		});
+
+		it('should reset consultant password and login with new one', () => {
+			cy.intercept(config.endpoints.passwordReset, {});
+			cy.get('input[id="passwordResetOld"]').focus().type('password');
+			cy.get('input[id="passwordResetNew"]').focus().type('Password123!');
+			cy.get('input[id="passwordResetConfirm"]')
+				.focus()
+				.type('Password123!');
+			cy.intercept(config.endpoints.rocketchatLogout, {});
+			cy.get('#passwordResetButton').click();
+			cy.get('.overlay__buttons')
+				.get('button')
+				.contains('Zum Login')
+				.click();
+
+			cy.caritasMockedLogin(
+				{
+					type: 'consultant'
+				},
+				{
+					testUsername: 'username',
+					testPassword: 'Password123!'
+				}
+			);
+			cy.get('.navigation__title').contains('Abmelden').click();
+		});
+
+		it('should check statistics and download them', () => {
+			defaultConsultantMockedLogin(3);
+			cy.get('.navigation__item ').contains('Profil').click();
+			cy.get('#statisticsSelect').contains('letzten Monats').click();
+			cy.get('.select__input__option:contains("letzten Monats")').click();
+			cy.get('a').contains('Excel Datei').click();
+		});
+
+		it('should edit consultant email and full name', () => {
+			cy.intercept(config.endpoints.userData, {});
+			cy.get('.profile__content__title')
+				.get('.editableData__inputButton')
+				.click()
+				.get('#E-Mail-Adresse')
+				.focus()
+				.type('test@test.com')
+				.get('#Vorname')
+				.focus()
+				.type('AnotherName')
+				.get('#Nachname')
+				.focus()
+				.type('AnotherLastName')
+				.get('.button__item')
+				.contains('Speichern')
+				.click();
+			cy.caritasMockedLogin(
+				{
+					type: 'consultant'
+				},
+				{
+					testUsername: 'test@test.com',
+					testPassword: 'password'
+				}
+			);
+		});
+
+		it('should check 2FA form', () => {
+			defaultConsultantMockedLogin(3);
+			cy.get('.navigation__item ').contains('Profil').click();
+			cy.get('.twoFactorAuth__switch').click();
+			cy.get('.twoFactorAuth__tools')
+				.get('span')
+				.contains('FreeOTP App')
+				.get('span')
+				.contains('Download im Google Play Store');
+			cy.get('span').contains('Download im Apple App Store');
+			cy.get('span').contains('Google Authenticator App');
+
+			cy.get('.overlay__buttons')
+				.get('button')
+				.contains('Weiter')
+				.click();
+			cy.get('.overlay__buttons')
+				.get('button')
+				.contains('Weiter')
+				.click();
+			cy.get('.overlay__content').get('.overlay__closeIcon').click();
+
+			cy.get('.navigation__title').contains('Abmelden').click();
+		});
+	});
+});

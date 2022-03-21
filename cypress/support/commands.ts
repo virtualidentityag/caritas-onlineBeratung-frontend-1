@@ -37,7 +37,11 @@ declare global {
 	namespace Cypress {
 		interface Chainable {
 			caritasMockedLogin(
-				args?: CaritasMockedLoginArgs
+				args?: CaritasMockedLoginArgs,
+				testCredentials?: {
+					testUsername: string;
+					testPassword: string;
+				}
 			): Chainable<Element>;
 		}
 	}
@@ -110,12 +114,14 @@ Cypress.Commands.add(
 		}
 
 		if (args.type === 'consultant') {
-			cy.fixture('service.users.data.consultants').then((userData) => {
-				cy.intercept('GET', config.endpoints.userData, {
-					...userData,
-					...args.userData
-				});
-			});
+			cy.fixture('service.users.data.default-consultants').then(
+				(userData) => {
+					cy.intercept('GET', config.endpoints.userData, {
+						...userData,
+						...args.userData
+					});
+				}
+			);
 		}
 
 		if (args.type === 'main-consultant') {
