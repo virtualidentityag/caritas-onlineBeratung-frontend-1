@@ -20,7 +20,7 @@
 				"description": null,
 				"teamAgency": true,
 				"offline": false,
-				"consultingType": 1
+				"consultingType": 0
 			}
 		},
 		"17": { "sessionData": null, "isRegistered": false, "agency": null }

@@ -1,8 +1,12 @@
 import { config } from '../../src/resources/scripts/config';
+import { generateAskerSession } from '../support/sessions';
 
 describe('Login', () => {
 	it('should be able to login', () => {
-		cy.caritasMockedLogin();
+		cy.caritasMockedLogin({
+			type: 'asker',
+			sessions: [generateAskerSession()]
+		});
 
 		cy.get('#appRoot').should('exist');
 	});

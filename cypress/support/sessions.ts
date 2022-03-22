@@ -37,7 +37,8 @@ export const generateConsultantSession = ({
 			feedbackRead: true,
 			isTeamSession: true,
 			monitoring: true,
-			attachment: null
+			attachment: null,
+			registrationType: 'REGISTERED'
 		},
 		chat: null,
 		user: {
@@ -77,7 +78,7 @@ export const generateAskerSession = ({
 
 	return {
 		session: {
-			id: sessionId,
+			id: parseInt(sessionId),
 			agencyId: 1,
 			consultingType: 1,
 			status: 2,
@@ -187,11 +188,6 @@ export const generateMessagesReply = (
 	messages: MessageService.Schemas.MessagesDTO[]
 ): MessageService.Schemas.MessageStreamDTO => {
 	return {
-		messages,
-		count: messages.length.toString(),
-		offset: '0',
-		total: messages.length.toString(),
-		success: 'true',
-		cleaned: null
+		messages
 	};
 };
