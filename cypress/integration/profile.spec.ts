@@ -1,4 +1,5 @@
 import { config } from '../../src/resources/scripts/config';
+import { generateAskerSession } from '../support/sessions';
 
 describe('profile', () => {
 	beforeEach(() => {
@@ -14,9 +15,13 @@ describe('profile', () => {
 				);
 			}
 		);
+		cy.caritasMockedLogin({
+			type: 'asker',
+			sessions: [generateAskerSession()]
+		});
 	});
 
-	it.skip('can register for a new consulting type with an external agency', () => {
+	it('can register for a new consulting type with an external agency', () => {
 		cy.intercept(
 			config.endpoints.agencyServiceBase +
 				'?postcode=00000&consultingType=0',
@@ -37,7 +42,6 @@ describe('profile', () => {
 			]
 		);
 
-		cy.caritasMockedLogin();
 		cy.visit('/beratung-hilfe.html', {
 			onBeforeLoad(window) {
 				cy.spy(window, 'open').as('windowOpen');
@@ -91,7 +95,6 @@ describe('profile', () => {
 			status: 'CREATED'
 		});
 
-		cy.caritasMockedLogin();
 		cy.contains('Profil').click();
 
 		cy.get('#consultingTypeSelect').click();
