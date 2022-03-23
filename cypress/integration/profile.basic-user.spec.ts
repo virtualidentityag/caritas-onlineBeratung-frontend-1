@@ -6,7 +6,6 @@ const basicAskerMockedLogin = () => {
 	const sessions = [generateAskerSession()];
 	cy.caritasMockedLogin({ type: 'asker', sessions }).then(() => {
 		sessions[0].session.messagesRead = false;
-		emitStompDirectMessage();
 	});
 };
 
