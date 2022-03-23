@@ -41,7 +41,7 @@ export const mockWebSocket = () => {
 
 				win.mockStompServer = server;
 				win.mockStompServer.on('connection', (socket) => {
-					win.mockStompSocket = socket;
+					win.mockStompSocket = socket.target;
 
 					socket.on('message', (message) => {
 						const parsedMessage = JSON.parse(
@@ -65,7 +65,7 @@ export const mockWebSocket = () => {
 
 				win.mockRocketChatServer = server;
 				win.mockRocketChatServer.on('connection', (socket) => {
-					win.mockRocketChatSocket = socket;
+					win.mockRocketChatSocket = socket.target;
 				});
 
 				return websocket;
