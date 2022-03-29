@@ -118,6 +118,7 @@ describe('Keycloak Tokens', () => {
 	it('should not logout if refresh token is expired but access token is still valid', () => {
 		cy.clock();
 		cy.caritasMockedLogin({
+			type: 'asker',
 			auth: { expires_in: 1800, refresh_expires_in: 600 }
 		});
 
@@ -134,6 +135,7 @@ describe('Keycloak Tokens', () => {
 
 		cy.clock();
 		cy.caritasMockedLogin({
+			type: 'asker',
 			auth: { expires_in: 1800, refresh_expires_in: refreshExpiresIn }
 		});
 

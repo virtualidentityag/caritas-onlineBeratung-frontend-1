@@ -11,7 +11,7 @@ import { mockWebSocket } from './websocket';
 import { UserDataInterface } from '../../src/globalState';
 
 interface CaritasMockedLoginArgs {
-	type?:
+	type:
 		| 'asker'
 		| 'group-chat-asker'
 		| 'consultant'
@@ -49,7 +49,10 @@ declare global {
 
 Cypress.Commands.add(
 	'caritasMockedLogin',
-	(args: CaritasMockedLoginArgs = {}, testCredentials = {}) => {
+	(
+		args: CaritasMockedLoginArgs = { type: 'asker' },
+		testCredentials = {}
+	) => {
 		const { testUsername = 'username', testPassword = 'password' } =
 			testCredentials;
 		mockWebSocket();
