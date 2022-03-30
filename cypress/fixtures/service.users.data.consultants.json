@@ -19,6 +19,7 @@
 	],
 	"grantedAuthorities": ["AUTHORIZATION_CONSULTANT_DEFAULT"],
 	"hasAnonymousConversations": false,
+	"languages": ["de"],
 	"twoFactorAuth": {
 		"isEnabled": true,
 		"isActive": false,

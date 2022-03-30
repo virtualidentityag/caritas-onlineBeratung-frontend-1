@@ -27,18 +27,18 @@ describe('Peer consultant', () => {
 				);
 			}
 		);
-	});
-	it('should login', () => {
+
 		mainConsultantMockedLogin(3);
+		cy.get('.navigation__item').contains('Profil').click();
 	});
+
 	it('should show Meine Nachrichten, Profil, Erstanfragen', () => {
-		cy.get('.navigation__item ').contains('Meine Nachrichten');
-		cy.get('.navigation__item ').contains('Profil');
-		cy.get('.navigation__item ').contains('Erstanfragen');
+		cy.get('.navigation__item').contains('Meine Nachrichten');
+		cy.get('.navigation__item').contains('Erstanfragen');
+		cy.get('.navigation__item').contains('Profil');
 	});
 	describe('Erstanfragen', () => {
 		it('should check Erstanfragen and Live-Chat Anfragen', () => {
-			mainConsultantMockedLogin(3);
 			cy.intercept(config.endpoints.consultantEnquiriesBase, {});
 			cy.contains('Erstanfragen').click();
 			cy.contains('Live-Chat Anfragen').click();
@@ -46,8 +46,7 @@ describe('Peer consultant', () => {
 	});
 	describe('Meine Nachrichten', () => {
 		it('should be able to check Asker profile', () => {
-			mainConsultantMockedLogin(3);
-			cy.get('.navigation__item ').contains('Meine Nachrichten').click();
+			cy.get('.navigation__item').contains('Meine Nachrichten').click();
 			cy.get('[data-cy=sessions-list-items-wrapper]').click();
 			cy.get('.sessionInfo__username a').click();
 		});

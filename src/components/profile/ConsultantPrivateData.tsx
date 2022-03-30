@@ -152,6 +152,7 @@ export const ConsultantPrivateData = () => {
 						<span
 							role="button"
 							className="primary"
+							aria-label={translate('profile.data.edit')}
 							onClick={() => {
 								setIsEditDisabled(false);
 							}}

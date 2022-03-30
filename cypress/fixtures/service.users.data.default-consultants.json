@@ -19,6 +19,7 @@
 	],
 	"grantedAuthorities": ["AUTHORIZATION_CONSULTANT_DEFAULT"],
 	"hasAnonymousConversations": true,
+	"languages": ["de"],
 	"consultingTypes": null,
 	"formalLanguage": true,
 	"absent": false,

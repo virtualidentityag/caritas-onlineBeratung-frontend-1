@@ -39,6 +39,7 @@ const profile = {
 	'data.email': 'E-Mail-Adresse',
 	'data.title.agencies': 'Meine Beratungsstellen',
 	'data.agency': 'Beratungsstelle',
+	'data.edit': 'Bearbeiten',
 
 	'data.agency.registrationLink.title':
 		'Registrierungslink zur Beratungsstelle in Zwischenablage kopieren',

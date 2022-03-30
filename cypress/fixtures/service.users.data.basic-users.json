@@ -26,6 +26,7 @@
 		"17": { "sessionData": null, "isRegistered": false, "agency": null }
 	},
 	"hasAnonymousConversations": false,
+	"languages": ["de"],
 	"formalLanguage": true,
 	"absent": false,
 	"inTeamAgency": false

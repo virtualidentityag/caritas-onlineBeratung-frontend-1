@@ -80,19 +80,28 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should check impressum and datenschutzerklärung from chat menu', () => {
+		defaultConsultantMockedLogin(3);
+		cy.intercept(config.endpoints.sendMessage, {});
+		cy.get('a[href="/sessions/consultant/sessionView"]').click();
+		cy.get('.sessionsListItem__content').first().click();
+
 		cy.get('span[id="iconH"]').click();
-		cy.get('.legalInformationLinks')
-			.contains('Impressum')
-			.closest('a')
-			.should('have.attr', 'href', 'https://www.caritas.de/impressum');
-		cy.get('.legalInformationLinks')
-			.contains('Datenschutzerklärung')
-			.closest('a')
-			.should(
-				'have.attr',
-				'href',
-				'https://www.caritas.de/hilfeundberatung/onlineberatung/datenschutz'
-			);
+		cy.get('#flyout').within(() => {
+			cy.contains('Impressum')
+				.closest('a')
+				.should(
+					'have.attr',
+					'href',
+					'https://www.caritas.de/impressum'
+				);
+			cy.contains('Datenschutzerklärung')
+				.closest('a')
+				.should(
+					'have.attr',
+					'href',
+					'https://www.caritas.de/hilfeundberatung/onlineberatung/datenschutz'
+				);
+		});
 	});
 
 	it('should send chat message', () => {
