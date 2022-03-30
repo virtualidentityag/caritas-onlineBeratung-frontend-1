@@ -3,17 +3,17 @@ $link-hover-text-decoration: $link-text-decoration !default;
 
 .login {
 	&__tenantRegistration {
-		position: absolute;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		top: $grid-base-six;
-		left: 0;
-		right: 0;
+		padding: $grid-base-four 0;
 
-		@media (min-width: $fromLarge) {
+		@media (min-width: $fromMedium) {
+			position: absolute;
+			top: $grid-base-six;
 			left: auto;
 			right: $grid-base-seven;
+			padding: 0;
 		}
 	}
 
@@ -53,6 +53,11 @@ $link-hover-text-decoration: $link-text-decoration !default;
 		&--active {
 			max-height: 250px;
 		}
+	}
+
+	&__otpEmailResend {
+		display: inline-block;
+		margin-bottom: $grid-base-three;
 	}
 
 	&__error {
@@ -105,5 +110,18 @@ $link-hover-text-decoration: $link-text-decoration !default;
 			text-transform: uppercase;
 			margin-top: $grid-base-two;
 		}
+	}
+
+	&__emailHint {
+		width: 280px;
+		margin-bottom: $grid-base-three;
+
+		@include breakpoint($fromLarge) {
+			width: 320px;
+		}
+	}
+
+	.twoFactorAuthResendMail {
+		margin-bottom: $grid-base-two;
 	}
 }

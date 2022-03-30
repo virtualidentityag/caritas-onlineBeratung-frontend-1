@@ -44,7 +44,7 @@ describe('profile', () => {
 
 		cy.visit('/beratung-hilfe.html', {
 			onBeforeLoad(window) {
-				cy.spy(window, 'open').as('windowOpen');
+				cy.stub(window, 'open').as('windowOpen');
 			}
 		});
 		cy.contains('Profil').click();
@@ -59,7 +59,7 @@ describe('profile', () => {
 			'Ihre gewählte Beratungsstelle nutzt eine andere Anwendung für die Beratung'
 		);
 		cy.contains(
-			'Möchten Sie für „Suchtberatung“ zu der anderen Anwendung wechseln und sich dort registrieren? Ihre bisherigen Beratungs- und Hilfethemen finden Sie weiterhin hier.'
+			'Möchten Sie für „Suchtberatung“ zu der anderen Anwendung wechseln und sich dort registrieren?'
 		);
 
 		cy.contains('Jetzt wechseln').click();
