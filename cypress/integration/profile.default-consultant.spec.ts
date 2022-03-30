@@ -130,7 +130,7 @@ describe('Default consultant', () => {
 			cy.contains('Speichern').should('not.exist');
 		});
 
-		it('should check 2FA form', () => {
+		it('guide the user through the 2FA form', () => {
 			cy.contains('Sicherheit').click();
 			cy.get('.twoFactorAuth__switch').click();
 			cy.get('#overlay').within(() => {
@@ -147,8 +147,7 @@ describe('Default consultant', () => {
 
 				cy.contains('4. Schritt | Einmal-Code eingeben');
 				cy.get('input[name="otp"]').type('123456');
-				cy.get('button:contains("Speichern")').click();
-				cy.location('pathname').should('match', /\/login$/);
+				cy.get('button:contains("Speichern")').should('be.enabled');
 			});
 		});
 	});
