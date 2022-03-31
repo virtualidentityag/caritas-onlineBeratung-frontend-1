@@ -1,5 +1,5 @@
 import { generateMultipleConsultantSessions } from '../support/sessions';
-import { config, apiUrl } from '../../src/resources/scripts/config';
+import { config } from '../../src/resources/scripts/config';
 
 const groupChatConsultantMockedLogin = (amountOfSessions: number) => {
 	const sessions = generateMultipleConsultantSessions(amountOfSessions);
@@ -19,7 +19,8 @@ describe('Group chat consultant', () => {
 				)
 		);
 	});
-	it('should login', () => {
+
+	it('should be able to login', () => {
 		groupChatConsultantMockedLogin(3);
 	});
 });

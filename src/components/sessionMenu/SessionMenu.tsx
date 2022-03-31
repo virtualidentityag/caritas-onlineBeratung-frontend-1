@@ -419,6 +419,8 @@ export const SessionMenu = (props: SessionMenuProps) => {
 
 			<span
 				id="iconH"
+				aria-label={translate('chatFlyout.toggleMenu')}
+				role="button"
 				onClick={handleFlyout}
 				className="sessionMenu__icon sessionMenu__icon--desktop"
 			>
@@ -426,6 +428,8 @@ export const SessionMenu = (props: SessionMenuProps) => {
 			</span>
 			<span
 				id="iconV"
+				aria-label={translate('chatFlyout.toggleMenu')}
+				role="button"
 				onClick={handleFlyout}
 				className="sessionMenu__icon sessionMenu__icon--mobile"
 			>

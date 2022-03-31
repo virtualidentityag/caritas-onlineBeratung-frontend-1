@@ -1,4 +1,3 @@
-import { emitStompDirectMessage } from '../support/websocket';
 import { generateAskerSession } from '../support/sessions';
 import { config } from '../../src/resources/scripts/config';
 
@@ -25,27 +24,22 @@ describe('Basic user', () => {
 					)
 			);
 		});
-	});
-	it('should login', () => {
 		basicAskerMockedLogin();
 	});
-	it('should show Meine Nachrichten, Profil', () => {
-		cy.get('.navigation__item ').contains('Meine Nachrichten');
-		cy.get('.navigation__item ').contains('Profil');
+
+	it('should the correct navigation items', () => {
+		cy.get('nav').within(() => {
+			cy.contains('Meine Nachrichten');
+			cy.contains('Profil');
+			cy.contains('Erstanfragen').should('not.exist');
+			cy.contains('Peer Beratungen').should('not.exist');
+		});
 	});
-	it('should not show Erstanfragen, Peer Beratungen', () => {
-		cy.get('.navigation__item ')
-			.contains('Erstanfragen')
-			.should('not.exist');
-		cy.get('.navigation__item ')
-			.contains('Peer Beratungen')
-			.should('not.exist');
-	});
+
 	describe('Meine Nachrichten', () => {
-		it('should show Chat, and show only Impressum and Datenschutz links', () => {
-			basicAskerMockedLogin();
+		it('should show the correct legal links', () => {
 			cy.get('[data-cy=sessions-list-items-wrapper]').click();
-			cy.get('#iconH').click();
+			cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 			cy.get('#flyout').contains('Impressum');
 			cy.get('#flyout').contains('Datenschutz');
 			cy.get('#flyout')
@@ -54,22 +48,18 @@ describe('Basic user', () => {
 			cy.get('#flyout').contains('Archivieren').should('not.exist');
 			cy.get('#flyout').contains('Dokumentation').should('not.exist');
 		});
-		it('no click on session header', () => {
+
+		it('not be able to visit the consultant profile', () => {
 			cy.get('.sessionInfo__username a').should('not.exist');
 		});
 	});
 
 	describe('Profile', () => {
-		beforeEach(() => {
-			basicAskerMockedLogin();
-		});
-
 		it('should be able to change the password', () => {
-			cy.get('.navigation__item ').contains('Profil').click();
+			cy.get('nav').contains('Profil').click();
 			cy.intercept(config.endpoints.passwordReset, {});
 			cy.contains('Sicherheit').click();
 			cy.get('#passwordResetOld').should('exist');
-
 			// Change password
 			cy.get('input[id="passwordResetOld"]').focus().type('password');
 			cy.get('input[id="passwordResetNew"]').focus().type('Password123!');
@@ -82,7 +72,6 @@ describe('Basic user', () => {
 				.get('button')
 				.contains('Zum Login')
 				.click();
-
 			// `force` is necessary because Cypress reports the labels to be covering the inputs
 			cy.get('#username').type('username', { force: true });
 			cy.get('#passwordInput').type('Password123!', { force: true });
@@ -91,7 +80,7 @@ describe('Basic user', () => {
 		});
 
 		it('should be able to delete an account', () => {
-			cy.get('.navigation__item ').contains('Profil').click();
+			cy.get('nav').contains('Profil').click();
 			cy.contains('Sicherheit').click();
 			cy.get('.deleteAccount').click();
 			cy.get('#passwordInput').focus().type('Password123!');

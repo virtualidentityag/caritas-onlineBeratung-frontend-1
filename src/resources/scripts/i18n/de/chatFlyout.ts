@@ -1,4 +1,5 @@
 const chatFlyout = {
+	toggleMenu: 'Menü ein- / ausblenden',
 	askerProfil: 'Ratsuchendenprofil',
 	dataProtection: 'Datenschutz',
 	documentation: 'Dokumentation',

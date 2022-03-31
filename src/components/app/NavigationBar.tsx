@@ -58,7 +58,7 @@ export const NavigationBar = (props: NavigationBarProps) => {
 	];
 
 	return (
-		<div className="navigation__wrapper">
+		<nav className="navigation__wrapper">
 			<div className="navigation__itemContainer">
 				{props.routerConfig.navigation.map((item, index) => (
 					<Link
@@ -147,6 +147,6 @@ export const NavigationBar = (props: NavigationBarProps) => {
 					</span>
 				</div>
 			</div>
-		</div>
+		</nav>
 	);
 };

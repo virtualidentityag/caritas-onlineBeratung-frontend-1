@@ -20,7 +20,8 @@ describe('Group chat asker', () => {
 				)
 		);
 	});
-	it('should login', () => {
+
+	it('should be able to login', () => {
 		groupChatAskerMockedLogin();
 	});
 });

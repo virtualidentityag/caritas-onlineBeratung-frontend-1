@@ -38,10 +38,10 @@ describe('Default consultant', () => {
 	describe('Profile', () => {
 		beforeEach(() => {
 			defaultConsultantMockedLogin(3);
-			cy.get('.navigation__item ').contains('Profil').click();
+			cy.get('nav').contains('Profil').click();
 		});
 
-		it('should login, check impressum and privacy data links', () => {
+		it('have impressum and privacy data links', () => {
 			cy.contains('Impressum')
 				.closest('a')
 				.should(
@@ -58,7 +58,7 @@ describe('Default consultant', () => {
 				);
 		});
 
-		it('should enable absence mode and set message', () => {
+		it('should be able to enable the absence mode', () => {
 			cy.contains('Meine Aktivitäten').click();
 			cy.intercept(config.endpoints.setAbsence, {});
 			cy.get('#absenceForm').within(() => {
@@ -78,7 +78,7 @@ describe('Default consultant', () => {
 			cy.contains('Speichern').should('not.exist');
 		});
 
-		it('should reset consultant password and login with new one', () => {
+		it('should be able to reset the consultant password', () => {
 			cy.contains('Sicherheit').click();
 			cy.intercept(config.endpoints.passwordReset, {});
 			cy.get('input[id="passwordResetOld"]').focus().type('password');
@@ -100,14 +100,14 @@ describe('Default consultant', () => {
 			cy.contains('Erstanfragen');
 		});
 
-		it('should check statistics and download them', () => {
+		it('should be able to download statistics', () => {
 			cy.contains('Meine Aktivitäten').click();
 			cy.get('#statisticsSelect').click();
 			cy.contains('letzten Monats').click();
 			cy.get('a').contains('Download Excel Datei').click();
 		});
 
-		it('should edit consultant email and full name', () => {
+		it('should be able to edit the consultant email and full name', () => {
 			cy.intercept(config.endpoints.userData, {});
 			cy.contains('Private Daten')
 				.closest('.profile__content__title')
@@ -130,7 +130,7 @@ describe('Default consultant', () => {
 			cy.contains('Speichern').should('not.exist');
 		});
 
-		it('guide the user through the 2FA form', () => {
+		it('guides the user through the 2FA form', () => {
 			cy.contains('Sicherheit').click();
 			cy.get('.twoFactorAuth__switch').click();
 			cy.get('#overlay').within(() => {

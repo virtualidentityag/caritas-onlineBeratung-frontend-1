@@ -33,23 +33,19 @@ describe('Default consultant sessions', () => {
 				);
 			}
 		);
-	});
-
-	it('should login', () => {
 		defaultConsultantMockedLogin(3);
 	});
 
 	it('should show Meine Nachrichten, Profil, Erstanfragen', () => {
-		cy.get('.navigation__item ').contains('Meine Nachrichten');
-		cy.get('.navigation__item ').contains('Profil');
-		cy.get('.navigation__item ').contains('Erstanfragen');
-	});
-	it('should check if Team Beratungen is shown', () => {
-		cy.get('.navigation__item ').contains('Team Beratungen');
+		cy.get('nav').within(() => {
+			cy.contains('Meine Nachrichten');
+			cy.contains('Profil');
+			cy.contains('Erstanfragen');
+			cy.contains('Team Beratungen');
+		});
 	});
 
-	it('should check Ratsuchende and Archiv tabs', () => {
-		defaultConsultantMockedLogin(3);
+	it('should check asker and archive tabs', () => {
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.intercept(config.endpoints.sendMessage, {});
 		cy.get('.sessionsListItem__content').first().click();
@@ -58,7 +54,7 @@ describe('Default consultant sessions', () => {
 			.type('Hallo, wie kann ich helfe?');
 		cy.get('span[title="Nachricht senden"]').click();
 		cy.intercept(`${apiUrl}/service/users/sessions/1/archive`, {});
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.intercept(config.endpoints.myMessagesBase, {});
 		cy.get('div[class="sessionMenu__item"]')
 			.contains('Archivieren')
@@ -66,26 +62,24 @@ describe('Default consultant sessions', () => {
 		cy.get('.overlay__buttons').get('button').contains('Schließen').click();
 	});
 
-	it('should check RS profile access', () => {
-		defaultConsultantMockedLogin(3);
+	it('should check the asker profile', () => {
 		cy.intercept(`${apiUrl}/service/users/sessions/1/monitoring`, {});
 		cy.intercept(config.endpoints.messages, {});
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.get('.sessionsListItem__content').first().click();
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.get('div[id="flyout"]').contains('a', 'Ratsuchendenprofil').click();
 		cy.get('.profile__header__backButton').click();
 		cy.get('.sessionInfo__username').click();
 		cy.get('.profile__header__backButton').click();
 	});
 
-	it('should check impressum and datenschutzerklärung from chat menu', () => {
-		defaultConsultantMockedLogin(3);
+	it('should have legal links in the chat menu', () => {
 		cy.intercept(config.endpoints.sendMessage, {});
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.get('.sessionsListItem__content').first().click();
 
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.get('#flyout').within(() => {
 			cy.contains('Impressum')
 				.closest('a')
@@ -105,7 +99,6 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should send chat message', () => {
-		defaultConsultantMockedLogin(3);
 		cy.intercept(config.endpoints.sendMessage, {});
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 
@@ -121,6 +114,9 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should attach file and send it', () => {
+		cy.get('a[href="/sessions/consultant/sessionView"]').click();
+		cy.get('.sessionsListItem__content').first().click();
+
 		cy.intercept('POST', config.endpoints.draftMessages, {
 			message: 'Hallo, wie kann ich helfe?'
 		});
@@ -139,24 +135,24 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should archive chat and check archived message', () => {
+		cy.get('a[href="/sessions/consultant/sessionView"]').click();
+		cy.get('.sessionsListItem__content').first().click();
 		cy.intercept(`${apiUrl}/service/users/sessions/1/archive`, {});
 		cy.intercept(config.endpoints.consultantSessions, {});
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.get('div[class="sessionMenu__item"]')
 			.contains('Archivieren')
 			.click();
 		cy.get('.overlay__buttons').get('button').contains('Schließen').click();
 		cy.intercept(config.endpoints.rocketchatLogout, {});
-		// to-do: recreate archived message
 	});
 
 	it('should document/monitor user data', () => {
-		defaultConsultantMockedLogin(3);
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.intercept(`${apiUrl}/service/users/sessions/1/monitoring`, {});
 		cy.intercept(config.endpoints.messages, {});
 		cy.get('.sessionsListItem__content').first().click();
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.get('a[class="sessionMenu__item"]')
 			.contains('Dokumentation')
 			.click();
@@ -164,10 +160,9 @@ describe('Default consultant sessions', () => {
 	});
 
 	it('should delete chat from menu', () => {
-		defaultConsultantMockedLogin(3);
 		cy.get('a[href="/sessions/consultant/sessionView"]').click();
 		cy.get('.sessionsListItem__content').first().click();
-		cy.get('span[id="iconH"]').click();
+		cy.get('[aria-label="Menü ein- / ausblenden"]:visible').click();
 		cy.get('div[class="sessionMenu__item"]').contains('Löschen').click();
 		cy.intercept(config.endpoints.sessionBase, {});
 		cy.get('.overlay__content').contains('button', 'ja').click();

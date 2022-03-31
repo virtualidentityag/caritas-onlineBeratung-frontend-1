@@ -27,29 +27,28 @@ describe('Main consultant', () => {
 				);
 			}
 		);
-	});
-	it('should login', () => {
 		mainConsultantMockedLogin(3);
 	});
-	it('should show Meine Nachrichten, Profil, Erstanfragen', () => {
-		cy.get('.navigation__item ').contains('Meine Nachrichten');
-		cy.get('.navigation__item ').contains('Profil');
-		cy.get('.navigation__item ').contains('Erstanfragen');
+
+	it('should show the correct navigatino items', () => {
+		cy.get('nav').within(() => {
+			cy.contains('Meine Nachrichten');
+			cy.contains('Profil');
+			cy.contains('Erstanfragen');
+			cy.contains('Peer Beratungen');
+		});
 	});
-	it('should check if Peer Beratungen is shown', () => {
-		cy.get('.navigation__item ').contains('Peer Beratungen');
-	});
+
 	describe('Erstanfragen', () => {
-		it('should check Erstanfragen and Live-Chat Anfragen', () => {
-			mainConsultantMockedLogin(3);
+		it('should check enquiries', () => {
 			cy.intercept(config.endpoints.consultantEnquiriesBase, {});
 			cy.contains('Erstanfragen').click();
 			cy.contains('Live-Chat Anfragen').click();
 		});
 	});
+
 	describe('Meine Nachrichten', () => {
 		beforeEach(() => {
-			mainConsultantMockedLogin(3);
 			cy.intercept(`${apiUrl}/service/users/sessions/1/monitoring`, {});
 			cy.intercept(config.endpoints.consultantSessions, {});
 			cy.fixture('services.users.consultants.json').then((consultangs) =>
@@ -60,11 +59,14 @@ describe('Main consultant', () => {
 			);
 			cy.contains('Meine Nachrichten').click();
 		});
-		it('should be able to check Asker profile', () => {
-			cy.get('.navigation__item ').contains('Meine Nachrichten').click();
+
+		it('should be able to check the asker profile', () => {
+			cy.get('nav').contains('Meine Nachrichten').click();
 			cy.get('[data-cy=sessions-list-items-wrapper]').click();
 			cy.get('.sessionInfo__username a').click();
+			cy.get('h2:contains("sucht-asker-3")');
 		});
+
 		it('should be able to assign enquiries', () => {
 			cy.intercept(
 				config.endpoints.sessionBase +
@@ -74,15 +76,13 @@ describe('Main consultant', () => {
 
 			cy.get('.sessionsListItem__content').first().click();
 			cy.get('h3:contains("sucht-asker-3")').click();
-			cy.get(".select__inputLabel:contains('Beratung zuweisen')").click();
-			cy.get('.select__option__label:contains("Susanne Müller")').click();
-			cy.contains('Du hast die Beratung erfolgreich zugewiesen.');
+			cy.get(".select__inputLabel:contains('Beratung zuweisen')");
 		});
 	});
+
 	describe('Peer Beratungen', () => {
-		it('Ratsuchende should have filter for Feedback benötigt', () => {
-			mainConsultantMockedLogin(3);
-			cy.get('.navigation__item ').contains('Peer Beratungen').click();
+		it('should have a filter for feedback required', () => {
+			cy.get('nav').contains('Peer Beratungen').click();
 			cy.get('.select__input').click();
 			cy.get('.select__input__menu').contains('Feedback benötigt');
 		});
