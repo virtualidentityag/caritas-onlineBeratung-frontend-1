@@ -1,0 +1,14 @@
+[
+	{
+		"consultantId": "8c286b12-d6af-419d-9643-fbef9a82db6a",
+		"firstName": "Susanne",
+		"lastName": "Müller",
+		"agencies": null
+	},
+	{
+		"consultantId": "3012cee2-38fd-4c86-bf5f-416388e7e26e",
+		"firstName": "Maximilian",
+		"lastName": "Mustermann",
+		"agencies": null
+	}
+]
