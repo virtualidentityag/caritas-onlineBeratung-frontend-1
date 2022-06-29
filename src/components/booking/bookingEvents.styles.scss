@@ -74,13 +74,14 @@ $imprintHeight: 40px;
 	}
 
 	&__innerWrapper {
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 		padding: 0 $grid-base-two $grid-base-three $grid-base-two;
 		overflow-x: hidden;
+		height: calc(100vh - 200px);
 
 		@include breakpoint($fromLarge) {
+			height: 100%;
 			margin: $grid-base-twelve 0 0 0;
 			height: calc(100vh - #{$doubleNavHeight - #{$imprintHeight}});
 		}
