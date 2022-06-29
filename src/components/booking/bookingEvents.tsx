@@ -101,15 +101,21 @@ export const BookingEvents = () => {
 		});
 	};
 
-	const location = useLocation();
-	const scrollContainer = useRef<HTMLDivElement>();
-
-	useEffect(() => {
-		scrollContainer.current.scrollTo(0, 0);
-	}, [location]);
+	const icsComponent = () => {
+		return (
+			<React.Fragment>
+				<CalendarICSIcon />
+				<Text
+					type="standard"
+					text={translate('message.appointmentSet.addToCalendar')}
+					className="bookingEvents--blue"
+				/>
+			</React.Fragment>
+		);
+	};
 
 	return (
-		<div className="bookingEvents__wrapper" ref={scrollContainer}>
+		<div className="bookingEvents__wrapper">
 			<div className="bookingEvents__header">
 				<Headline
 					text={translate('navigation.booking.events')}
@@ -147,6 +153,9 @@ export const BookingEvents = () => {
 										semanticLevel="5"
 										className="bookingEvents__duration"
 									></Headline>
+									<div className="bookingEvents__ics bookingEvents--flex bookingEvents--pointer">
+										{icsComponent()}
+									</div>
 								</div>
 								<div className="bookingEvents__group bookingEvents__counselorWrap">
 									<Text
@@ -168,15 +177,8 @@ export const BookingEvents = () => {
 									</div>
 								</div>
 								<div className="bookingEvents__group">
-									<div className="bookingEvents__ics bookingEvents--flex bookingEvents--pointer">
-										<CalendarICSIcon />
-										<Text
-											type="standard"
-											text={translate(
-												'message.appointmentSet.addToCalendar'
-											)}
-											className="bookingEvents--blue"
-										/>
+									<div className="bookingEvents__ics--mobile bookingEvents--flex bookingEvents--pointer">
+										{icsComponent()}
 									</div>
 								</div>
 							</div>
