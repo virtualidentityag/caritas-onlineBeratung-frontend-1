@@ -21,12 +21,11 @@ export const Booking = () => {
 
 	return (
 		<Cal
-			calLink="team/team-b"
-			// calLink="andre-soares"
+			calLink="team/team-hamburg"
 			calOrigin={config.urls.calComDevServer}
 			config={{
 				name: userData.userName,
-				email: userData.userName,
+				email: userData.userName + '@email.com',
 				theme: 'light'
 			}}
 		/>

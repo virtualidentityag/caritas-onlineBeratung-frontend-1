@@ -1,20 +1,37 @@
 import { config } from '../resources/scripts/config';
-import { fetchData, FETCH_METHODS } from './fetchData';
+import { FETCH_METHODS, fetchData } from './fetchData';
 
 export const apiAppointmentSuccessfullySet = async (
-	content: string,
+	content: object,
+	sessionId: number,
+	isInitialMessage: boolean,
 	rcGroupId: string
 ): Promise<void> => {
-	const url = config.endpoints.setAppointmentSuccessMessage;
-	const appointmentSuccessfullySetMessage = JSON.stringify({
-		content: content,
+	const appointmentSuccessfullySetMessage = {
+		...content,
 		messageType: 'APPOINTMENT_SET'
-	});
-	const headersData = { rcGroupId: rcGroupId };
-	return fetchData({
-		url: url,
-		headersData: headersData,
-		method: FETCH_METHODS.POST,
-		bodyData: appointmentSuccessfullySetMessage
-	});
+	};
+	if (isInitialMessage) {
+		const url = `${config.endpoints.appointmentBase}/${sessionId}/enquiry/new`;
+		return fetchData({
+			url: url,
+			rcValidation: true,
+			method: FETCH_METHODS.POST,
+			bodyData: JSON.stringify(appointmentSuccessfullySetMessage)
+		});
+	} else {
+		const appointmentSuccessfullySetMessage = JSON.stringify({
+			content: JSON.stringify(content),
+			messageType: 'APPOINTMENT_SET'
+		});
+
+		const url = config.endpoints.setAppointmentSuccessMessage;
+		return fetchData({
+			url: url,
+			headersData: { rcGroupId: rcGroupId },
+			rcValidation: true,
+			method: FETCH_METHODS.POST,
+			bodyData: appointmentSuccessfullySetMessage
+		});
+	}
 };
