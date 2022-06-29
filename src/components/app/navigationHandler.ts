@@ -102,7 +102,7 @@ export const setBookingWrapperActive = () => {
 		?.setAttribute('style', 'display: none');
 	document
 		.querySelector('.contentWrapper__detail')
-		?.setAttribute('style', 'display: block');
+		?.setAttribute('style', 'display: none');
 	document
 		.querySelector('.contentWrapper__profile')
 		?.setAttribute('style', 'display: none');

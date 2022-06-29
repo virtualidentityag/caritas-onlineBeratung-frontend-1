@@ -3,6 +3,7 @@ import absence from './de/absence';
 import anonymous from './de/anonymous';
 import archive from './de/archive';
 import attachments from './de/attachments';
+import booking from './de/booking';
 import chatFlyout from './de/chatFlyout';
 import consultant from './de/consultant';
 import dates from './de/dates';
@@ -37,6 +38,7 @@ const de = {
 	app,
 	archive,
 	attachments,
+	booking,
 	chatFlyout,
 	consultant,
 	dates,
