@@ -132,7 +132,7 @@ export const BookingEvents = () => {
 				<Text
 					type="standard"
 					text={translate('message.appointmentSet.addToCalendar')}
-					className="bookingEvents--blue"
+					className="bookingEvents--primary"
 				/>
 			</div>
 		);
@@ -151,7 +151,7 @@ export const BookingEvents = () => {
 			<div className="bookingEvents__header">
 				<Headline
 					text={translate('navigation.booking.events')}
-					semanticLevel="1"
+					semanticLevel="2"
 					className="bookingEvents__header--title"
 				/>
 				<Button
@@ -256,7 +256,7 @@ export const BookingEvents = () => {
 												  )
 										}
 										type="standard"
-										className="bookingEvents--pointer bookingEvents--blue"
+										className="bookingEvents--pointer bookingEvents--primary"
 									/>
 								</div>
 							</div>
@@ -271,7 +271,7 @@ export const BookingEvents = () => {
 										text={translate(
 											'booking.event.booking.reschedule'
 										)}
-										className="bookingEvents--blue"
+										className="bookingEvents--primary"
 									/>
 								</div>
 								<div
@@ -284,7 +284,7 @@ export const BookingEvents = () => {
 										text={translate(
 											'booking.event.booking.cancel'
 										)}
-										className="bookingEvents--blue"
+										className="bookingEvents--primary"
 									/>
 								</div>
 							</div>
