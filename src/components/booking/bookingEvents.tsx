@@ -91,7 +91,7 @@ export const BookingEvents = () => {
 
 	const handleViewMore = (id: number) => {
 		let newArrayEvents: BookingEventsInterface[] = [];
-		bookingEvents.filter((event) => {
+		bookingEvents.forEach((event) => {
 			if (event.id === id) {
 				newArrayEvents.push({ ...event, expanded: !event.expanded });
 			} else {
