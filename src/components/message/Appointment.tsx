@@ -79,7 +79,7 @@ export const Appointment = (param: { data: string }) => {
 			<Text
 				type="infoSmall"
 				text={translate('message.appointmentSet.confirmation')}
-				className="appointmentSet__confirmation appointmentSet--blue"
+				className="appointmentSet__confirmation appointmentSet--primary"
 			/>
 			<div className="appointmentSet">
 				<div className="appointmentSet--flex">
@@ -110,7 +110,11 @@ export const Appointment = (param: { data: string }) => {
 						className="appointmentSet__video"
 					/>
 				</div>
-				<Text type="standard" text={parsedData.location} />
+				<Text
+					type="standard"
+					className="appointmentSet__summary"
+					text={parsedData.location}
+				/>
 				<div
 					className="appointmentSet--flex appointmentSet--pointer"
 					onClick={handleICSAppointment.bind(this, parsedData)}
@@ -119,7 +123,7 @@ export const Appointment = (param: { data: string }) => {
 					<Text
 						type="standard"
 						text={translate('message.appointmentSet.addToCalendar')}
-						className="appointmentSet__ics appointmentSet--blue"
+						className="appointmentSet__ics appointmentSet--primary"
 					/>
 				</div>
 				<div
@@ -130,7 +134,7 @@ export const Appointment = (param: { data: string }) => {
 					<Text
 						type="standard"
 						text={translate('message.appointmentSet.cancel')}
-						className="appointmentSet__cancel appointmentSet--blue"
+						className="appointmentSet__cancel appointmentSet--primary"
 					/>
 				</div>
 			</div>
