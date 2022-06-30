@@ -33,8 +33,6 @@ $imprintHeight: 40px;
 		}
 
 		@include breakpoint($fromLarge) {
-			position: relative;
-			top: 96px;
 			z-index: 20;
 		}
 	}
@@ -78,13 +76,7 @@ $imprintHeight: 40px;
 		flex-direction: column;
 		padding: 0 $grid-base-two $grid-base-three $grid-base-two;
 		overflow-x: hidden;
-		height: calc(100vh - 200px);
-
-		@include breakpoint($fromLarge) {
-			height: 100%;
-			margin: $grid-base-twelve 0 0 0;
-			height: calc(100vh - #{$doubleNavHeight - #{$imprintHeight}});
-		}
+		height: calc(100vh - #{$doubleNavHeight - #{$imprintHeight}});
 
 		&-event {
 			display: grid;
@@ -218,6 +210,10 @@ $imprintHeight: 40px;
 
 			@include breakpoint($fromLarge) {
 				display: none;
+			}
+
+			p {
+				margin-left: 0.5rem;
 			}
 		}
 	}

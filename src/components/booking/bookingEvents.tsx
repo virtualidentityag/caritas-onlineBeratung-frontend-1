@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { translate } from '../../utils/translate';
 import {
 	setBookingWrapperActive,
@@ -18,7 +18,7 @@ import { ReactComponent as ArrowUpIcon } from '../../resources/img/icons/arrow-u
 import { ReactComponent as ArrowDownIcon } from '../../resources/img/icons/arrow-down.svg';
 import { Text } from '../text/Text';
 import { Box } from '../box/Box';
-import { useLocation } from 'react-router-dom';
+import { downloadICSFile } from '../../utils/downloadICSFile';
 
 interface BookingEventsInterface {
 	id: number;
@@ -91,7 +91,7 @@ export const BookingEvents = () => {
 
 	const handleViewMore = (id: number) => {
 		let newArrayEvents: BookingEventsInterface[] = [];
-		bookingEvents.map((event) => {
+		bookingEvents.filter((event) => {
 			if (event.id === id) {
 				newArrayEvents.push({ ...event, expanded: !event.expanded });
 			} else {
@@ -101,17 +101,49 @@ export const BookingEvents = () => {
 		});
 	};
 
-	const icsComponent = () => {
+	const handleICSAppointment = (appointmentInfo) => {
+		const icsMSG =
+			'BEGIN:VCALENDAR\n' +
+			'VERSION:2.0\n' +
+			'CALSCALE:GREGORIAN\n' +
+			'PRODID:adamgibbons/ics\n' +
+			'METHOD:PUBLISH\n' +
+			'X-PUBLISHED-TTL:PT1H\n' +
+			'BEGIN:VEVENT\n' +
+			'SUMMARY:Team B Event 2 zwischen Team B und Andre Soares\n' +
+			'DTSTART:20220704T080000Z\n' +
+			'DURATION:PT15M\n' +
+			'END:VEVENT\n' +
+			'END:VCALENDAR\n';
+
+		downloadICSFile(
+			'Team B Event 2 zwischen Team B und Andre Soares',
+			icsMSG
+		);
+	};
+
+	const icsComponent = (event: BookingEventsInterface) => {
 		return (
-			<React.Fragment>
+			<div
+				className="bookingEvents--flex"
+				onClick={handleICSAppointment.bind(this, event)}
+			>
 				<CalendarICSIcon />
 				<Text
 					type="standard"
 					text={translate('message.appointmentSet.addToCalendar')}
 					className="bookingEvents--blue"
 				/>
-			</React.Fragment>
+			</div>
 		);
+	};
+
+	const handleCancelAppointment = () => {
+		history.push('/booking/cancelation');
+	};
+
+	const handleRescheduleAppointment = () => {
+		history.push('/booking/reschedule');
 	};
 
 	return (
@@ -154,12 +186,14 @@ export const BookingEvents = () => {
 										className="bookingEvents__duration"
 									></Headline>
 									<div className="bookingEvents__ics bookingEvents--flex bookingEvents--pointer">
-										{icsComponent()}
+										{icsComponent(event)}
 									</div>
 								</div>
 								<div className="bookingEvents__group bookingEvents__counselorWrap">
 									<Text
-										text={'Ihr Berater'}
+										text={translate(
+											'booking.event.your.counselor'
+										)}
 										type="standard"
 										className="bookingEvents__counselor bookingEvents--font-weight-bold"
 									/>
@@ -178,7 +212,7 @@ export const BookingEvents = () => {
 								</div>
 								<div className="bookingEvents__group">
 									<div className="bookingEvents__ics--mobile bookingEvents--flex bookingEvents--pointer">
-										{icsComponent()}
+										{icsComponent(event)}
 									</div>
 								</div>
 							</div>
@@ -188,7 +222,9 @@ export const BookingEvents = () => {
 								}`}
 							>
 								<Text
-									text={'Ihre Nachricht zum Termin'}
+									text={translate(
+										'booking.event.description'
+									)}
 									type="standard"
 									className="bookingEvents--font-weight-bold"
 								/>
@@ -212,8 +248,12 @@ export const BookingEvents = () => {
 									<Text
 										text={
 											event.expanded
-												? 'Weniger anzeigen'
-												: 'Mehr anzeigen'
+												? translate(
+														'booking.event.show.less'
+												  )
+												: translate(
+														'booking.event.show.more'
+												  )
 										}
 										type="standard"
 										className="bookingEvents--pointer bookingEvents--blue"
@@ -221,22 +261,28 @@ export const BookingEvents = () => {
 								</div>
 							</div>
 							<div className="bookingEvents__actions">
-								<div className="bookingEvents--flex bookingEvents--align-items-center bookingEvents--pointer">
+								<div
+									className="bookingEvents--flex bookingEvents--align-items-center bookingEvents--pointer"
+									onClick={handleRescheduleAppointment}
+								>
 									<CalendarRescheduleIcon />
 									<Text
 										type="standard"
 										text={translate(
-											'message.appointmentSet.cancel'
+											'booking.event.booking.reschedule'
 										)}
 										className="bookingEvents--blue"
 									/>
 								</div>
-								<div className="bookingEvents--flex bookingEvents--align-items-center bookingEvents--pointer">
+								<div
+									className="bookingEvents--flex bookingEvents--align-items-center bookingEvents--pointer"
+									onClick={handleCancelAppointment}
+								>
 									<CalendarCancelIcon />
 									<Text
 										type="standard"
 										text={translate(
-											'message.appointmentSet.cancel'
+											'booking.event.booking.cancel'
 										)}
 										className="bookingEvents--blue"
 									/>

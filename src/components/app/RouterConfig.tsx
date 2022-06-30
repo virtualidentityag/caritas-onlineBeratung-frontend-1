@@ -11,6 +11,7 @@ import { GroupChatInfo } from '../groupChat/GroupChatInfo';
 import { Booking } from '../booking/booking';
 import { BookingCancelation } from '../booking/bookingCancelation';
 import { BookingEvents } from '../booking/bookingEvents';
+import { BookingReschedule } from '../booking/bookingReschedule';
 
 export const RouterConfigUser = (): any => {
 	return {
@@ -74,6 +75,10 @@ export const RouterConfigUser = (): any => {
 			{
 				path: '/booking/cancelation',
 				component: BookingCancelation
+			},
+			{
+				path: '/booking/reschedule',
+				component: BookingReschedule
 			},
 			{
 				path: '/booking/events',
@@ -184,6 +189,10 @@ export const RouterConfigConsultant = (): any => {
 			{
 				path: '/booking/cancelation',
 				component: BookingCancelation
+			},
+			{
+				path: '/booking/reschedule',
+				component: BookingReschedule
 			},
 			{
 				path: '/booking/events',
@@ -329,6 +338,10 @@ export const RouterConfigTeamConsultant = (): any => {
 			{
 				path: '/booking/cancelation',
 				component: BookingCancelation
+			},
+			{
+				path: '/booking/reschedule',
+				component: BookingReschedule
 			},
 			{
 				path: '/booking/events',
