@@ -8,7 +8,7 @@ interface StepsData {
 }
 
 // images, etc. can be included via "<div className="hasBackgroundImage"><div>My Text</div> in the intro section
-const stepsDataNoAgency: StepsData[] = [
+const stepsNoTeamAgency: StepsData[] = [
 	{
 		title: translate('walkthrough.step.0.title'),
 		intro: translate('walkthrough.step.0')
@@ -45,4 +45,4 @@ const stepsDataNoAgency: StepsData[] = [
 	}
 ];
 
-export default stepsDataNoAgency;
+export default stepsNoTeamAgency;
