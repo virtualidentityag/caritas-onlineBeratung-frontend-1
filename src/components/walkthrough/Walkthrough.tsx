@@ -11,6 +11,7 @@ import { apiPatchConsultantData } from '../../api';
 import { config } from '../../resources/scripts/config';
 
 import stepsData from './steps';
+import stepsDataNoAgency from './stepsNoAgency';
 
 export const Walkthrough = () => {
 	const ref = useRef<any>();
@@ -28,6 +29,8 @@ export const Walkthrough = () => {
 			}
 		});
 	}, [ref]);
+
+	const hasAgency = false; // mocked bool
 
 	return (
 		<Steps
@@ -51,7 +54,7 @@ export const Walkthrough = () => {
 						// don't know what to do then :O)
 					});
 			}}
-			steps={stepsData}
+			steps={!hasAgency ? stepsDataNoAgency : stepsData}
 			initialStep={0}
 			options={{
 				hidePrev: true,
