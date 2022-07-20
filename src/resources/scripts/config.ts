@@ -17,7 +17,7 @@ export const APP_PATH = 'app';
 export const config = {
 	enableTenantTheming: false, // Feature flag to enable tenant theming based on subdomains
 	enableWalkthrough: true, // Feature flag to enable walkthrough (false by default here & true in the theme repo)
-	enableVideoAppointments: false, // Feature flag to enable Video-Termine page
+	enableVideoAppointments: true, // Feature flag to enable Video-Termine page
 
 	endpoints: {
 		agencyConsultants: apiUrl + '/service/users/consultants',
