@@ -29,7 +29,9 @@ export const Walkthrough = () => {
 		});
 	}, [ref]);
 
-	const hasTeamAgency = userData.agencies.some((agency) => agency.teamAgency);
+	const hasTeamAgency = userData.agencies?.some(
+		(agency) => agency.teamAgency
+	);
 	const stepsData = steps({ hasTeamAgency });
 
 	return (
