@@ -11,7 +11,6 @@ import { apiPatchConsultantData } from '../../api';
 import { config } from '../../resources/scripts/config';
 
 import steps from './steps';
-import stepsNoTeamAgency from './stepsNoTeamAgency';
 
 export const Walkthrough = () => {
 	const ref = useRef<any>();
@@ -19,7 +18,6 @@ export const Walkthrough = () => {
 	const history = useHistory();
 
 	const onChangeStep = useCallback(() => {
-		console.log('REF CURRENT: ', ref.current);
 		ref.current.props.steps.forEach((step, key) => {
 			if (step.element) {
 				ref.current.introJs._introItems[key].element =
@@ -32,14 +30,8 @@ export const Walkthrough = () => {
 	}, [ref]);
 
 	const hasTeamAgency = userData.agencies.some((agency) => agency.teamAgency);
-	console.log('steps', steps({ hasTeamAgency }));
 	const stepsData = steps({ hasTeamAgency });
-	console.log(
-		'TOGGLES: ',
-		userData.isWalkThroughEnabled,
-		config.enableWalkthrough,
-		!userData.twoFactorAuth.isShown
-	);
+
 	return (
 		<Steps
 			ref={ref}
@@ -75,10 +67,6 @@ export const Walkthrough = () => {
 			}}
 			onBeforeChange={(nextStepIndex) => {
 				if (stepsData[nextStepIndex].path) {
-					console.log(
-						'stepsData PATH: ',
-						stepsData[nextStepIndex].path
-					);
 					history.push(stepsData[nextStepIndex].path);
 					onChangeStep();
 				}

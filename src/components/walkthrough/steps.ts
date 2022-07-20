@@ -12,6 +12,9 @@ interface StepsFeatureFlag {
 }
 
 // images, etc. can be included via "<div className="hasBackgroundImage"><div>My Text</div> in the intro section
+
+// future fix: when BS has not Team-Beratung enabled, the step back from 6 to 4 does not
+// highlight properly the element (sessions tab archive)
 const steps = ({ hasTeamAgency }: StepsFeatureFlag): StepsData[] =>
 	[
 		{
@@ -59,7 +62,7 @@ const steps = ({ hasTeamAgency }: StepsFeatureFlag): StepsData[] =>
 		.map((step, i) => {
 			return {
 				...step,
-				element: '.walkthrough_step_' + i
+				element: step.element ? '.walkthrough_step_' + i : step.element
 			};
 		});
 
