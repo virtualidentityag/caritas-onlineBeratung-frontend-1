@@ -32,8 +32,7 @@ export const config = {
 		appointmentServiceMeetingLink: (agencyId: number) =>
 			apiUrl +
 			`/service/appointservice/agencies/${agencyId}/initialMeetingSlugReal`,
-		//TODO Andre: rename it. consider that you have to change it also in the frontend-theme project
-		appointmentServiceEventTypes: (userId: string) =>
+		counselorAppointmentLink: (userId: string) =>
 			apiUrl +
 			`/service/appointservice/consultants/${userId}/meetingSlug`,
 		appointmentsServiceBase: apiUrl + '/service/appointments',
