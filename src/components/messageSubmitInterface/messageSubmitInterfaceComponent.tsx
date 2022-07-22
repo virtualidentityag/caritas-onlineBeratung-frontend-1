@@ -13,12 +13,12 @@ import {
 } from '../../globalState/helpers/stateHelpers';
 import {
 	E2EEContext,
+	SessionsDataContext,
 	SessionTypeContext,
 	STATUS_ARCHIVED,
 	STATUS_FINISHED
 } from '../../globalState';
 import {
-	apiGetAskerSessionList,
 	apiGetDraftMessage,
 	apiPostDraftMessage,
 	apiPutDearchive,
@@ -41,7 +41,7 @@ import {
 	isXLSXAttachment
 } from './attachmentHelpers';
 import { TypingIndicator } from '../typingIndicator/typingIndicator';
-import PluginsEditor from 'draft-js-plugins-editor';
+import PluginsEditor from '@draft-js-plugins/editor';
 import {
 	convertFromRaw,
 	convertToRaw,
@@ -50,14 +50,14 @@ import {
 	RichUtils
 } from 'draft-js';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import createToolbarPlugin from 'draft-js-static-toolbar-plugin';
+import createLinkifyPlugin from '@draft-js-plugins/linkify';
+import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import {
 	BoldButton,
 	ItalicButton,
 	UnorderedListButton
-} from 'draft-js-buttons';
-import createEmojiPlugin from 'draft-js-emoji-plugin';
+} from '@draft-js-plugins/buttons';
+import createEmojiPlugin from '@draft-js-plugins/emoji';
 import {
 	emojiPickerCustomClasses,
 	escapeMarkdownChars,
@@ -84,7 +84,6 @@ import { mobileListView } from '../app/navigationHandler';
 import { ActiveSessionContext } from '../../globalState/provider/ActiveSessionProvider';
 import { Button, ButtonItem, BUTTON_TYPES } from '../button/Button';
 import { Headline } from '../headline/Headline';
-import { useParams } from 'react-router-dom';
 import { decryptText, encryptText } from '../../utils/encryptionHelpers';
 import { e2eeParams, useE2EE } from '../../hooks/useE2EE';
 import { encryptRoom } from '../../utils/e2eeHelper';
@@ -182,7 +181,7 @@ export const MessageSubmitInterfaceComponent = (
 	const [placeholder, setPlaceholder] = useState(props.placeholder);
 	const { activeSession } = useContext(ActiveSessionContext);
 	const { type, path: listPath } = useContext(SessionTypeContext);
-
+	const { sessions } = useContext(SessionsDataContext);
 	const [activeInfo, setActiveInfo] = useState(null);
 	const [draftLoaded, setDraftLoaded] = useState(false);
 	const [attachmentSelected, setAttachmentSelected] = useState<File | null>(
@@ -282,7 +281,7 @@ export const MessageSubmitInterfaceComponent = (
 	}, [isConsultantAbsent, isLiveChatFinished, isSessionArchived, userData]);
 
 	useEffect(() => {
-		apiGetDraftMessage(groupIdOrSessionId)
+		apiGetDraftMessage(activeSession.rid)
 			.then((response) => {
 				if (isE2eeEnabled) {
 					return decryptText(
@@ -318,7 +317,7 @@ export const MessageSubmitInterfaceComponent = (
 					requestFeedbackCheckboxCallback &&
 					requestFeedbackCheckboxCallback.checked
 						? activeSession.item.feedbackGroupId
-						: groupIdOrSessionId;
+						: activeSession.rid;
 
 				if (isE2eeEnabled && props.E2EEParams.encrypted) {
 					encryptText(
@@ -361,7 +360,8 @@ export const MessageSubmitInterfaceComponent = (
 			const groupId =
 				requestFeedbackCheckbox && requestFeedbackCheckbox.checked
 					? activeSession.item.feedbackGroupId
-					: groupIdOrSessionId;
+					: activeSession.rid;
+
 			if (isE2eeEnabled && props.E2EEParams.encrypted) {
 				encryptText(
 					debouncedDraftMessage,
@@ -474,13 +474,10 @@ export const MessageSubmitInterfaceComponent = (
 			hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData) ||
 			hasUserAuthority(AUTHORITIES.ANONYMOUS_DEFAULT, userData)
 		) {
-			apiGetAskerSessionList().then((response) => {
-				const { appointmentFeatureEnabled } = userData;
-				const { consultant } = response.sessions[0];
-				if (!consultant) {
-					setShowAppointmentButton(appointmentFeatureEnabled);
-				}
-			});
+			const { appointmentFeatureEnabled } = userData;
+			if (!sessions[0].consultant) {
+				setShowAppointmentButton(appointmentFeatureEnabled);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -921,13 +918,12 @@ export const MessageSubmitInterfaceComponent = (
 		return infoData;
 	};
 
-	let { rcGroupId, sessionId } = useParams();
 	const handleBookingButton = () => {
 		history.push({
-			pathname: '/booking',
+			pathname: '/booking/',
 			state: {
-				rcGroupId: rcGroupId,
-				sessionId: sessionId
+				sessionId: activeSession.item.id,
+				isInitialMessage: true
 			}
 		});
 	};

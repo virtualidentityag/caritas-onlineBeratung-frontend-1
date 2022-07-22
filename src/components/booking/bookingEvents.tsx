@@ -23,10 +23,7 @@ import {
 } from '../../globalState';
 import { BookingEventsInterface } from '../../globalState/interfaces/BookingDataInterface';
 import { apiGetConsultantAppointments } from '../../api/apiGetConsultantAppointments';
-import {
-	apiAppointmentsServiceBookingEventsByAskerId,
-	apiGetAskerSessionList
-} from '../../api';
+import { apiAppointmentsServiceBookingEventsByAskerId } from '../../api';
 import { BookingDescription } from './bookingDescription';
 import { DownloadICSFile } from '../downloadICSFile/downloadICSFile';
 import { addMissingZero } from '../../utils/dateHelpers';
@@ -87,8 +84,7 @@ export const BookingEvents = () => {
 	}, []);
 
 	const { userData } = useContext(UserDataContext);
-	const sessionsContext = useContext(SessionsDataContext);
-	const { sessions, setSessions } = sessionsContext;
+	const { sessions } = useContext(SessionsDataContext);
 
 	const isConsultant = hasUserAuthority(
 		AUTHORITIES.CONSULTANT_DEFAULT,
@@ -141,9 +137,8 @@ export const BookingEvents = () => {
 								className="bookingEvents__innerWrapper-no-bookings-text"
 								text={`${translate(
 									'booking.my.booking.schedule'
-								)} <b>${
-									sessions?.mySessions[0].consultant.username
-								}</b>:`}
+								)} <b>
+								${sessions?.[0]?.consultant?.username}</b>:`}
 								type="standard"
 							/>
 							<Button
@@ -169,11 +164,6 @@ export const BookingEvents = () => {
 					transformData(bookings);
 				}
 			);
-			apiGetAskerSessionList().then((response) => {
-				setSessions({
-					mySessions: response.sessions
-				});
-			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

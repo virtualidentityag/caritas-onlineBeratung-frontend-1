@@ -18,7 +18,7 @@ export const config = {
 	useTenantService: false,
 	enableTenantTheming: false, // Feature flag to enable tenant theming based on subdomains
 	enableWalkthrough: false, // Feature flag to enable walkthrough (false by default here & true in the theme repo)
-	enableVideoAppointments: true, // Feature flag to enable Video-Termine page
+	disableVideoAppointments: false, // Feature flag to enable Video-Termine page
 
 	endpoints: {
 		agencyConsultants: apiUrl + '/service/users/consultants',
@@ -60,6 +60,7 @@ export const config = {
 		error: apiUrl + '/service/logstash',
 		forwardMessage: apiUrl + '/service/messages/forward',
 		groupChatBase: apiUrl + '/service/users/chat/',
+		//TODO: fix this before merging back to open source
 		keycloakAccessToken:
 			apiUrl +
 			'/auth/realms/caritas-online-beratung/protocol/openid-connect/token',
@@ -155,7 +156,7 @@ export const config = {
 		registration: uiUrl + '/registration',
 		toEntry: uiUrl + '/',
 		toLogin: uiUrl + '/login',
-		toRegistration: uiUrl + '/beratung/registration',
+		toRegistration: 'https://www.caritas.de/onlineberatung',
 		videoConference: '/videoberatung/:type/:appointmentId'
 	},
 	postcodeFallbackUrl: '{url}',

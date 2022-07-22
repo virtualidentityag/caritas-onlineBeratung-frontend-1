@@ -15,6 +15,7 @@ import {
 	hasUserAuthority,
 	LegalLinkInterface,
 	RocketChatContext,
+	SessionsDataContext,
 	SessionTypeContext,
 	STATUS_FINISHED,
 	useConsultingType,
@@ -39,7 +40,6 @@ import {
 } from './sessionMenuHelpers';
 import {
 	apiFinishAnonymousConversation,
-	apiGetAskerSessionList,
 	apiPutArchive,
 	apiPutDearchive,
 	apiPutGroupChat,
@@ -87,6 +87,7 @@ export const SessionMenu = (props: SessionMenuProps) => {
 	const { userData } = useContext(UserDataContext);
 	const { type, path: listPath } = useContext(SessionTypeContext);
 	const { close: closeWebsocket } = useContext(RocketChatContext);
+	const { sessions } = useContext(SessionsDataContext);
 
 	const { activeSession, reloadActiveSession } =
 		useContext(ActiveSessionContext);
@@ -138,33 +139,30 @@ export const SessionMenu = (props: SessionMenuProps) => {
 				});
 			});
 		}
-		if (!activeSession.item?.active || !activeSession.item?.subscribed) {
-			// do not get group members for a chat that has not been started and user is not subscribed
-			return;
-		}
 		if (
 			hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData) ||
 			hasUserAuthority(AUTHORITIES.ANONYMOUS_DEFAULT, userData)
 		) {
-			apiGetAskerSessionList().then((response) => {
-				const { consultant } = response.sessions[0];
-				if (!consultant) {
-					setConsultant(true);
-				}
-			});
+			const { consultant } = sessions[0];
+			if (!consultant) {
+				setConsultant(true);
+			}
 
 			const { appointmentFeatureEnabled } = userData;
 			setAppointmentFeatureEnabled(appointmentFeatureEnabled);
 		}
-	}, [groupIdFromParam, handleClick, activeSession]);
+		if (!activeSession.item?.active || !activeSession.item?.subscribed) {
+			// do not get group members for a chat that has not been started and user is not subscribed
+			return;
+		}
+	}, [groupIdFromParam, handleClick, activeSession]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	let { rcGroupId, sessionId } = useParams();
 	const handleBookingButton = () => {
 		history.push({
-			pathname: '/booking',
+			pathname: '/booking/',
 			state: {
-				rcGroupId: rcGroupId,
-				sessionId: sessionId
+				sessionId: activeSession.item.id,
+				isInitialMessage: false
 			}
 		});
 	};
@@ -269,7 +267,6 @@ export const SessionMenu = (props: SessionMenuProps) => {
 				});
 		} else if (buttonFunction === OVERLAY_FUNCTIONS.REDIRECT) {
 			setRedirectToSessionsList(true);
-			//setUpdateSessionList(true);
 		} else if (buttonFunction === OVERLAY_FUNCTIONS.LOGOUT) {
 			logout();
 		} else if (

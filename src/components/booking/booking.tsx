@@ -32,25 +32,19 @@ export const Booking = () => {
 		};
 	}, []);
 
-	const assignedConsultant = sessions?.mySessions?.[0].consultant;
-
-	const setCounselorLink = () => {
-		getCounselorAppointmentLink(assignedConsultant.consultantId).then(
-			(response) => {
-				setAppointmentLink(response.slug);
-			}
-		);
-	};
-
-	const setTeamLink = () => {
-		const agencyId = sessions?.mySessions?.[0]?.agency?.id;
-		getTeamAppointmentLink(agencyId).then((response) => {
-			setAppointmentLink(`team/${response.slug}`);
-		});
-	};
-
 	useEffect(() => {
-		assignedConsultant ? setCounselorLink() : setTeamLink();
+		const consultant = sessions[0]?.consultant;
+		const agencyId = sessions[0]?.agency?.id;
+		if (consultant) {
+			const consultantId = consultant?.consultantId || consultant?.id;
+			getCounselorAppointmentLink(consultantId).then((response) => {
+				setAppointmentLink(response.slug);
+			});
+		} else if (agencyId) {
+			getTeamAppointmentLink(agencyId).then((response) => {
+				setAppointmentLink(`team/${response.slug}`);
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

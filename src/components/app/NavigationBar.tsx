@@ -7,19 +7,17 @@ import {
 	hasUserAuthority,
 	AUTHORITIES,
 	ConsultingTypesContext,
-	SessionsDataContext
+	SessionsDataContext,
+	SET_SESSIONS
 } from '../../globalState';
 import { initNavigationHandler } from './navigationHandler';
-import { ReactComponent as InboxIcon } from '../../resources/img/icons/inbox.svg';
-import { ReactComponent as SpeechBubbleIcon } from '../../resources/img/icons/speech-bubble.svg';
-import { ReactComponent as SpeechBubbleTeamIcon } from '../../resources/img/icons/speech-bubble-team.svg';
-import { ReactComponent as PersonIcon } from '../../resources/img/icons/person.svg';
 import { ReactComponent as LogoutIcon } from '../../resources/img/icons/out.svg';
-import { ReactComponent as CalendarIcon } from '../../resources/img/icons/calendar2.svg';
-import { ReactComponent as CalendarMonthIcon } from '../../resources/img/icons/calendar-month-navigation.svg';
 import clsx from 'clsx';
 import { RocketChatUnreadContext } from '../../globalState/provider/RocketChatUnreadProvider';
-import { apiFinishAnonymousConversation } from '../../api';
+import {
+	apiFinishAnonymousConversation,
+	apiGetAskerSessionList
+} from '../../api';
 
 export interface NavigationBarProps {
 	onLogout: any;
@@ -32,10 +30,12 @@ export const NavigationBar = ({
 }: NavigationBarProps) => {
 	const { userData } = useContext(UserDataContext);
 	const { consultingTypes } = useContext(ConsultingTypesContext);
-	const { sessions } = useContext(SessionsDataContext);
-
-	const sessionId = sessions?.[0]?.session?.id;
-
+	const { sessions, dispatch } = useContext(SessionsDataContext);
+	const [sessionId, setSessionId] = useState(null);
+	const isConsultant = hasUserAuthority(
+		AUTHORITIES.CONSULTANT_DEFAULT,
+		userData
+	);
 	const {
 		sessions: unreadSessions,
 		group: unreadGroup,
@@ -57,6 +57,19 @@ export const NavigationBar = ({
 	useEffect(() => {
 		initNavigationHandler();
 	}, []);
+
+	useEffect(() => {
+		if (!isConsultant) {
+			apiGetAskerSessionList().then((sessionsData) => {
+				dispatch({
+					type: SET_SESSIONS,
+					ready: true,
+					sessions: sessionsData.sessions
+				});
+				setSessionId(sessionsData?.sessions?.[0]?.session?.id);
+			});
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const animateNavIconTimeoutRef = useRef(null);
 	useEffect(() => {
@@ -102,72 +115,56 @@ export const NavigationBar = ({
 	return (
 		<div className="navigation__wrapper">
 			<div className="navigation__itemContainer">
-				{routerConfig.navigation
-					.filter(
-						(item: any) =>
-							!item.condition ||
-							item.condition(userData, consultingTypes, sessions)
-					)
-					.map((item, index) => (
-						<Link
-							key={index}
-							className={`navigation__item ${resolveClassnameForWalkthrough(
-								index
-							)} ${
-								location.pathname.indexOf(item.to) !== -1 &&
-								'navigation__item--active'
-							} ${
-								animateNavIcon &&
-								Object.keys(
+				{sessions &&
+					routerConfig.navigation
+						.filter(
+							(item: any) =>
+								!item.condition ||
+								item.condition(
+									userData,
+									consultingTypes,
+									sessions
+								)
+						)
+						.map((item, index) => (
+							<Link
+								key={index}
+								className={`navigation__item ${resolveClassnameForWalkthrough(
+									index
+								)} ${
+									location.pathname.indexOf(item.to) !== -1 &&
+									'navigation__item--active'
+								} ${
+									animateNavIcon &&
+									Object.keys(
+										pathsToShowUnreadMessageNotification
+									).includes(item.to) &&
+									'navigation__item__count--active'
+								}`}
+								to={item.to}
+							>
+								{item?.icon}
+								{(({ large }) => {
+									return (
+										<>
+											<span className="navigation__title">
+												{translate(large)}
+											</span>
+										</>
+									);
+								})(item.titleKeys)}
+								{Object.keys(
 									pathsToShowUnreadMessageNotification
 								).includes(item.to) &&
-								'navigation__item__count--active'
-							}`}
-							to={item.to}
-						>
-							{
-								{
-									'inbox': (
-										<InboxIcon className="navigation__icon" />
-									),
-									'speech-bubbles': (
-										<SpeechBubbleIcon className="navigation__icon" />
-									),
-									'speech-bubbles-team': (
-										<SpeechBubbleTeamIcon className="navigation__icon" />
-									),
-									'person': (
-										<PersonIcon className="navigation__icon" />
-									),
-									'calendar': (
-										<CalendarIcon className="navigation__icon" />
-									),
-									'booking-events': (
-										<CalendarMonthIcon className="navigation__icon" />
-									)
-								}[item.icon]
-							}
-							{item?.icon}
-							{(({ large }) => {
-								return (
-									<>
-										<span className="navigation__title">
-											{translate(large)}
-										</span>
-									</>
-								);
-							})(item.titleKeys)}
-							{Object.keys(
-								pathsToShowUnreadMessageNotification
-							).includes(item.to) &&
-								pathsToShowUnreadMessageNotification[item.to] >
-									0 && (
-									<NavigationUnreadIndicator
-										animate={animateNavIcon}
-									/>
-								)}
-						</Link>
-					))}
+									pathsToShowUnreadMessageNotification[
+										item.to
+									] > 0 && (
+										<NavigationUnreadIndicator
+											animate={animateNavIcon}
+										/>
+									)}
+							</Link>
+						))}
 				<div
 					onClick={handleLogout}
 					className={clsx(
