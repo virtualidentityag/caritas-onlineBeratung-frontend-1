@@ -1,10 +1,10 @@
 {
-	"name": "@virtualidentityag/vi-saas-frontend",
+	"name": "@onlineberatung/onlineberatung-frontend",
 	"title": "Online-Beratung",
 	"version": "2.9.14",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/virtualidentityag/vi-saas-frontend.git"
+		"url": "https://github.com/onlineberatung/onlineberatung-frontend.git"
 	},
 	"main": "index.ts",
 	"bin": "cli.js",
