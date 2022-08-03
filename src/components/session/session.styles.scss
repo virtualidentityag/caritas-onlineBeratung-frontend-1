@@ -132,12 +132,12 @@ $session-scroll-to-bottom-color-hover: #545454;
 		}
 
 		.button {
-			&__smallIcon {
+			&__smallIcon,
+			&__smallIcon--alternate {
 				background-color: $session-scroll-to-bottom-color;
 				&:hover {
 					background-color: $session-scroll-to-bottom-color-hover;
 				}
-
 				svg {
 					fill: $white;
 				}
