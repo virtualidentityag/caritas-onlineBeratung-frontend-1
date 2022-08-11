@@ -16,7 +16,7 @@ const groupChat = {
 	'create.durationSelect.option5': '2,5 Stunden',
 	'create.durationSelect.option6': '3 Stunden',
 	'create.repetitiveCheckbox.label': 'wöchentlich wiederholen',
-	'create.button.label': 'Chat anlegen',
+	'create.button.label': 'Chat erstellen',
 	'create.listItem.label': 'Neuer Chat',
 	'createSuccess.overlayHeadline':
 		'Sie haben erfolgreich einen Chat angelegt.',

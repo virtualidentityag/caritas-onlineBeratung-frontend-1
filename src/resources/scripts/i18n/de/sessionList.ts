@@ -20,7 +20,7 @@ const sessionList = {
 	'filter.option.feedbackPeer': 'Feedback vorhanden',
 	'user.peer': 'Peer',
 	'reloadButton.label': 'Erneut laden',
-	'createChat.buttonTitle': 'Chat anlegen',
+	'createChat.buttonTitle': 'Chat erstellen',
 	'time.label.postfix': 'Uhr'
 };
 
