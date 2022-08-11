@@ -45,18 +45,20 @@ export const StageLayout = ({
 										text=" | "
 									/>
 								)}
-								<a
-									key={legalLink.url}
-									href={legalLink.url}
-									target="_blank"
-									rel="noreferrer"
+								<button
+									type="button"
+									className="button-as-link"
+									data-cy-link={legalLink.url}
+									onClick={() =>
+										window.open(legalLink.url, '_blank')
+									}
 								>
 									<Text
 										className="stageLayout__legalLinksItem"
 										type="infoSmall"
 										text={legalLink.label}
 									/>
-								</a>
+								</button>
 							</React.Fragment>
 						))}
 					</div>

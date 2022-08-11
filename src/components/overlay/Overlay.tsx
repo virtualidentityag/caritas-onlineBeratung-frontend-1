@@ -151,11 +151,13 @@ export const Overlay = (props: {
 			>
 				<div className="overlay__background"></div>
 				<div className="overlay__wrapper">
-					<div className="overlay__content">
+					<div className="overlay__content" tabIndex={0}>
 						{props.handleOverlayClose && (
 							<XIcon
 								className="overlay__closeIcon"
 								onClick={(e) => props.handleOverlayClose(e)}
+								onKeyPress={(e) => props.handleOverlayClose(e)}
+								tabIndex={0}
 							/>
 						)}
 						{props.items?.some((item) => item.step) && (
