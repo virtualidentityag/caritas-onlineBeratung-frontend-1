@@ -317,7 +317,7 @@ export const RegistrationForm = ({
 					<span>
 						<button
 							type="button"
-							className="button-as-link"
+							className="button-as-link-registration"
 							onClick={() =>
 								window.open(
 									`${window.location.host}/datenschutz`
