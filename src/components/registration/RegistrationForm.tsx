@@ -320,7 +320,7 @@ export const RegistrationForm = ({
 							className="button-as-link-registration"
 							onClick={() =>
 								window.open(
-									`${window.location.host}/datenschutz`
+									`${window.location.origin}/datenschutz`
 								)
 							}
 						>
