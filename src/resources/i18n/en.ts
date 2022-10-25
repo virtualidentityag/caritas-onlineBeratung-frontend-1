@@ -1620,7 +1620,7 @@ export const en = {
 			label: {
 				prefix: 'I agree to the validity of the ',
 				and: ' and ',
-				suffix: ''
+				suffix: '.'
 			}
 		},
 		'submitButton.label': 'Register',
