@@ -1495,6 +1495,10 @@ export const en = {
 		'headline': 'Registration',
 		'overline': 'Welcome to online consulting',
 		'title.start': 'Registration',
+		'tsys.prefix':
+			'The processing of your personal data is carried out as described in this ',
+		'tsys.button': 'Privacy policy',
+		'tsys.sufix': ' described',
 		'form.title': 'Complete registration',
 		'login': {
 			helper: 'Already registered?',

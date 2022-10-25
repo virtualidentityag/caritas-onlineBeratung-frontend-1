@@ -1638,6 +1638,10 @@ export const de = {
 		'teaser.consultant':
 			'Bitte registrieren Sie sich, um mit Ihrer Beraterin / Ihrem Berater in Kontakt zu kommen',
 		'title.start': 'Registrierung',
+		'tsys.prefix':
+			'Die Verarbeitung Ihrer personenbezogenen Daten erfolgt wie in dieser ',
+		'tsys.button': 'Datenschutzerklärung',
+		'tsys.sufix': ' beschrieben',
 		'user': {
 			label: 'Benutzername',
 			infoText:

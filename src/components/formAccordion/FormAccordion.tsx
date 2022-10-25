@@ -444,8 +444,7 @@ export const FormAccordion = ({
 					/>
 				</div>
 				<p>
-					Die Verarbeitung Ihrer personenbezogenen Daten erfolgt wie
-					in dieser{' '}
+					{translate('registration.tsys.prefix')}
 					<span>
 						<button
 							type="button"
@@ -456,10 +455,10 @@ export const FormAccordion = ({
 								)
 							}
 						>
-							Datenschutzerklärung
+							{translate('registration.tsys.button')}
 						</button>
-					</span>{' '}
-					beschrieben
+					</span>
+					{translate('registration.tsys.sufix')}
 				</p>
 				<Button
 					className="registrationForm__submit"
