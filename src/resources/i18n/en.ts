@@ -1498,7 +1498,7 @@ export const en = {
 		'tsys.prefix':
 			'The processing of your personal data is carried out as described in this ',
 		'tsys.button': 'Privacy policy',
-		'tsys.sufix': ' described',
+		'tsys.sufix': '',
 		'form.title': 'Complete registration',
 		'login': {
 			helper: 'Already registered?',
