@@ -443,7 +443,24 @@ export const FormAccordion = ({
 						}}
 					/>
 				</div>
-
+				<p>
+					Die Verarbeitung Ihrer personenbezogenen Daten erfolgt wie
+					in dieser{' '}
+					<span>
+						<button
+							type="button"
+							className="button-as-link-registration"
+							onClick={() =>
+								window.open(
+									`${window.location.origin}/datenschutz`
+								)
+							}
+						>
+							Datenschutzerklärung
+						</button>
+					</span>{' '}
+					beschrieben
+				</p>
 				<Button
 					className="registrationForm__submit"
 					item={buttonItemSubmit}
