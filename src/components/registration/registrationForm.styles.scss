@@ -23,6 +23,10 @@ $registration-form-headline-margin-bottom: 24px;
 			line-height: $line-height-primary;
 		}
 
+		.checkbox__wrapper {
+			justify-content: start;
+		}
+
 		.button-as-link {
 			border: none;
 			background: none;
