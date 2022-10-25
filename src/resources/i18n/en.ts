@@ -1496,8 +1496,8 @@ export const en = {
 		'overline': 'Welcome to online consulting',
 		'title.start': 'Registration',
 		'tsys.prefix':
-			'The processing of your personal data is carried out as described in this ',
-		'tsys.button': 'Privacy policy',
+			'Your personal data will be processed as described in this ',
+		'tsys.button': 'Privacy policy.',
 		'tsys.sufix': '',
 		'form.title': 'Complete registration',
 		'login': {
@@ -1618,9 +1618,9 @@ export const en = {
 		},
 		'dataProtection': {
 			label: {
-				prefix: 'I have the ',
+				prefix: 'I agree to the validity of the ',
 				and: ' and ',
-				suffix: ' noted. For authentication and navigation, this website uses cookies. I agree with this.'
+				suffix: '.'
 			}
 		},
 		'submitButton.label': 'Register',
