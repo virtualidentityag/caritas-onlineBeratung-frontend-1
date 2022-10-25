@@ -217,7 +217,7 @@ export const FormAccordion = ({
 				)
 				.join(''),
 			translate('registration.dataProtection.label.suffix')
-		].join(' ')
+		].join('')
 	};
 
 	if (topicsAreRequired) {
