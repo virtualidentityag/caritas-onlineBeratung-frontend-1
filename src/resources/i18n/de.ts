@@ -1641,7 +1641,7 @@ export const de = {
 		'tsys.prefix':
 			'Die Verarbeitung Ihrer personenbezogenen Daten erfolgt wie in dieser ',
 		'tsys.button': 'Datenschutzerklärung',
-		'tsys.sufix': ' beschrieben',
+		'tsys.sufix': ' beschrieben.',
 		'user': {
 			label: 'Benutzername',
 			infoText:
