@@ -20,7 +20,6 @@ import { EnableWalkthrough } from './EnableWalkthrough';
 import { Help } from '../help/Help';
 import { ConsultantNotifications } from './ConsultantNotifications';
 import { COLUMN_LEFT, COLUMN_RIGHT, TabsType } from '../../utils/tabsHelper';
-import { Locale } from './Locale';
 import { isDesktop } from 'react-device-detect';
 import { OverviewBookings } from './OverviewMobile/Bookings';
 import { OverviewSessions } from './OverviewMobile/Sessions';
@@ -206,17 +205,6 @@ const profileRoutes = (settings: AppConfigInterface): TabsType => [
 								userData
 							),
 						component: ConsultantNotifications,
-						column: COLUMN_RIGHT,
-						order: 1
-					}
-				]
-			},
-			{
-				title: 'profile.routes.display',
-				url: '/anzeige',
-				elements: [
-					{
-						component: Locale,
 						column: COLUMN_RIGHT,
 						order: 1
 					}
