@@ -17,7 +17,6 @@ import { PasswordReset } from '../passwordReset/PasswordReset';
 import { TwoFactorAuth } from '../twoFactorAuth/TwoFactorAuth';
 import { DeleteAccount } from './DeleteAccount';
 import { EnableWalkthrough } from './EnableWalkthrough';
-import { Help } from '../help/Help';
 import { ConsultantNotifications } from './ConsultantNotifications';
 import { COLUMN_LEFT, COLUMN_RIGHT, TabsType } from '../../utils/tabsHelper';
 import { isDesktop } from 'react-device-detect';
@@ -217,22 +216,6 @@ const profileRoutes = (settings: AppConfigInterface): TabsType => [
 				boxed: false,
 				order: 99,
 				fullWidth: true
-			}
-		]
-	},
-	{
-		title: 'profile.routes.help.title',
-		url: '/hilfe',
-		elements: [
-			{
-				title: 'profile.routes.help.videoCall',
-				url: '/videoCall',
-				elements: [
-					{
-						component: Help,
-						column: COLUMN_LEFT
-					}
-				]
 			}
 		]
 	}
