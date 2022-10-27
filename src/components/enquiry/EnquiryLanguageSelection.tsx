@@ -56,17 +56,7 @@ export const EnquiryLanguageSelection: React.FC<EnquiryLanguageSelectionProps> =
 				}
 				setLanguages(sortedLanguages);
 			});
-		}, [
-			sessions,
-			ready,
-			sessionIdFromParam,
-			fixedLanguages,
-			translate,
-			settings?.multitenancyWithSingleDomainEnabled,
-			locale,
-			onSelect,
-			languages
-		]);
+		}, [locale, onSelect, ready, sessionIdFromParam, sessions]);
 
 		const mapLanguages = (isoCode) => (
 			<span
