@@ -1,10 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiAgencyLanguages } from '../../api/apiAgencyLanguages';
 import { getExtendedSession, SessionsDataContext } from '../../globalState';
 import { Headline } from '../headline/Headline';
-import { isUniqueLanguage } from '../profile/profileHelpers';
-
 import './enquiryLanguageSelection.styles';
 import { LanguagesContext } from '../../globalState/provider/LanguagesProvider';
 import { useTranslation } from 'react-i18next';
@@ -50,42 +47,6 @@ export const EnquiryLanguageSelection: React.FC<EnquiryLanguageSelectionProps> =
 
 				if (!agencyId) {
 					resolve([]);
-				}
-
-				if (languages.length === 0) {
-					apiAgencyLanguages(
-						agencyId,
-						settings?.multitenancyWithSingleDomainEnabled
-					)
-						.then((response) => {
-							const sortByTranslation = (a, b) => {
-								if (
-									translate(`languages.${a}`) >
-									translate(`languages.${b}`)
-								)
-									return 1;
-								if (
-									translate(`languages.${a}`) <
-									translate(`languages.${b}`)
-								)
-									return -1;
-								return 0;
-							};
-
-							const sortedResponseLanguages = response.languages
-								.slice()
-								.sort(sortByTranslation);
-							resolve(
-								[
-									...fixedLanguages,
-									...sortedResponseLanguages
-								].filter(isUniqueLanguage)
-							);
-						})
-						.catch(() => {
-							resolve([...fixedLanguages]);
-							/* intentional, falls back to fixed languages */
-						});
 				}
 			});
 
