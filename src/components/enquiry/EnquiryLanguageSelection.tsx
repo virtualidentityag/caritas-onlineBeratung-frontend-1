@@ -3,9 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getExtendedSession, SessionsDataContext } from '../../globalState';
 import { Headline } from '../headline/Headline';
 import './enquiryLanguageSelection.styles';
-import { LanguagesContext } from '../../globalState/provider/LanguagesProvider';
 import { useTranslation } from 'react-i18next';
-import { useAppConfig } from '../../hooks/useAppConfig';
 import { LocaleContext } from '../../globalState/provider/LocaleProvider';
 
 interface EnquiryLanguageSelectionProps {
@@ -17,9 +15,7 @@ interface EnquiryLanguageSelectionProps {
 export const EnquiryLanguageSelection: React.FC<EnquiryLanguageSelectionProps> =
 	({ className = '', onSelect, value }) => {
 		const { t: translate } = useTranslation();
-		const settings = useAppConfig();
 		const { sessions, ready } = useContext(SessionsDataContext);
-		const { fixed: fixedLanguages } = useContext(LanguagesContext);
 		const { sessionId: sessionIdFromParam } =
 			useParams<{ sessionId: string }>();
 		const { locale } = useContext(LocaleContext);
