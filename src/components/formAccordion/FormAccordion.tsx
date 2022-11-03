@@ -465,11 +465,7 @@ export const FormAccordion = ({
 							className="button-as-link-registration"
 							onClick={() =>
 								window.open(
-									`${
-										window.location.origin
-									}/datenschutz?agencyId=${
-										agency?.tenantId ? agency?.tenantId : 0
-									}`
+									`${window.location.origin}/datenschutz`
 								)
 							}
 						>
