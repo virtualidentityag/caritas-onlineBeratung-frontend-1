@@ -116,7 +116,10 @@ export const FormAccordion = ({
 			postcode: agency?.postcode
 		});
 		// different data protection between agencies
-		setValueInCookie('tenantId', agency?.tenantId?.toString() || '0');
+		setValueInCookie(
+			'tenantId',
+			agency?.tenantId ? agency?.tenantId?.toString() : '0'
+		);
 		agency?.tenantId && setIsDataProtectionSelected(false);
 	}, [agency]); // eslint-disable-line react-hooks/exhaustive-deps
 
