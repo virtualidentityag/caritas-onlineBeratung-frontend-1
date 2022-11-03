@@ -259,8 +259,7 @@ const useTenantTheming = () => {
 			useMultiTenancyWithSingleDomain:
 				settings?.multitenancyWithSingleDomainEnabled,
 			mainTenantSubdomainForSingleDomain:
-				settings.mainTenantSubdomainForSingleDomainMultitenancy,
-			tenantId: new URLSearchParams(searchParams.search).get('tenantId')
+				settings.mainTenantSubdomainForSingleDomainMultitenancy
 		})
 			.then(onTenantServiceResponse)
 			.catch((error) => {
