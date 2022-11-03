@@ -33,6 +33,7 @@ import { PreselectedAgency } from '../agencySelection/PreselectedAgency';
 import { Text } from '../text/Text';
 import { Checkbox, CheckboxItem } from '../checkbox/Checkbox';
 import { Button, BUTTON_TYPES, ButtonItem } from '../button/Button';
+import { setValueInCookie } from '../sessionCookie/accessSessionCookie';
 
 interface FormAccordionProps {
 	consultingType?: ConsultingTypeInterface;
@@ -114,6 +115,8 @@ export const FormAccordion = ({
 			consultingTypeId: agency?.consultingType,
 			postcode: agency?.postcode
 		});
+		// different data protection between agencies
+		agency?.tenantId && setIsDataProtectionSelected(false);
 	}, [agency]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -297,7 +300,11 @@ export const FormAccordion = ({
 					icon={<PinIcon />}
 					initialPostcode={initialPostcode}
 					preselectedAgency={preselectedAgencyData}
-					onAgencyChange={(agency) => setAgency(agency)}
+					onAgencyChange={(agency) => {
+						agency?.tenantId &&
+							setValueInCookie('tenantId', agency?.tenantId);
+						setAgency(agency);
+					}}
 					hideExternalAgencies
 					onValidityChange={(validity) => {
 						if (
@@ -454,7 +461,7 @@ export const FormAccordion = ({
 									`${
 										window.location.origin
 									}/datenschutz?agencyId=${
-										agency.id ? agency.id : 0
+										agency?.tenantId ? agency?.tenantId : 0
 									}`
 								)
 							}
