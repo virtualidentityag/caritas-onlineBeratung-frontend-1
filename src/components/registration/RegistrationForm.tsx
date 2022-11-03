@@ -113,7 +113,7 @@ export const RegistrationForm = ({
 			apiAgencySelection({
 				postcode: postcodeParameter || DEFAULT_POSTCODE,
 				consultingType: consultingType.id,
-				topicId: formAccordionData.mainTopicId
+				topicId: formAccordionData.mainTopicId || 0
 			})
 				.then((response) => {
 					const agencyData = response[0];
