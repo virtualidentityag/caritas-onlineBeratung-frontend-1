@@ -116,7 +116,7 @@ export const FormAccordion = ({
 			postcode: agency?.postcode
 		});
 		// different data protection between agencies
-		setValueInCookie('tenantId', agency?.tenantId.toString());
+		setValueInCookie('tenantId', agency?.tenantId?.toString() || '0');
 		agency?.tenantId && setIsDataProtectionSelected(false);
 	}, [agency]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -303,7 +303,10 @@ export const FormAccordion = ({
 					preselectedAgency={preselectedAgencyData}
 					onAgencyChange={(agency) => {
 						agency?.tenantId &&
-							setValueInCookie('tenantId', agency?.tenantId);
+							setValueInCookie(
+								'tenantId',
+								agency?.tenantId || '0'
+							);
 						setAgency(agency);
 					}}
 					hideExternalAgencies
