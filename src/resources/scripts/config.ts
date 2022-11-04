@@ -16,7 +16,7 @@ export const config: AppConfigInterface = {
 	enableWalkThrough: false, // Feature flag to enable walkthrough (false by default here & true in the theme repo)
 	disableVideoAppointments: false, // Feature flag to enable Video-Termine page
 	multitenancyWithSingleDomainEnabled: false, // Feature flag to enable the multi tenancy with a single domain ex: lands
-	useTenantService: false,
+	useTenantService: true,
 	useApiClusterSettings: false, // Feature flag to enable the cluster use the cluster settings instead of the config file
 	mainTenantSubdomainForSingleDomainMultitenancy: 'app',
 

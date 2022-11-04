@@ -7,7 +7,6 @@ import flatten from 'flat';
 import { de } from './resources/i18n/de';
 import { deConsultingTypes } from './resources/i18n/de.consultingTypes';
 import { deInformal } from './resources/i18n/de.informal';
-import { deAgency } from './resources/i18n/de.agency';
 import { deLanguages } from './resources/i18n/de.languages';
 import { STORAGE_KEY_ENABLE_TRANSLATION_CHECK } from './components/devToolbar/DevToolbar';
 
@@ -20,9 +19,6 @@ const resources = {
 		},
 		consultingTypes: {
 			...deConsultingTypes
-		},
-		agencies: {
-			...deAgency
 		},
 		languages: {
 			...deLanguages
