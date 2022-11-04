@@ -63,7 +63,10 @@ import { TwoFactorAuthResendMail } from '../twoFactorAuth/TwoFactorAuthResendMai
 import { SETTING_E2E_ENABLE } from '../../api/apiRocketChatSettingsPublic';
 import { useTranslation } from 'react-i18next';
 import { useAppConfig } from '../../hooks/useAppConfig';
-import { setValueInCookie } from '../sessionCookie/accessSessionCookie';
+import {
+	deleteCookie,
+	setValueInCookie
+} from '../sessionCookie/accessSessionCookie';
 import { apiPatchUserData } from '../../api/apiPatchUserData';
 import { useSearchParam } from '../../hooks/useSearchParams';
 import { getTenantSettings } from '../../utils/tenantSettingsHelper';
@@ -310,6 +313,10 @@ export const Login = ({ stageComponent: Stage }: LoginProps) => {
 			setValidity(VALIDITY_VALID);
 		}
 	}, [possibleAgencies, possibleConsultingTypes]);
+
+	useEffect(() => {
+		deleteCookie('tenantId');
+	}, []);
 
 	const postLogin = useCallback(
 		(data) => {
