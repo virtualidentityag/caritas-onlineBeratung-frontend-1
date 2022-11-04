@@ -70,30 +70,35 @@ export const StageLayout = ({
 					</div>
 				)}
 
-				{hasTenant && (
-					<div className="login__tenantRegistration">
-						<Text
-							text={translate('login.register.infoText.title')}
-							type={'infoSmall'}
-						/>
-						<a
-							className="login__tenantRegistrationLink"
-							href={settings.urls.toRegistration}
-							target="_self"
-							tabIndex={-1}
-						>
-							<Button
-								item={{
-									label: translate(
-										'login.register.linkLabel'
-									),
-									type: 'TERTIARY'
-								}}
-								isLink
+				{hasTenant &&
+					window.location.pathname.indexOf(
+						'beratung/registration'
+					) === -1 && (
+						<div className="login__tenantRegistration">
+							<Text
+								text={translate(
+									'login.register.infoText.title'
+								)}
+								type={'infoSmall'}
 							/>
-						</a>
-					</div>
-				)}
+							<a
+								className="login__tenantRegistrationLink"
+								href={settings.urls.toRegistration}
+								target="_self"
+								tabIndex={-1}
+							>
+								<Button
+									item={{
+										label: translate(
+											'login.register.linkLabel'
+										),
+										type: 'TERTIARY'
+									}}
+									isLink
+								/>
+							</a>
+						</div>
+					)}
 			</div>
 
 			<div className="stageLayout__content">{children}</div>
