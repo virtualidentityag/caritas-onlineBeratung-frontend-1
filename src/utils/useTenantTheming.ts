@@ -6,7 +6,6 @@ import getLocationVariables from './getLocationVariables';
 import decodeHTML from './decodeHTML';
 import contrast from 'get-contrast';
 import { useAppConfig } from '../hooks/useAppConfig';
-import { useLocation } from 'react-router-dom';
 
 const RGBToHSL = (r, g, b) => {
 	// Make r, g, and b fractions of 1
@@ -219,7 +218,6 @@ const applyTheming = (tenant: TenantDataInterface) => {
 
 const useTenantTheming = () => {
 	const settings = useAppConfig();
-	const searchParams = useLocation();
 	const tenantContext = useContext(TenantContext);
 	const { subdomain } = getLocationVariables();
 	const [isLoadingTenant, setIsLoadingTenant] = useState(
