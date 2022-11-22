@@ -971,7 +971,7 @@ export const en = {
 		'legal': {
 			infoText: {
 				impressum: 'Imprint',
-				dataprotection: 'Privacy Policy'
+				dataprotection: 'Privacy policy'
 			}
 		},
 		'consultant': {
@@ -1497,7 +1497,7 @@ export const en = {
 		'title.start': 'Registration',
 		'tsys.prefix':
 			'Your personal data will be processed as described in this ',
-		'tsys.button': 'Privacy policy',
+		'tsys.button': 'privacy policy',
 		'tsys.sufix': '.',
 		'form.title': 'Complete registration',
 		'login': {
