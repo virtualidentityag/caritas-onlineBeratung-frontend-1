@@ -971,7 +971,7 @@ export const en = {
 		'legal': {
 			infoText: {
 				impressum: 'Imprint',
-				dataprotection: 'Privacy policy'
+				dataprotection: 'Privacy Policy'
 			}
 		},
 		'consultant': {
