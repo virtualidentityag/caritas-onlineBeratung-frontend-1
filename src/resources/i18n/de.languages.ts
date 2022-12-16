@@ -1,3 +1,4 @@
 export const deLanguages = {
-	de: '(DE) Deutsch'
+	de: '(DE) Deutsch',
+	en: '(EN) English'
 };

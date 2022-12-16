@@ -1,6 +1,8 @@
 import { deConsultingTypes } from '../i18n/de.consultingTypes';
 import { deAgency } from '../i18n/de.agency';
 import { AppConfigInterface } from '../../globalState/interfaces/AppConfig/AppConfigInterface';
+import { en } from '../i18n/en';
+import { enLanguages } from '../i18n/en.languages';
 
 export const uiUrl = window.location.origin;
 
@@ -14,8 +16,8 @@ export const config: AppConfigInterface = {
 	enableWalkthrough: false, // Feature flag to enable walkthrough (false by default here & true in the theme repo)
 	disableVideoAppointments: false, // Feature flag to enable Video-Termine page
 	multitenancyWithSingleDomainEnabled: false, // Feature flag to enable the multi tenancy with a single domain ex: lands
-	useTenantService: false,
-	useApiClusterSettings: false, // Feature flag to enable the cluster use the cluster settings instead of the config file
+	useTenantService: true,
+	useApiClusterSettings: true, // Feature flag to enable the cluster use the cluster settings instead of the config file
 	mainTenantSubdomainForSingleDomainMultitenancy: 'app',
 	attachmentEncryption: true, // Feature flag for attachment end to end encryption - e2e must also be enabled in rocket.chat
 
@@ -278,6 +280,8 @@ export const config: AppConfigInterface = {
 		'zu'
 	],
 	i18n: {
+		//remove
+		supportedLngs: ['en', 'de'],
 		resources: {
 			de: {
 				consultingTypes: {
@@ -285,6 +289,17 @@ export const config: AppConfigInterface = {
 				},
 				agencies: {
 					...deAgency
+				}
+			},
+			//remove
+			en: {
+				common: {
+					...en
+				},
+				consultingTypes: {},
+				agencies: {},
+				languages: {
+					...enLanguages
 				}
 			}
 		}

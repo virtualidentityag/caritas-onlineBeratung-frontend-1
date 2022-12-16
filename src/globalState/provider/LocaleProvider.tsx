@@ -4,6 +4,9 @@ import i18n, { FALLBACK_LNG, init } from '../../i18n';
 import { InformalContext } from './InformalProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { setValueInCookie } from '../../components/sessionCookie/accessSessionCookie';
+import { apiGetTenantTheming } from '../../api/apiGetTenantTheming';
+import getLocationVariables from '../../utils/getLocationVariables';
+import useTenantTheming from '../../utils/useTenantTheming';
 
 export const STORAGE_KEY_LOCALE = 'locale';
 
@@ -19,10 +22,15 @@ export const LocaleContext = createContext<TLocaleContext>(null);
 
 export function LocaleProvider(props) {
 	const settings = useAppConfig();
+	useTenantTheming();
 	const [initialized, setInitialized] = useState(false);
 	const [initLocale, setInitLocale] = useState(null);
 	const { informal } = useContext(InformalContext);
 	const [locale, setLocale] = useState(null);
+	const { subdomain } = getLocationVariables();
+	// const { activeLanguages } = getTenantSettings();
+
+	const [activeLanguages, setActiveLanguages] = useState(null);
 
 	useEffect(() => {
 		init(settings.i18n).then(() => {
@@ -38,21 +46,53 @@ export function LocaleProvider(props) {
 		});
 	}, [settings.i18n]);
 
-	const locales = useMemo(
-		() =>
-			initialized ? Object.keys(i18n.services.resourceStore.data) : [],
-		[initialized]
-	);
+	useEffect(() => {
+		apiGetTenantTheming({
+			subdomain,
+			useMultiTenancyWithSingleDomain:
+				settings?.multitenancyWithSingleDomainEnabled,
+			mainTenantSubdomainForSingleDomain:
+				settings.mainTenantSubdomainForSingleDomainMultitenancy
+		}).then((tenant) =>
+			setActiveLanguages(tenant['settings'].activeLanguages)
+		);
+	}, [
+		settings.mainTenantSubdomainForSingleDomainMultitenancy,
+		settings?.multitenancyWithSingleDomainEnabled,
+		subdomain
+	]);
 
-	const selectableLocales = useMemo(
-		() =>
-			initialized
-				? Object.keys(i18n.services.resourceStore.data).filter(
-						(lng) => lng.indexOf('_informal') < 0
-				  )
-				: [],
-		[initialized]
-	);
+	const locales = useMemo(() => {
+		if (activeLanguages) {
+			return initialized
+				? activeLanguages?.filter((lng) => {
+						return lng.indexOf('_informal') < 0;
+				  })
+				: [];
+		}
+
+		return initialized
+			? Object.keys(i18n.services.resourceStore.data).filter((lng) => {
+					return lng.indexOf('_informal') < 0;
+			  })
+			: [];
+	}, [activeLanguages, initialized]);
+
+	const selectableLocales = useMemo(() => {
+		if (activeLanguages) {
+			return initialized
+				? activeLanguages?.filter((lng) => {
+						return lng.indexOf('_informal') < 0;
+				  })
+				: [];
+		}
+
+		return initialized
+			? Object.keys(i18n.services.resourceStore.data).filter((lng) => {
+					return lng.indexOf('_informal') < 0;
+			  })
+			: [];
+	}, [activeLanguages, initialized]);
 
 	useEffect(() => {
 		if (!initialized) {
