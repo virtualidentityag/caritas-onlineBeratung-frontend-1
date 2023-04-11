@@ -91,7 +91,7 @@ export const deInformal = {
 	deleteSession: {
 		confirmOverlay: {
 			copy: 'Möchtest du den Chat wirklich löschen?',
-			headline: 'Du hast den Chat erfolgreich gelöscht.'
+			headline: 'Chat löschen'
 		},
 		errorOverlay: {
 			headline:
@@ -337,7 +337,9 @@ export const deInformal = {
 			},
 			info: {
 				public: 'Mit dem Anzeigenamen erscheinst Du bei den Ratsuchenden.'
-			}
+			},
+			emailInfo:
+				'Die Angabe deiner E-Mail ist freiwillig und wird ausschließlich verwendet, um dich über neue Antworten deine_r Berater_in zu informieren. Deine E-mail-Adresse ist für Berater_innen nicht sichtbar.'
 		},
 		externalRegistration: {
 			headline:
@@ -543,6 +545,13 @@ export const deInformal = {
 					}
 				}
 			}
+		}
+	},
+	sessionList: {
+		empty: {
+			mySessions: 'Du hast zur Zeit keine aktiven Beratungen',
+			teamSessions: 'Dein Team hat keine aktiven Beratungen',
+			perSessions: 'Du hast zur Zeit keine aktiven Peer-Beratungen'
 		}
 	},
 	statusOverlay: {
