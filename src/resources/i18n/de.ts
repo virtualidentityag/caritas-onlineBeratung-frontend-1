@@ -1134,11 +1134,12 @@ export const de = {
 		'read': 'gelesen',
 		'sent': 'zugestellt',
 		'groupChat': 'Gruppenchat',
-		'liveChat': 'Live Chat',
+		'liveChat': 'Live-Chat',
 		'newEnquiry': 'Neue Anfrage',
 		'video': {
 			moderatorStartedTitle:
 				'Moderator:in {{name}} hat eine Videokonferenz gestartet',
+			moderatorEndedTitle: 'Videokonferenz wurde beendet: {{time}}',
 			callActive: 'Videokonferenz läuft',
 			description: 'Sie können jetzt an der Videokonferenz teilnehmen',
 			join: 'Beitreten'
