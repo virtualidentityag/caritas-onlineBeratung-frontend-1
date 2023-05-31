@@ -1141,6 +1141,7 @@ export const de = {
 		'video': {
 			moderatorStartedTitle:
 				'Moderator:in {{name}} hat eine Videokonferenz gestartet',
+			moderatorEndedTitle: 'Videokonferenz wurde beendet: {{time}}',
 			callActive: 'Videokonferenz läuft',
 			description: 'Sie können jetzt an der Videokonferenz teilnehmen',
 			join: 'Beitreten'
