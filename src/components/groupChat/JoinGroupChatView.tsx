@@ -232,7 +232,7 @@ export const JoinGroupChatView = ({
 
 	useEffect(() => {
 		if (
-			hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
+			hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
 			!activeSession.item.active
 		) {
 			setButtonItem(startButtonItem);
@@ -242,10 +242,7 @@ export const JoinGroupChatView = ({
 	}, [activeSession.item.active, userData, startButtonItem, joinButtonItem]);
 
 	useEffect(() => {
-		if (
-			hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData) ||
-			!hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData)
-		) {
+		if (hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData)) {
 			setIsButtonDisabled(
 				!activeSession.item.active ||
 					bannedUsers.includes(userData.userName) ||
@@ -269,7 +266,7 @@ export const JoinGroupChatView = ({
 		}
 		setIsRequestInProgress(true);
 		const groupChatApiCall =
-			hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
+			hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
 			!activeSession.item.active
 				? GROUP_CHAT_API.START
 				: GROUP_CHAT_API.JOIN;
@@ -318,8 +315,8 @@ export const JoinGroupChatView = ({
 		`consultingType.${consultingType?.id}.groupChatRules.0`,
 		{ ns: 'consultingTypes' }
 	);
-	const hasGroupChatRulesTranslationsRule = i18n.exists('groupChat.rules.0');
-	if (hasGroupChatRulesTranslations || hasGroupChatRulesTranslationsRule) {
+
+	if (hasGroupChatRulesTranslations) {
 		for (let i = 0; i < 10; i++) {
 			if (
 				i18n.exists(
@@ -333,8 +330,6 @@ export const JoinGroupChatView = ({
 						{ ns: 'consultingTypes' }
 					)
 				);
-			} else if (i18n.exists(`groupChat.rules.${i}`)) {
-				groupChatRules.push(translate(`groupChat.rules.${i}`));
 			}
 		}
 	} else {
@@ -357,18 +352,11 @@ export const JoinGroupChatView = ({
 				))}
 			</div>
 			<div className="joinChat__button-container">
-				{!hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
+				{!hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
 					!activeSession.item.active && (
 						<p className="joinChat__warning-message">
 							<WarningIcon />
-							{translate(
-								hasUserAuthority(
-									AUTHORITIES.ASKER_DEFAULT,
-									userData
-								)
-									? 'groupChat.join.warning.message'
-									: 'groupChat.join.warning.consultant.message'
-							)}
+							{translate('groupChat.join.warning.message')}
 						</p>
 					)}
 				<Button

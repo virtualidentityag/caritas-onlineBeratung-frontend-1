@@ -21,7 +21,7 @@ import { getValueFromCookie } from '../../../../components/sessionCookie/accessS
 export const getUserEmail = (userData: UserDataInterface) => {
 	return userData.email
 		? userData.email
-		: userData.userName?.replace(/ /g, '') + '@suchtberatung.digital';
+		: userData.userName + '@suchtberatung.digital';
 };
 
 export const Booking = () => {
@@ -40,10 +40,9 @@ export const Booking = () => {
 
 	useEffect(() => {
 		apiGetAskerSessionList().then(({ sessions }) => {
-			const session = sessions.find((s) => !!s.consultant);
-			setSession(session);
-			const consultant = session?.consultant;
-			const agencyId = session?.agency?.id;
+			setSession(sessions[0]);
+			const consultant = sessions[0]?.consultant;
+			const agencyId = sessions[0]?.agency?.id;
 			if (consultant) {
 				const consultantId = consultant?.consultantId || consultant?.id;
 				getCounselorAppointmentLink(consultantId).then((response) => {

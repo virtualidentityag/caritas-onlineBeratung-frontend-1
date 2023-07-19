@@ -16,7 +16,6 @@ export const useBrowserNotification = () => {
 			const enquirySessions = sessions.filter((session) => {
 				return (
 					!session.consultant &&
-					session.session?.createDate &&
 					new Date().getTime() -
 						new Date(session.session.createDate).getTime() <
 						1000 * 60

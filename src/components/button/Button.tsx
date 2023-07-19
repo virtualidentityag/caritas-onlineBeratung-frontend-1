@@ -30,8 +30,7 @@ export interface ButtonItem {
 		| 'yellow'
 		| 'grey'
 		| 'alternate'
-		| 'secondary'
-		| 'transparent';
+		| 'secondary';
 	title?: string;
 	type: string;
 }
@@ -125,20 +124,20 @@ export const Button = (props: ButtonProps) => {
 				title={item.title}
 				aria-label={item.title}
 				className={`
-					button__item
-					${getButtonClassName(item.type)}
+					button__item 
+					${getButtonClassName(item.type)} 
 					${
 						item.type === BUTTON_TYPES.SMALL_ICON
 							? getButtonClassName(item.type) +
 							  '--' +
 							  item.smallIconBackgroundColor
 							: ''
-					}
+					} 
 					${
 						item.type === BUTTON_TYPES.SMALL_ICON && item.label
 							? getButtonClassName(item.type) + '--withLabel'
 							: ''
-					}
+					} 
 					${props.disabled || props.item.disabled ? ' button__item--disabled' : ''}
 				`}
 				data-cy={props.testingAttribute}

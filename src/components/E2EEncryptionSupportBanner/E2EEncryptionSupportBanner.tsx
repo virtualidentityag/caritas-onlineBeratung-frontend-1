@@ -42,11 +42,6 @@ export const E2EEncryptionSupportBanner = () => {
 		}
 	}, [userData, consultingTypes, sessions]);
 
-	useEffect(() => {
-		const fn = showBanner ? 'add' : 'remove';
-		document.body.classList[fn]('banner-open');
-	}, [showBanner]);
-
 	if (!showBanner) {
 		return null;
 	}

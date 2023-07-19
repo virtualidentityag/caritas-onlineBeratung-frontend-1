@@ -15,7 +15,7 @@
 	}
 
 	&--green {
-		background-color: $success;
+		background-color: var(--skin-color-primary, $upload-progress);
 	}
 
 	&--red {

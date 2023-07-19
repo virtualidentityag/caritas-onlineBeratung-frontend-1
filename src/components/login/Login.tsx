@@ -15,11 +15,7 @@ import { ReactComponent as PersonIcon } from '../../resources/img/icons/person.s
 import { ReactComponent as LockIcon } from '../../resources/img/icons/lock.svg';
 import { ReactComponent as VerifiedIcon } from '../../resources/img/icons/verified.svg';
 import { StageLayout } from '../stageLayout/StageLayout';
-import {
-	apiGetUserData,
-	apiRegistrationNewConsultingTypes,
-	FETCH_ERRORS
-} from '../../api';
+import { apiRegistrationNewConsultingTypes, FETCH_ERRORS } from '../../api';
 import { OTP_LENGTH, TWO_FACTOR_TYPES } from '../twoFactorAuth/TwoFactorAuth';
 import clsx from 'clsx';
 import {
@@ -52,7 +48,6 @@ import { useTranslation } from 'react-i18next';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import {
 	deleteCookieByName,
-	getValueFromCookie,
 	setValueInCookie
 } from '../sessionCookie/accessSessionCookie';
 import { apiPatchUserData } from '../../api/apiPatchUserData';
@@ -73,10 +68,8 @@ export const Login = () => {
 	const { locale, initLocale } = useContext(LocaleContext);
 	const { tenant } = useContext(TenantContext);
 	const { getSetting } = useContext(RocketChatGlobalSettingsContext);
-	const { userData, reloadUserData } = useContext(UserDataContext);
+	const { reloadUserData } = useContext(UserDataContext);
 	const { Stage } = useContext(GlobalComponentContext);
-	const gcid = useSearchParam<string>('gcid');
-	const isFirstVisit = useIsFirstVisit();
 
 	const loginButton: ButtonItem = {
 		label: translate('login.button.label'),
@@ -102,15 +95,6 @@ export const Login = () => {
 	const { featureToolsEnabled } = getTenantSettings();
 
 	useEffect(() => {
-		// If we're authenticated and have a gcid, redirect to app
-		if (gcid && getValueFromCookie('keycloak')) {
-			apiGetUserData([FETCH_ERRORS.CATCH_ALL])
-				.then(() => redirectToApp(gcid))
-				.catch(() => null); // do nothing
-		}
-	}, [consultant, gcid, reloadUserData, userData]);
-
-	useEffect(() => {
 		setShowLoginError('');
 		setLabelState(null);
 		if (
@@ -129,10 +113,8 @@ export const Login = () => {
 	}, [username]);
 
 	useEffect(() => {
-		if (!gcid && featureToolsEnabled) {
-			budibaseLogout().catch(() => null);
-		}
-	}, [featureToolsEnabled, gcid]);
+		featureToolsEnabled && budibaseLogout();
+	}, [featureToolsEnabled]);
 
 	const [agency, setAgency] = useState(null);
 	const [validity, setValidity] = useState(VALIDITY_INITIAL);
@@ -140,6 +122,8 @@ export const Login = () => {
 	const [pwResetOverlayActive, setPwResetOverlayActive] = useState(false);
 
 	const [twoFactorType, setTwoFactorType] = useState(TWO_FACTOR_TYPES.NONE);
+	const isFirstVisit = useIsFirstVisit();
+	const gcid = useSearchParam<string>('gcid');
 
 	const inputItemUsername: InputFieldItem = {
 		name: 'username',

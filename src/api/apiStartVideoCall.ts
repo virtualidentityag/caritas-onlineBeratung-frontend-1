@@ -1,20 +1,13 @@
 import { endpoints } from '../resources/scripts/endpoints';
-import {
-	fetchData,
-	FETCH_METHODS,
-	FETCH_SUCCESS,
-	FETCH_ERRORS
-} from './fetchData';
+import { fetchData, FETCH_METHODS, FETCH_SUCCESS } from './fetchData';
 
 export const apiStartVideoCall = async (
 	sessionId: number,
-	initiatorDisplayName: string,
-	groupId?: number
+	initiatorDisplayName: string
 ): Promise<{ moderatorVideoCallUrl: string }> => {
 	const url = endpoints.startVideoCall;
 	const videoCallData = JSON.stringify({
 		sessionId: sessionId,
-		groupChatId: groupId,
 		initiatorDisplayName: initiatorDisplayName
 	});
 
@@ -22,7 +15,7 @@ export const apiStartVideoCall = async (
 		url: url,
 		method: FETCH_METHODS.POST,
 		bodyData: videoCallData,
-		responseHandling: [FETCH_SUCCESS.CONTENT, FETCH_ERRORS.CATCH_ALL],
+		responseHandling: [FETCH_SUCCESS.CONTENT],
 		rcValidation: true
 	});
 };
