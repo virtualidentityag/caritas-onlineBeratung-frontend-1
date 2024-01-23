@@ -81,6 +81,7 @@ describe('registration', () => {
 			// `Uncaught ReferenceError: setVisitorCookieTimeout is not defined`
 			// and causes Cypress to fail the test.
 			// As this is outside of our control, we ignore this specific error for now.
+			// Update (2024-01-10): The page is now re-redirected to 'https://www.u25-deutschland.de/helpmail/'
 			cy.on('uncaught:exception', (error) => {
 				if (
 					error.message.includes(
@@ -92,7 +93,10 @@ describe('registration', () => {
 			});
 			cy.visit('/u25/registration');
 			cy.wait('@consultingTypeServiceBySlugFull');
-			cy.url().should('be.equal', 'https://www.u25.de/helpmail/');
+			cy.url().should(
+				'be.equal',
+				'https://www.u25-deutschland.de/helpmail/'
+			);
 		});
 
 		it('should have all generic registration page elements', () => {
@@ -131,9 +135,10 @@ describe('registration', () => {
 			cy.wait('@agencies');
 			cy.get('[data-cy=close-welcome-screen]').click();
 			cy.contains('Beratungsstelle wählen').click();
-			cy.get('[data-cy=show-preselected-agency]').should('exist');
-			cy.get('[data-cy=show-preselected-agency]').contains(
-				agencies[0].name
+			cy.get('input[name="agencySelection"]').should('have.length', 1);
+			cy.get('input[name="agencySelection"]').should(
+				'have.value',
+				agencies[0].id
 			);
 		});
 
@@ -143,9 +148,10 @@ describe('registration', () => {
 			cy.wait('@agencies');
 			cy.get('[data-cy=close-welcome-screen]').click();
 			cy.contains('Beratungsstelle wählen').click();
-			cy.get('[data-cy=show-preselected-agency]').should('exist');
-			cy.get('[data-cy=show-preselected-agency]').contains(
-				agencies[0].name
+			cy.get('input[name="agencySelection"]').should('have.length', 1);
+			cy.get('input[name="agencySelection"]').should(
+				'have.value',
+				agencies[0].id
 			);
 			cy.contains('Benutzernamen wählen').click();
 			cy.get('input[id="username"]').focus().type('u25-user');
@@ -177,4 +183,22 @@ describe('registration', () => {
 			);
 		});
 	});
+
+	// ToDo: More specific tests for the following cases and with check of autoselection of the registration form and automatic validation of the form:
+	// - registration with consultant with single consultingType and single agency
+	// - registration with consultant with single consultingType and single agency and other preselections (aid, postcode, consultingType)
+	// - registration with consultant with single consultingType and single agency and autoSelectPostcode config
+
+	// - registration with consultant with multiple consultingTypes and single agency
+	// - registration with consultant with multiple consultingTypes and single agency and other preselections (aid, postcode, consultingType)
+	// - registration with consultant with multiple consultingTypes and single agency and autoSelectPostcode config
+
+	// - registration with consultant with multiple consultingTypes and multiple agencies
+	// - registration with consultant with multiple consultingTypes and multiple agencies and other preselections (aid, postcode, consultingType)
+	// - registration with consultant with multiple consultingTypes and multiple agencies and autoSelectPostcode config
+
+	// - registration with topic selection (topic with single agency for postcode and topic with multiple agencies for postcode!)
+	// - registration with topic selection and other preselections (aid, postcode, consultingType)
+	// - registration with topic selection and autoSelectPostcode config
+	// - registration with topic selection and autoSelectAgency config
 });

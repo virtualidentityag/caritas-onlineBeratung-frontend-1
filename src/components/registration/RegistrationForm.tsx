@@ -1,86 +1,86 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback, useContext } from 'react';
 import { BUTTON_TYPES } from '../button/Button';
-import {
-	apiPostRegistration,
-	FETCH_ERRORS,
-	apiAgencySelection,
-	X_REASON
-} from '../../api';
+import { apiPostRegistration, FETCH_ERRORS, X_REASON } from '../../api';
 import { endpoints } from '../../resources/scripts/endpoints';
-import { DEFAULT_POSTCODE } from './prefillPostcode';
 import { Overlay, OVERLAY_FUNCTIONS, OverlayItem } from '../overlay/Overlay';
 import { redirectToApp } from './autoLogin';
 import {
 	AgencyDataInterface,
-	ConsultantDataInterface,
 	ConsultingTypeInterface,
+	NOTIFICATION_TYPE_ERROR,
+	NotificationsContext,
 	TenantContext,
-	useTenant,
 	useLocaleData
 } from '../../globalState';
 import { FormAccordion } from '../formAccordion/FormAccordion';
 import { ReactComponent as WelcomeIcon } from '../../resources/img/illustrations/welcome.svg';
-import { getUrlParameter } from '../../utils/getUrlParameter';
 import './registrationForm.styles';
 import {
 	getErrorCaseForStatus,
 	redirectToErrorPage
 } from '../error/errorHandling';
 import { useTranslation } from 'react-i18next';
-import { TopicsDataInterface } from '../../globalState/interfaces/TopicsDataInterface';
 import { LegalLinksContext } from '../../globalState/provider/LegalLinksProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { getTenantSettings } from '../../utils/tenantSettingsHelper';
 import { budibaseLogout } from '../budibase/budibaseLogout';
-import { isNumber } from '../../utils/isNumber';
+import { getUrlParameter } from '../../utils/getUrlParameter';
+import { UrlParamsContext } from '../../globalState/provider/UrlParamsProvider';
+import { TopicsDataInterface } from '../../globalState/interfaces/TopicsDataInterface';
+import { ConsultingTypeRegistrationDefaults } from '../../containers/registration/components/ProposedAgencies/ProposedAgencies';
+import { apiPostError, ERROR_LEVEL_ERROR } from '../../api/apiPostError';
 
-interface RegistrationFormProps {
-	consultingType?: ConsultingTypeInterface;
-	agency?: AgencyDataInterface;
-	consultant?: ConsultantDataInterface;
-	topic?: TopicsDataInterface;
-}
-
-interface FormAccordionData {
+export interface FormAccordionData {
 	username?: string;
 	password?: string;
-	agencyId?: number;
-	mainTopicId?: number;
+	agency?: AgencyDataInterface;
+	consultingType?: ConsultingTypeInterface;
+	mainTopic?: TopicsDataInterface;
 	postcode?: string;
 	state?: string;
 	age?: string;
-	consultingTypeId?: number;
-	mainTopic?: string;
 }
 
-export const RegistrationForm = ({
-	consultingType,
-	agency,
-	topic,
-	consultant
-}: RegistrationFormProps) => {
+export const RegistrationForm = () => {
 	const { t: translate } = useTranslation(['common', 'consultingTypes']);
-	const tenantData = useTenant();
 	const legalLinks = useContext(LegalLinksContext);
+	const { addNotification } = useContext(NotificationsContext);
 	const { locale } = useLocaleData();
 	const settings = useAppConfig();
+	const postcode = getUrlParameter('postcode');
+	const { agency, consultingType, consultant, topic } =
+		useContext(UrlParamsContext);
+
 	const [formAccordionData, setFormAccordionData] =
-		useState<FormAccordionData>({});
+		useState<FormAccordionData>(() => {
+			const initData = {
+				agency: agency || null,
+				consultingType: consultingType || null,
+				mainTopic: topic || null,
+				postcode: postcode || null
+			};
+
+			const { autoSelectPostcode } =
+				consultingType?.registration ||
+				ConsultingTypeRegistrationDefaults;
+			if (consultingType && agency && !postcode && autoSelectPostcode) {
+				initData.postcode = agency.postcode;
+			}
+
+			return initData;
+		});
 	const [formAccordionValid, setFormAccordionValid] = useState(false);
-	const [preselectedAgencyData, setPreselectedAgencyData] =
-		useState<AgencyDataInterface | null>(agency);
 	const [isUsernameAlreadyInUse, setIsUsernameAlreadyInUse] =
 		useState<boolean>(false);
 	const [isDataProtectionSelected, setIsDataProtectionSelected] =
 		useState(false);
 	const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
 	const [overlayActive, setOverlayActive] = useState(false);
+	const [missingFieldsErrorPosted, setMissingFieldsErrorPosted] = useState<
+		string[]
+	>([]);
 
-	const [initialPostcode, setInitialPostcode] = useState('');
-	const topicsAreRequired =
-		tenantData?.settings?.topicsInRegistrationEnabled &&
-		tenantData?.settings?.featureTopicsEnabled;
 	const { tenant } = useContext(TenantContext);
 	const { featureToolsEnabled } = getTenantSettings();
 
@@ -90,79 +90,10 @@ export const RegistrationForm = ({
 	}, [featureToolsEnabled]);
 
 	useEffect(() => {
-		const postcodeParameter = getUrlParameter('postcode');
-		if (postcodeParameter) {
-			setInitialPostcode(postcodeParameter);
-		}
-
-		if (consultingType) {
-			setFormAccordionData({
-				...formAccordionData,
-				consultingTypeId: consultingType.id
-			});
-		}
-
-		if (
-			consultingType?.registration.autoSelectAgency &&
-			!topicsAreRequired
-		) {
-			apiAgencySelection({
-				postcode: postcodeParameter || DEFAULT_POSTCODE,
-				consultingType: consultingType.id
-			})
-				.then((response) => {
-					const agencyData = response[0];
-					setPreselectedAgencyData(agencyData);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		}
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		if (!!(formAccordionValid && isDataProtectionSelected)) {
-			setIsSubmitButtonDisabled(false);
-		} else {
-			setIsSubmitButtonDisabled(true);
-		}
+		setIsSubmitButtonDisabled(
+			!(formAccordionValid && isDataProtectionSelected)
+		);
 	}, [formAccordionValid, isDataProtectionSelected]);
-
-	useEffect(() => {
-		// When we require the topic to be selected and the autoSelectPostCode is enabled,
-		// we need to request the api to get the preselected agency
-		const shouldRequestAgencyWhenAutoSelectIsEnabled =
-			consultingType?.registration.autoSelectPostcode &&
-			!!topicsAreRequired &&
-			!consultant &&
-			!agency;
-
-		if (
-			shouldRequestAgencyWhenAutoSelectIsEnabled &&
-			isNumber(`${formAccordionData.mainTopicId}`)
-		) {
-			apiAgencySelection({
-				postcode: formAccordionData.postcode || DEFAULT_POSTCODE,
-				consultingType: consultingType.id,
-				topicId: formAccordionData.mainTopicId
-			})
-				.then((response) => {
-					const agencyData = response[0];
-					setPreselectedAgencyData(agencyData);
-				})
-				.catch(() => setPreselectedAgencyData(null));
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [
-		consultingType?.registration.autoSelectPostcode,
-		consultingType?.id,
-		formAccordionData.mainTopicId,
-		formAccordionData.postcode,
-		consultant,
-		agency,
-		topicsAreRequired,
-		locale
-	]);
 
 	const overlayItemRegistrationSuccess: OverlayItem = {
 		svg: WelcomeIcon,
@@ -190,16 +121,66 @@ export const RegistrationForm = ({
 		const registrationData = {
 			username: formAccordionData.username,
 			password: encodeURIComponent(formAccordionData.password),
-			agencyId: formAccordionData.agencyId?.toString(),
-			mainTopicId: formAccordionData.mainTopicId?.toString(),
 			postcode: formAccordionData.postcode,
-			consultingType: formAccordionData.consultingTypeId?.toString(),
+			agencyId: formAccordionData?.agency.id.toString(),
 			termsAccepted: isDataProtectionSelected.toString(),
+			consultingType: formAccordionData.consultingType?.id?.toString(),
+			mainTopicId: formAccordionData.mainTopic?.id?.toString(),
 			preferredLanguage: locale,
 			...(formAccordionData.state && { state: formAccordionData.state }),
 			...(formAccordionData.age && { age: formAccordionData.age }),
 			...(consultant && { consultantId: consultant.consultantId })
 		};
+
+		const missingFields = [
+			'username',
+			'password',
+			'postcode',
+			'agencyId',
+			'termsAccepted',
+			'consultingType'
+		].filter(
+			(required) =>
+				!registrationData[required] || registrationData[required] === ''
+		);
+		if (missingFields.length > 0) {
+			addNotification({
+				notificationType: NOTIFICATION_TYPE_ERROR,
+				title: translate(
+					'registration.error.required_field_missing.title'
+				),
+				text: translate(
+					'registration.error.required_field_missing.text'
+				)
+			});
+
+			// prevent sending error multiple times with the same fields.
+			if (
+				missingFields
+					.filter((x) => !missingFieldsErrorPosted.includes(x))
+					.concat(
+						missingFieldsErrorPosted.filter(
+							(x) => !missingFields.includes(x)
+						)
+					).length > 0
+			) {
+				const { agencyId, consultingType } = registrationData;
+				void apiPostError(
+					{
+						name: `REGISTRATION_MISSING_FIELDS`,
+						message: `User got error while trying to register (consultingTypeId: "${consultingType}", agencyId: "${agencyId}") because there where some fields (${missingFields.join(
+							', '
+						)}) missing.`,
+						level: ERROR_LEVEL_ERROR
+					},
+					null
+				);
+			}
+
+			setMissingFieldsErrorPosted(missingFields);
+			setIsSubmitButtonDisabled(false);
+			return;
+		}
 
 		apiPostRegistration(
 			endpoints.registerAsker,
@@ -226,7 +207,7 @@ export const RegistrationForm = ({
 	};
 
 	const handleChange = useCallback(
-		(data) => {
+		(data: Partial<FormAccordionData>) => {
 			setFormAccordionData({
 				...formAccordionData,
 				...data
@@ -262,17 +243,12 @@ export const RegistrationForm = ({
 
 				{(consultingType || consultant) && (
 					<FormAccordion
-						consultingType={consultingType}
+						formAccordionData={formAccordionData}
 						isUsernameAlreadyInUse={isUsernameAlreadyInUse}
-						preselectedAgencyData={preselectedAgencyData}
-						initialPostcode={initialPostcode}
 						onChange={handleChange}
 						additionalStepsData={consultingType?.requiredComponents}
 						registrationNotes={consultingType?.registration.notes}
-						consultant={consultant}
 						onValidation={setFormAccordionValid}
-						mainTopicId={formAccordionData.mainTopicId}
-						preselectedTopic={topic?.id}
 						legalLinks={legalLinks}
 						handleSubmitButtonClick={handleSubmitButtonClick}
 						isSubmitButtonDisabled={isSubmitButtonDisabled}

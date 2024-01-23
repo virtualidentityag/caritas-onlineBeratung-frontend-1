@@ -15,7 +15,11 @@ import { ReactComponent as PersonIcon } from '../../resources/img/icons/person.s
 import { ReactComponent as LockIcon } from '../../resources/img/icons/lock.svg';
 import { ReactComponent as VerifiedIcon } from '../../resources/img/icons/verified.svg';
 import { StageLayout } from '../stageLayout/StageLayout';
-import { apiRegistrationNewConsultingTypes, FETCH_ERRORS } from '../../api';
+import {
+	apiGetUserData,
+	apiRegistrationNewConsultingTypes,
+	FETCH_ERRORS
+} from '../../api';
 import { OTP_LENGTH, TWO_FACTOR_TYPES } from '../twoFactorAuth/TwoFactorAuth';
 import clsx from 'clsx';
 import {
@@ -31,11 +35,7 @@ import '../../resources/styles/styles';
 import './login.styles';
 import useIsFirstVisit from '../../utils/useIsFirstVisit';
 import { getUrlParameter } from '../../utils/getUrlParameter';
-import useUrlParamsLoader from '../../utils/useUrlParamsLoader';
-import {
-	ConsultingTypeAgencySelection,
-	useConsultingTypeAgencySelection
-} from '../consultingTypeSelection/ConsultingTypeAgencySelection';
+import { ConsultingTypeAgencySelection } from '../consultingTypeSelection/ConsultingTypeAgencySelection';
 import { Overlay, OVERLAY_FUNCTIONS, OverlayItem } from '../overlay/Overlay';
 import { ReactComponent as WelcomeIcon } from '../../resources/img/illustrations/welcome.svg';
 import {
@@ -52,6 +52,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import {
 	deleteCookieByName,
+	getValueFromCookie,
 	setValueInCookie
 } from '../sessionCookie/accessSessionCookie';
 import { apiPatchUserData } from '../../api/apiPatchUserData';
@@ -59,6 +60,8 @@ import { useSearchParam } from '../../hooks/useSearchParams';
 import { getTenantSettings } from '../../utils/tenantSettingsHelper';
 import { budibaseLogout } from '../budibase/budibaseLogout';
 import { GlobalComponentContext } from '../../globalState/provider/GlobalComponentContext';
+import { useConsultantAgenciesAndConsultingTypes } from '../../containers/registration/hooks/useConsultantAgenciesAndConsultingTypes';
+import { UrlParamsContext } from '../../globalState/provider/UrlParamsProvider';
 
 const regexAccountDeletedError = /account disabled/i;
 
@@ -70,8 +73,10 @@ export const Login = () => {
 	const { locale, initLocale } = useContext(LocaleContext);
 	const { tenant } = useContext(TenantContext);
 	const { getSetting } = useContext(RocketChatGlobalSettingsContext);
-	const { reloadUserData } = useContext(UserDataContext);
+	const { userData, reloadUserData } = useContext(UserDataContext);
 	const { Stage } = useContext(GlobalComponentContext);
+	const gcid = useSearchParam<string>('gcid');
+	const isFirstVisit = useIsFirstVisit();
 
 	const loginButton: ButtonItem = {
 		label: translate('login.button.label'),
@@ -81,12 +86,7 @@ export const Login = () => {
 	const hasTenant = tenant != null;
 
 	const consultantId = getUrlParameter('cid');
-	const {
-		agency: preselectedAgency,
-		consultingType,
-		consultant,
-		loaded: isReady
-	} = useUrlParamsLoader();
+	const { consultant, loaded: isReady } = useContext(UrlParamsContext);
 
 	const [labelState, setLabelState] = useState<InputFieldLabelState>(null);
 	const [username, setUsername] = useState<string>('');
@@ -100,6 +100,15 @@ export const Login = () => {
 	const [isRequestInProgress, setIsRequestInProgress] =
 		useState<boolean>(false);
 	const { featureToolsEnabled } = getTenantSettings();
+
+	useEffect(() => {
+		// If we're authenticated and have a gcid, redirect to app
+		if (gcid && getValueFromCookie('keycloak')) {
+			apiGetUserData([FETCH_ERRORS.CATCH_ALL])
+				.then(() => redirectToApp(gcid))
+				.catch(() => null); // do nothing
+		}
+	}, [consultant, gcid, reloadUserData, userData]);
 
 	useEffect(() => {
 		setShowLoginError('');
@@ -120,8 +129,10 @@ export const Login = () => {
 	}, [username]);
 
 	useEffect(() => {
-		featureToolsEnabled && budibaseLogout();
-	}, [featureToolsEnabled]);
+		if (!gcid && featureToolsEnabled) {
+			budibaseLogout().catch(() => null);
+		}
+	}, [featureToolsEnabled, gcid]);
 
 	const [agency, setAgency] = useState(null);
 	const [validity, setValidity] = useState(VALIDITY_INITIAL);
@@ -129,8 +140,6 @@ export const Login = () => {
 	const [pwResetOverlayActive, setPwResetOverlayActive] = useState(false);
 
 	const [twoFactorType, setTwoFactorType] = useState(TWO_FACTOR_TYPES.NONE);
-	const isFirstVisit = useIsFirstVisit();
-	const gcid = useSearchParam<string>('gcid');
 
 	const inputItemUsername: InputFieldItem = {
 		name: 'username',
@@ -183,11 +192,7 @@ export const Login = () => {
 	const {
 		agencies: possibleAgencies,
 		consultingTypes: possibleConsultingTypes
-	} = useConsultingTypeAgencySelection(
-		consultant,
-		consultingType,
-		preselectedAgency
-	);
+	} = useConsultantAgenciesAndConsultingTypes();
 
 	const registerOverlay = useMemo(
 		(): OverlayItem => ({
@@ -195,10 +200,7 @@ export const Login = () => {
 			headline: translate('login.consultant.overlay.success.headline'),
 			nestedComponent: (
 				<ConsultingTypeAgencySelection
-					consultant={consultant}
 					agency={agency}
-					preselectedConsultingType={consultingType}
-					preselectedAgency={preselectedAgency}
 					onChange={setAgency}
 					onValidityChange={(validity) => setValidity(validity)}
 				/>
@@ -217,14 +219,7 @@ export const Login = () => {
 				}
 			]
 		}),
-		[
-			agency,
-			consultant,
-			consultingType,
-			preselectedAgency,
-			validity,
-			translate
-		]
+		[agency, validity, translate]
 	);
 
 	const handleRegistration = useCallback(

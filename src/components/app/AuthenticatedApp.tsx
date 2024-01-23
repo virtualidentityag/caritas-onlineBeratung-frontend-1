@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Routing } from './Routing';
 import {
 	UserDataContext,
-	NotificationsContext,
 	hasUserAuthority,
 	AUTHORITIES,
 	ConsultingTypesContext,
@@ -16,7 +15,6 @@ import { apiGetConsultingTypes } from '../../api';
 import { Loading } from './Loading';
 import { handleTokenRefresh } from '../auth/auth';
 import { logout } from '../logout/logout';
-import { Notifications } from '../notifications/Notifications';
 import './authenticatedApp.styles';
 import './navigation.styles';
 import { requestPermissions } from '../../utils/notificationHelpers';
@@ -27,6 +25,7 @@ import { RocketChatGetUserRolesProvider } from '../../globalState/provider/Rocke
 import { useJoinGroupChat } from '../../hooks/useJoinGroupChat';
 import { RocketChatUserStatusProvider } from '../../globalState/provider/RocketChatUserStatusProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
+import { E2EEncryptionSupportBanner } from '../E2EEncryptionSupportBanner/E2EEncryptionSupportBanner';
 
 interface AuthenticatedAppProps {
 	onAppReady: Function;
@@ -47,7 +46,6 @@ export const AuthenticatedApp = ({
 	const [appReady, setAppReady] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [userDataRequested, setUserDataRequested] = useState<boolean>(false);
-	const { notifications } = useContext(NotificationsContext);
 
 	useEffect(() => {
 		// When the user has a group chat id that means that we need to join the user in the group chat
@@ -121,12 +119,8 @@ export const AuthenticatedApp = ({
 							<RocketChatSubscriptionsProvider>
 								<RocketChatUnreadProvider>
 									<RocketChatUserStatusProvider>
+										<E2EEncryptionSupportBanner />
 										<Routing logout={handleLogout} />
-										{notifications && (
-											<Notifications
-												notifications={notifications}
-											/>
-										)}
 									</RocketChatUserStatusProvider>
 								</RocketChatUnreadProvider>
 							</RocketChatSubscriptionsProvider>

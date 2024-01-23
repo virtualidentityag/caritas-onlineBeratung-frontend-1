@@ -232,7 +232,7 @@ export const JoinGroupChatView = ({
 
 	useEffect(() => {
 		if (
-			hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
+			hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
 			!activeSession.item.active
 		) {
 			setButtonItem(startButtonItem);
@@ -242,7 +242,10 @@ export const JoinGroupChatView = ({
 	}, [activeSession.item.active, userData, startButtonItem, joinButtonItem]);
 
 	useEffect(() => {
-		if (hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData)) {
+		if (
+			hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData) ||
+			!hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData)
+		) {
 			setIsButtonDisabled(
 				!activeSession.item.active ||
 					bannedUsers.includes(userData.userName) ||
@@ -266,7 +269,7 @@ export const JoinGroupChatView = ({
 		}
 		setIsRequestInProgress(true);
 		const groupChatApiCall =
-			hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
+			hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
 			!activeSession.item.active
 				? GROUP_CHAT_API.START
 				: GROUP_CHAT_API.JOIN;
@@ -310,30 +313,15 @@ export const JoinGroupChatView = ({
 		return <Redirect to={listPath + getSessionListTab()} />;
 	}
 
-	let groupChatRules: [string?] = [];
-	const hasGroupChatRulesTranslations = i18n.exists(
-		`consultingType.${consultingType?.id}.groupChatRules.0`,
-		{ ns: 'consultingTypes' }
-	);
-
-	if (hasGroupChatRulesTranslations) {
-		for (let i = 0; i < 10; i++) {
-			if (
-				i18n.exists(
-					`consultingType.${consultingType?.id}.groupChatRules.${i}`,
-					{ ns: 'consultingTypes' }
-				)
-			) {
-				groupChatRules.push(
-					translate(
-						`consultingType.${consultingType?.id}.groupChatRules.${i}`,
-						{ ns: 'consultingTypes' }
-					)
-				);
-			}
-		}
-	} else {
-		groupChatRules = consultingType?.groupChat?.groupChatRules ?? [];
+	let groupChatRules: string[] =
+		consultingType?.groupChat?.groupChatRules ?? [];
+	const transKey = `consultingType.${
+		consultingType?.id ?? 'noConsultingType'
+	}.groupChatRules`;
+	const translatedRules: { [key: string]: string } =
+		i18n.getResource(i18n.language, 'consultingTypes', transKey) || {};
+	if (Object.keys(translatedRules).length > 0) {
+		groupChatRules = Object.values(translatedRules);
 	}
 
 	return (
@@ -352,11 +340,18 @@ export const JoinGroupChatView = ({
 				))}
 			</div>
 			<div className="joinChat__button-container">
-				{!hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
+				{!hasUserAuthority(AUTHORITIES.CREATE_NEW_CHAT, userData) &&
 					!activeSession.item.active && (
 						<p className="joinChat__warning-message">
 							<WarningIcon />
-							{translate('groupChat.join.warning.message')}
+							{translate(
+								hasUserAuthority(
+									AUTHORITIES.ASKER_DEFAULT,
+									userData
+								)
+									? 'groupChat.join.warning.message'
+									: 'groupChat.join.warning.consultant.message'
+							)}
 						</p>
 					)}
 				<Button

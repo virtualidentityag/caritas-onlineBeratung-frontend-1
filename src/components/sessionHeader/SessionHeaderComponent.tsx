@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import {
-	getAddictiveDrugsString,
-	handleNumericTranslation
-} from '../../utils/translate';
+import { handleNumericTranslation } from '../../utils/translate';
 import { mobileListView } from '../app/navigationHandler';
 import {
 	AUTHORITIES,
@@ -18,28 +15,18 @@ import {
 } from '../../globalState';
 import {
 	getViewPathForType,
-	isUserModerator,
 	SESSION_LIST_TAB,
 	SESSION_LIST_TYPES
 } from '../session/sessionHelpers';
 import { SessionMenu } from '../sessionMenu/SessionMenu';
-import {
-	convertUserDataObjectToArray,
-	getAddictiveDrugsTranslatable
-} from '../profile/profileHelpers';
-import { getGroupChatDate } from '../session/sessionDateHelpers';
-import { apiGetGroupMembers } from '../../api';
-import { decodeUsername } from '../../utils/encryptionHelpers';
+import { convertUserDataObjectToArray } from '../profile/profileHelpers';
 import { ReactComponent as BackIcon } from '../../resources/img/icons/arrow-left.svg';
 import { ActiveSessionContext } from '../../globalState/provider/ActiveSessionProvider';
-import { getValueFromCookie } from '../sessionCookie/accessSessionCookie';
-import { FlyoutMenu } from '../flyoutMenu/FlyoutMenu';
-import { BanUser } from '../banUser/BanUser';
-import { Tag } from '../tag/Tag';
 import './sessionHeader.styles';
 import './sessionHeader.yellowTheme.styles';
 import { useSearchParam } from '../../hooks/useSearchParams';
 import { useTranslation } from 'react-i18next';
+import { GroupChatHeader } from './GroupChatHeader';
 
 export interface SessionHeaderProps {
 	consultantAbsent?: SessionConsultantInterface;
@@ -57,7 +44,6 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 	const { activeSession } = useContext(ActiveSessionContext);
 	const { userData } = useContext(UserDataContext);
 	const consultingType = useConsultingType(activeSession.item.consultingType);
-	const [flyoutOpenId, setFlyoutOpenId] = useState('');
 
 	const username = getContact(
 		activeSession,
@@ -77,18 +63,12 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 		!activeSession.isLive
 			? convertUserDataObjectToArray(userSessionData)
 			: null;
-	const addictiveDrugs =
-		hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
-		userSessionData
-			? getAddictiveDrugsTranslatable(userSessionData.addictiveDrugs)
-			: null;
 	const translateBase =
 		activeSession.item.consultingType === 0
 			? 'user.userAddiction'
 			: 'user.userU25';
 
 	const [isSubscriberFlyoutOpen, setIsSubscriberFlyoutOpen] = useState(false);
-	const [subscriberList, setSubscriberList] = useState([]);
 	const sessionListTab = useSearchParam<SESSION_LIST_TAB>('sessionListTab');
 	const getSessionListTab = () =>
 		`${sessionListTab ? `?sessionListTab=${sessionListTab}` : ''}`;
@@ -111,28 +91,6 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 		mobileListView();
 	};
 
-	const handleFlyout = (e) => {
-		if (!isSubscriberFlyoutOpen) {
-			apiGetGroupMembers(activeSession.item.id)
-				.then((response) => {
-					const subscribers = response.members.map((member) => ({
-						isModerator: isUserModerator({
-							chatItem: activeSession.item,
-							rcUserId: member._id
-						}),
-						...member
-					}));
-					setSubscriberList(subscribers);
-					setIsSubscriberFlyoutOpen(true);
-				})
-				.catch((error) => {
-					console.error(error);
-				});
-		} else if (e.target.id === 'subscriberButton') {
-			setIsSubscriberFlyoutOpen(false);
-		}
-	};
-
 	const handleWindowClick = (event) => {
 		const flyoutElement = document.querySelector(
 			'.sessionInfo__metaInfo__flyout'
@@ -142,15 +100,9 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 			!flyoutElement.contains(event.target) &&
 			event.target.id !== 'subscriberButton'
 		) {
-			setFlyoutOpenId('');
 			setIsSubscriberFlyoutOpen(false);
 		}
 	};
-
-	const isCurrentUserModerator = isUserModerator({
-		chatItem: activeSession.item,
-		rcUserId: getValueFromCookie('rc_uid')
-	});
 
 	const isAskerInfoAvailable = () =>
 		!hasUserAuthority(AUTHORITIES.ASKER_DEFAULT, userData) &&
@@ -163,156 +115,13 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 
 	if (activeSession.isGroup) {
 		return (
-			<div className="sessionInfo">
-				<div className="sessionInfo__headerWrapper">
-					<Link
-						to={listPath + getSessionListTab()}
-						onClick={handleBackButton}
-						className="sessionInfo__backButton"
-					>
-						<BackIcon />
-					</Link>
-					<div className="sessionInfo__username sessionInfo__username--deactivate sessionInfo__username--groupChat">
-						{hasUserAuthority(
-							AUTHORITIES.CONSULTANT_DEFAULT,
-							userData
-						) ? (
-							<Link
-								to={`/sessions/consultant/${sessionView}/${
-									activeSession.item.groupId
-								}/${
-									activeSession.item.id
-								}/groupChatInfo${getSessionListTab()}`}
-							>
-								<h3>{activeSession.item.topic}</h3>
-							</Link>
-						) : (
-							<h3>{activeSession.item.topic}</h3>
-						)}
-					</div>
-					<SessionMenu
-						hasUserInitiatedStopOrLeaveRequest={
-							props.hasUserInitiatedStopOrLeaveRequest
-						}
-						isAskerInfoAvailable={isAskerInfoAvailable()}
-						isJoinGroupChatView={props.isJoinGroupChatView}
-					/>
-				</div>
-				<div className="sessionInfo__metaInfo">
-					<div className="sessionInfo__metaInfo__content">
-						{getGroupChatDate(
-							activeSession.item,
-							translate('sessionList.time.label.postfix'),
-							true
-						)}
-					</div>
-					{activeSession.item.active &&
-					activeSession.item.subscribed &&
-					!props.isJoinGroupChatView ? (
-						<div
-							className="sessionInfo__metaInfo__content sessionInfo__metaInfo__content--clickable"
-							id="subscriberButton"
-							onClick={(e) => handleFlyout(e)}
-						>
-							{translate(
-								'groupChat.active.sessionInfo.subscriber'
-							)}
-							{isSubscriberFlyoutOpen ? (
-								<div className="sessionInfo__metaInfo__flyout">
-									<ul>
-										{subscriberList.map(
-											(subscriber, index) => (
-												<li
-													className={
-														isCurrentUserModerator &&
-														!props.bannedUsers.includes(
-															subscriber.username
-														) &&
-														!subscriber.isModerator
-															? 'has-flyout'
-															: ''
-													}
-													key={index}
-													onClick={() => {
-														if (
-															!props.bannedUsers.includes(
-																subscriber.username
-															)
-														) {
-															setFlyoutOpenId(
-																subscriber._id
-															);
-														}
-													}}
-												>
-													<span>
-														{subscriber.displayName
-															? decodeUsername(
-																	subscriber.displayName
-															  )
-															: decodeUsername(
-																	subscriber.username
-															  )}
-													</span>
-													{isCurrentUserModerator &&
-														!subscriber.isModerator && (
-															<FlyoutMenu
-																isHidden={props.bannedUsers.includes(
-																	subscriber.username
-																)}
-																position={
-																	window.innerWidth <=
-																	520
-																		? 'left'
-																		: 'right'
-																}
-																isOpen={
-																	flyoutOpenId ===
-																	subscriber._id
-																}
-																handleClose={() => {
-																	setFlyoutOpenId(
-																		null
-																	);
-																}}
-															>
-																<BanUser
-																	userName={decodeUsername(
-																		subscriber.username
-																	)}
-																	rcUserId={
-																		subscriber._id
-																	}
-																	chatId={
-																		activeSession
-																			.item
-																			.id
-																	}
-																/>
-															</FlyoutMenu>
-														)}
-													{isCurrentUserModerator &&
-														props.bannedUsers.includes(
-															subscriber.username
-														) && (
-															<Tag
-																className="bannedUserTag"
-																color="red"
-																text={translate(
-																	'banUser.is.banned'
-																)}
-															/>
-														)}
-												</li>
-											)
-										)}
-									</ul>
-								</div>
-							) : null}
-						</div>
-					) : null}
-				</div>
-			</div>
+			<GroupChatHeader
+				hasUserInitiatedStopOrLeaveRequest={
+					props.hasUserInitiatedStopOrLeaveRequest
+				}
+				isJoinGroupChatView={props.isJoinGroupChatView}
+				bannedUsers={props.bannedUsers}
+			/>
 		);
 	}
 
@@ -386,6 +195,7 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 						props.hasUserInitiatedStopOrLeaveRequest
 					}
 					isAskerInfoAvailable={isAskerInfoAvailable()}
+					bannedUsers={props.bannedUsers}
 				/>
 			</div>
 
@@ -407,24 +217,21 @@ export const SessionHeaderComponent = (props: SessionHeaderProps) => {
 					) : null}
 					{preparedUserSessionData
 						? preparedUserSessionData.map((item, index) =>
-								item.value ? (
+								item.value &&
+								!(
+									item.type === 'age' && item.value === 'null'
+								) ? (
 									<div
 										className="sessionInfo__metaInfo__content"
 										key={index}
 									>
-										{item.type === 'addictiveDrugs'
-											? translate(
-													getAddictiveDrugsString(
-														addictiveDrugs
-													)
-											  )
-											: translate(
-													handleNumericTranslation(
-														translateBase,
-														item.type,
-														item.value
-													)
-											  )}
+										{translate(
+											handleNumericTranslation(
+												translateBase,
+												item.type,
+												item.value
+											)
+										)}
 									</div>
 								) : null
 						  )

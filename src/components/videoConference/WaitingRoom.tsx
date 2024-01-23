@@ -16,6 +16,8 @@ import { Button, BUTTON_TYPES, ButtonItem } from '../button/Button';
 import { LegalLinksContext } from '../../globalState/provider/LegalLinksProvider';
 import { Text } from '../text/Text';
 import { GlobalComponentContext } from '../../globalState/provider/GlobalComponentContext';
+import { supportsE2EEncryptionVideoCall } from '../../utils/videoCallHelpers';
+import { E2EEncryptionSupportHelp } from '../E2EEncryptionSupportHelp/E2EEncryptionSupportHelp';
 
 export interface WaitingRoomProps {
 	confirmed: boolean;
@@ -72,7 +74,9 @@ export const WaitingRoom = ({
 	};
 
 	const getContent = () => {
-		if (error) {
+		if (!supportsE2EEncryptionVideoCall()) {
+			return <E2EEncryptionSupportHelp />;
+		} else if (error) {
 			return (
 				<WaitingRoomContent
 					headlineKey={error.title}
@@ -119,10 +123,10 @@ export const WaitingRoom = ({
 															'registration.dataProtection.label.and'
 													  )
 												: '') +
-											`<a target="_blank" href="${
-												legalLink.url
-											}">${translate(
-												legalLink.label
+											`<a target="_blank" href="${legalLink.getUrl(
+												{ aid: null }
+											)}">${translate(
+												legalLink.getUrl({ aid: null })
 											)}</a>`
 									)
 									.join('')

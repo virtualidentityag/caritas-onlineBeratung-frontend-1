@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import {
 	ListItemInterface,
+	STATUS_EMPTY,
 	UserDataContext,
 	UserDataInterface
 } from '../../../../globalState';
@@ -12,16 +13,12 @@ import {
 } from '../../../../api';
 import Cal from '../Calcom/Cal';
 import { useAppConfig } from '../../../../hooks/useAppConfig';
-import {
-	setBookingWrapperActive,
-	setBookingWrapperInactive
-} from '../../../../components/app/navigationHandler';
 import { getValueFromCookie } from '../../../../components/sessionCookie/accessSessionCookie';
 
 export const getUserEmail = (userData: UserDataInterface) => {
 	return userData.email
 		? userData.email
-		: userData.userName + '@suchtberatung.digital';
+		: userData.userName?.replace(/ /g, '') + '@suchtberatung.digital';
 };
 
 export const Booking = () => {
@@ -31,18 +28,11 @@ export const Booking = () => {
 	const settings = useAppConfig();
 
 	useEffect(() => {
-		setBookingWrapperActive();
-
-		return () => {
-			setBookingWrapperInactive();
-		};
-	}, []);
-
-	useEffect(() => {
 		apiGetAskerSessionList().then(({ sessions }) => {
-			setSession(sessions[0]);
-			const consultant = sessions[0]?.consultant;
-			const agencyId = sessions[0]?.agency?.id;
+			const session = sessions.find((s) => !!s.consultant);
+			setSession(session);
+			const consultant = session?.consultant;
+			const agencyId = session?.agency?.id;
 			if (consultant) {
 				const consultantId = consultant?.consultantId || consultant?.id;
 				getCounselorAppointmentLink(consultantId).then((response) => {
@@ -55,6 +45,8 @@ export const Booking = () => {
 			}
 		});
 	}, [userData]);
+
+	if (!session) return null;
 
 	return (
 		<React.Fragment>
@@ -69,8 +61,7 @@ export const Booking = () => {
 						'metadata[user]': userData.userId,
 						'metadata[isInitialAppointment]':
 							!session.consultant ||
-							new Date(session.latestMessage).getTime() <
-								new Date(session.session.createDate).getTime(),
+							session.session.status === STATUS_EMPTY,
 						'metadata[sessionId]': session.session.id,
 						'metadata[rcToken]': getValueFromCookie('rc_token'),
 						'metadata[rcUserId]': getValueFromCookie('rc_uid'),

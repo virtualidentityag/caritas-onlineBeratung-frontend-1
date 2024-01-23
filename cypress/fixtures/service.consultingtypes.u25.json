@@ -8,7 +8,7 @@
 		"registrationDropdown": "Beratung für suizidgefährdete junge Menschen [U25]"
 	},
 	"urls": {
-		"requiredAidMissingRedirectUrl": "https://www.u25.de/helpmail/"
+		"requiredAidMissingRedirectUrl": "https://www.u25-deutschland.de/helpmail/"
 	},
 	"registration": {
 		"minPostcodeSize": 5,
@@ -50,10 +50,6 @@
 		"relation": false,
 		"state": true
 	},
-	"monitoring": {
-		"initializeMonitoring": true,
-		"monitoringTemplateFile": "u25.json"
-	},
 	"initializeFeedbackChat": true,
 	"roles": {
 		"consultant": {
@@ -69,30 +65,6 @@
 		}
 	},
 	"showAskerProfile": true,
-	"voluntaryComponents": [
-		{
-			"componentType": "RadioButton",
-			"headline": "Geschlecht",
-			"name": "gender",
-			"radioButtons": [
-				{
-					"inputId": "female",
-					"label": "Weiblich",
-					"checked": false
-				},
-				{
-					"inputId": "male",
-					"label": "Männlich",
-					"checked": false
-				},
-				{
-					"inputId": "diverseGender",
-					"label": "Divers",
-					"checked": false
-				}
-			]
-		}
-	],
 	"requiredComponents": {
 		"age": {
 			"isEnabled": true,
