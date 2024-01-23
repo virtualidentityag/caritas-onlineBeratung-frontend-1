@@ -39,8 +39,9 @@ const defaultResources = {
 };
 
 const translationCacheDisabledLocally =
-	localStorage.getItem(STORAGE_KEY_TRANSLATION_DISABLE_CACHE) !== null &&
-	localStorage.getItem(STORAGE_KEY_TRANSLATION_DISABLE_CACHE) === '1';
+	localStorage.getItem(STORAGE_KEY_TRANSLATION_DISABLE_CACHE) !== null
+		? localStorage.getItem(STORAGE_KEY_TRANSLATION_DISABLE_CACHE) === '1'
+		: null;
 
 export const init = async (
 	{ resources, supportedLngs, ...config }: InitOptions,
@@ -137,6 +138,12 @@ export const init = async (
 						escapeValue: false
 					},
 					partialBundledLanguages: true,
+					// ToDo: Temp fix for cypress because it has problems with using backend with cy.clock()
+					...((window as any).Cypress
+						? {
+								resources: baseResources
+							}
+						: {}),
 					backend: {
 						backends: [
 							!(translationCacheDisabledLocally === null

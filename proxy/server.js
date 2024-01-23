@@ -6,8 +6,7 @@ const dotenv = require('dotenv');
 const dotenvExpand = require('dotenv-expand').expand;
 dotenvExpand(dotenv.config());
 
-process.env.REACT_APP_CSRF_WHITELIST_HEADER_PROPERTY =
-	process.env.CSRF_WHITELIST_HEADER_FOR_LOCAL_DEVELOPMENT;
+app.disable('x-powered-by');
 
 process.on('unhandledRejection', (err) => {
 	throw err;
@@ -36,11 +35,17 @@ const createServer = async () => {
 	await fs.promises.access(buildPath);
 
 	app.use((await import('compression')).default());
-	app.use(
-		(await import('serve-static')).default(buildPath, {
-			index: 'beratung-hilfe.html'
-		})
+
+	const serveStatic = await import('serve-static');
+	app.get(
+		/.(?:css(\.map)?|js(\.map)?|jpe?g|png|gif|ico|cur|heic|webp|tiff?|mp3|m4a|aac|ogg|midi?|wav|mp4|mov|webm|mpe?g|avi|ogv|flv|wmv)$/,
+		serveStatic.default(buildPath, { maxAge: '1d' })
 	);
+	app.get(
+		/.(?:svgz?|ttf|ttc|otf|eot|woff2?)$/,
+		serveStatic.default(buildPath, { maxAge: '1d' })
+	);
+	app.use(serveStatic.default(buildPath, { index: 'beratung-hilfe.html' }));
 
 	const middlewareConfigs = require(resolveApp('./routes'))(storagePath);
 	middlewareConfigs.forEach(
