@@ -1,26 +1,9 @@
-// .agencySelectionWrapper {
-// 	display: flex;
-// 	gap: 32px;
-// 	flex-direction: column;
-// 	flex-grow: 1;
-// 	width: 100%;
-
-// 	&.loading-agencies {
-// 		align-items: center;
-// 	}
-// }
-
-// $maxFormElementWidth: 320px;
 $infoIconSize: 16px;
 
 .agencyRadioSelect {
 	position: relative;
 	animation: fadeIn linear 0.2s;
 	width: 100%;
-
-	// .radioButton__label {
-	// 	padding-left: 16px;
-	// }
 
 	// .agencyLanguages {
 	// 	margin-left: 0;
@@ -107,6 +90,7 @@ $infoIconSize: 16px;
 
 			&__label {
 				font-size: 16px;
+				padding-left: 16px;
 			}
 
 			&__contentWrapper {
@@ -116,6 +100,10 @@ $infoIconSize: 16px;
 
 		&:not(:last-of-type) {
 			border-bottom: 1px solid $black-10-opacity;
+		}
+
+		& > .headline {
+			margin-left: $registration-form-margin-left;
 		}
 	}
 
@@ -141,21 +129,4 @@ $infoIconSize: 16px;
 		object-fit: contain;
 		object-position: center left;
 	}
-
-	// h5 {
-	// 	margin-bottom: 12px;
-	// }
-
-	// &__consultingModeInfo {
-	// 	animation: fadeIn linear 0.2s;
-	// 	font-size: $font-size-secondary;
-	// 	line-height: 1.3333em;
-	// 	max-width: $maxFormElementWidth;
-	// 	margin: 0 auto $grid-base-four;
-
-	// 	@include breakpoint($fromLarge) {
-	// 		margin: 0 0 $grid-base-four;
-	// 		text-align: left;
-	// 	}
-	// }
 }

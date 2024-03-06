@@ -395,7 +395,6 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 			)}
 			{showPreselectedAgency && (
 				<AgencyRadioSelect
-					key={`agency-${preselectedAgency.id}`}
 					agency={preselectedAgency}
 					checkedValue={preselectedAgency.id.toString()}
 					prefix={translate('registration.agency.preselected.prefix')}

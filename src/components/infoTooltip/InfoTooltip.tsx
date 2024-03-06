@@ -64,7 +64,7 @@ export const InfoTooltip = ({
 				}}
 				onMouseLeave={() => {
 					if (!isMobile) {
-						setDisplayInfo(null);
+						// setDisplayInfo(null);
 					}
 				}}
 				onFocus={() => {
@@ -74,7 +74,7 @@ export const InfoTooltip = ({
 				}}
 				onBlur={() => {
 					if (!isMobile) {
-						setDisplayInfo(null);
+						// setDisplayInfo(null);
 					}
 				}}
 				tabIndex={0}

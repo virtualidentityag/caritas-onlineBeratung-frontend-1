@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+	Fragment,
+	useCallback,
+	useContext,
+	useEffect,
+	useState
+} from 'react';
 import { useAgenciesForRegistration } from '../../hooks/useAgenciesForRegistration';
 import { NoAgencyFound } from '../NoAgencyFound';
 import { ConsultingTypeSelection } from '../ConsultingTypeSelection';
@@ -257,20 +263,18 @@ export const ProposedAgencies = ({
 						agenciesCount={agencies.length}
 					/>
 					<div className="agencySelection">
-						{agencies
-							.filter((a) => a.agencyLogo !== null)
-							.map((agency) => (
-								<AgencyRadioSelect
-									key={`agency-${agency.id}`}
-									agency={agency}
-									checkedValue={formAccordionData.agency?.id.toString()}
-									onChange={({ id }) =>
-										handleAgencyChange(
-											agencies.find((a) => a.id === id)
-										)
-									}
-								/>
-							))}
+						{agencies.slice(0, 10).map((agency) => (
+							<AgencyRadioSelect
+								key={`agency-${agency.id}`}
+								agency={agency}
+								checkedValue={formAccordionData.agency?.id.toString()}
+								onChange={({ id }) =>
+									handleAgencyChange(
+										agencies.find((a) => a.id === id)
+									)
+								}
+							/>
+						))}
 					</div>
 				</div>
 			)}
