@@ -257,7 +257,7 @@ export const ProposedAgencies = ({
 						agenciesCount={agencies.length}
 					/>
 					<div className="agencySelection">
-						{agencies.slice(0, 10).map((agency) => (
+						{agencies.map((agency) => (
 							<AgencyRadioSelect
 								key={`agency-${agency.id}`}
 								agency={agency}
