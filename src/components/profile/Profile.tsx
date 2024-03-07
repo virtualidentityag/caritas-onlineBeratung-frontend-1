@@ -2,17 +2,14 @@ import * as React from 'react';
 import { useState, useRef, useContext, useEffect, Fragment } from 'react';
 import { logout } from '../logout/logout';
 import {
+	AgencySpecificContext,
 	AUTHORITIES,
 	ConsultingTypesContext,
 	hasUserAuthority,
-	LocaleContext,
 	UserDataContext,
-	useTenant
+	useTenant,
+	LocaleContext
 } from '../../globalState';
-import {
-	setProfileWrapperActive,
-	setProfileWrapperInactive
-} from '../app/navigationHandler';
 import { ReactComponent as PersonIcon } from '../../resources/img/icons/person.svg';
 import { ReactComponent as LogoutIcon } from '../../resources/img/icons/out.svg';
 import { ReactComponent as BackIcon } from '../../resources/img/icons/arrow-left.svg';
@@ -52,6 +49,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { LegalLinksContext } from '../../globalState/provider/LegalLinksProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
+import useIsFirstVisit from '../../utils/useIsFirstVisit';
+import LegalLinks from '../legalLinks/LegalLinks';
 
 export const Profile = () => {
 	const settings = useAppConfig();
@@ -59,9 +58,11 @@ export const Profile = () => {
 	const { t: translate } = useTranslation();
 	const location = useLocation();
 	const { fromL } = useResponsive();
+	const isFirstVisit = useIsFirstVisit();
 
 	const legalLinks = useContext(LegalLinksContext);
-	const { userData, isFirstVisit } = useContext(UserDataContext);
+	const { userData } = useContext(UserDataContext);
+	const { specificAgency } = useContext(AgencySpecificContext);
 	const { consultingTypes } = useContext(ConsultingTypesContext);
 
 	const [mobileMenu, setMobileMenu] = useState<
@@ -79,12 +80,6 @@ export const Profile = () => {
 			.querySelector('.navigation__wrapper')
 			?.classList.remove('navigation__wrapper--mobileHidden');
 		document.querySelector('.header')?.classList.remove('header--mobile');
-
-		setProfileWrapperActive();
-
-		return () => {
-			setProfileWrapperInactive();
-		};
 	}, []);
 
 	useEffect(() => {
@@ -107,12 +102,12 @@ export const Profile = () => {
 											element,
 											userData,
 											consultingTypes ?? []
-									  )
+										)
 									: solveCondition(
 											element.condition,
 											userData,
 											consultingTypes ?? []
-									  )
+										)
 							)
 							.map((element) =>
 								isTabGroup(element)
@@ -126,10 +121,10 @@ export const Profile = () => {
 												element as unknown as TabType
 											)?.notificationBubble,
 											externalLink: element.externalLink
-									  }
+										}
 									: {
 											component: <element.component />
-									  }
+										}
 							)
 					})
 				)
@@ -160,12 +155,12 @@ export const Profile = () => {
 														? {
 																title: c.title,
 																url: c.url
-														  }
+															}
 														: null
 												)
 												.filter(Boolean)
 										: { title: curr.title, url: curr.url }
-							  ),
+								),
 					[]
 				)
 				.find(({ url }) => url === location.pathname)
@@ -269,7 +264,7 @@ export const Profile = () => {
 									tenant,
 									selectableLocales,
 									isFirstVisit
-							  )
+								)
 									.filter((tab) =>
 										solveTabConditions(
 											tab,
@@ -308,7 +303,7 @@ export const Profile = () => {
 									<div className="title text--nowrap text--bold text--center flex__col--50p">
 										{subpage?.title}
 									</div>
-							  )}
+								)}
 					</div>
 					<div
 						className={`profile__header__actions flex flex--ai-c flex--jc-fe ${
@@ -473,31 +468,28 @@ export const Profile = () => {
 						/>
 					</Switch>
 				</div>
-
 				<div className="profile__footer">
-					{legalLinks.map((legalLink, index) => (
-						<Fragment key={legalLink.url}>
-							{index > 0 && (
-								<Text
-									type="infoSmall"
-									className="profile__footer__separator"
-									text=" | "
-								/>
-							)}
-							<a
-								key={legalLink.url}
-								href={legalLink.url}
-								target="_blank"
-								rel="noreferrer"
-							>
+					<LegalLinks
+						legalLinks={legalLinks}
+						params={{ aid: specificAgency?.id }}
+						delimiter={
+							<Text
+								type="infoSmall"
+								className="profile__footer__separator"
+								text=" | "
+							/>
+						}
+					>
+						{(label, url) => (
+							<a href={url} target="_blank" rel="noreferrer">
 								<Text
 									className="profile__footer__item"
 									type="infoSmall"
-									text={translate(legalLink.label)}
+									text={label}
 								/>
 							</a>
-						</Fragment>
-					))}
+						)}
+					</LegalLinks>
 				</div>
 			</div>
 		</div>
@@ -515,8 +507,8 @@ const ProfileItem = ({
 			element.fullWidth
 				? 'full'
 				: element.column === COLUMN_LEFT
-				? 'left'
-				: 'right'
+					? 'left'
+					: 'right'
 		}`}
 	>
 		{element.boxed === false ? (

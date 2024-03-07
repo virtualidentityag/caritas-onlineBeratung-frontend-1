@@ -28,7 +28,9 @@ export const FETCH_ERRORS = {
 	CONFLICT: 'CONFLICT',
 	CONFLICT_WITH_RESPONSE: 'CONFLICT_WITH_RESPONSE',
 	EMPTY: 'EMPTY',
+	FAILED_DEPENDENCY: 'FAILED_DEPENDENCY',
 	FORBIDDEN: 'FORBIDDEN',
+	GATEWAY_TIMEOUT: 'GATEWAY_TIMEOUT',
 	NO_MATCH: 'NO_MATCH',
 	TIMEOUT: 'TIMEOUT',
 	UNAUTHORIZED: 'UNAUTHORIZED',
@@ -88,7 +90,7 @@ export const fetchData = ({
 			!skipAuth && accessToken
 				? {
 						Authorization: `Bearer ${accessToken}`
-				  }
+					}
 				: null;
 
 		const csrfToken = generateCsrfToken();
@@ -97,14 +99,14 @@ export const fetchData = ({
 			? {
 					rcToken: getValueFromCookie('rc_token'),
 					rcUserId: getValueFromCookie('rc_uid')
-			  }
+				}
 			: null;
 
 		const localDevelopmentHeader = isLocalDevelopment
 			? {
 					[process.env.REACT_APP_CSRF_WHITELIST_HEADER_PROPERTY]:
 						csrfToken
-			  }
+				}
 			: null;
 
 		let controller;
@@ -184,6 +186,13 @@ export const fetchData = ({
 								: new Error(FETCH_ERRORS.CONFLICT)
 						);
 					} else if (
+						response.status === 424 &&
+						responseHandling.includes(
+							FETCH_ERRORS.FAILED_DEPENDENCY
+						)
+					) {
+						reject(new Error(FETCH_ERRORS.FAILED_DEPENDENCY));
+					} else if (
 						responseHandling.includes(FETCH_ERRORS.CATCH_ALL) ||
 						responseHandling.includes(
 							FETCH_ERRORS.CATCH_ALL_WITH_RESPONSE
@@ -208,7 +217,13 @@ export const fetchData = ({
 						responseHandling.includes(FETCH_ERRORS.ABORTED)
 					) {
 						reject(new Error(FETCH_ERRORS.ABORTED));
+					} else if (
+						response.status === 504 &&
+						responseHandling.includes(FETCH_ERRORS.GATEWAY_TIMEOUT)
+					) {
+						reject(new Error(FETCH_ERRORS.GATEWAY_TIMEOUT));
 					} else if (response.status === 401) {
+						console.log(url);
 						logout(true, appConfig.urls.toLogin);
 					}
 				} else {

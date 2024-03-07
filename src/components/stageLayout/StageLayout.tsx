@@ -4,12 +4,13 @@ import { Button } from '../button/Button';
 import { Text } from '../text/Text';
 import './StageLayout.styles.scss';
 import clsx from 'clsx';
-import { LocaleContext } from '../../globalState';
+import { AgencySpecificContext, LocaleContext } from '../../globalState';
 import { useTranslation } from 'react-i18next';
 import { LocaleSwitch } from '../localeSwitch/LocaleSwitch';
 import { LegalLinksContext } from '../../globalState/provider/LegalLinksProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { useResponsive } from '../../hooks/useResponsive';
+import LegalLinks from '../legalLinks/LegalLinks';
 
 interface StageLayoutProps {
 	className?: string;
@@ -33,6 +34,7 @@ export const StageLayout = ({
 	const { t: translate } = useTranslation();
 	const legalLinks = useContext(LegalLinksContext);
 	const { selectableLocales } = useContext(LocaleContext);
+	const { specificAgency } = useContext(AgencySpecificContext);
 	const settings = useAppConfig();
 	const { fromL } = useResponsive();
 
@@ -101,31 +103,32 @@ export const StageLayout = ({
 			<div className="stageLayout__footer">
 				{showLegalLinks && (
 					<div className={`stageLayout__legalLinks`}>
-						{legalLinks.map((legalLink, index) => (
-							<React.Fragment key={legalLink.url}>
-								{index > 0 && (
-									<Text
-										type="infoSmall"
-										className="stageLayout__legalLinksSeparator"
-										text=" | "
-									/>
-								)}
+						<LegalLinks
+							delimiter={
+								<Text
+									type="infoSmall"
+									className="stageLayout__legalLinksSeparator"
+									text=" | "
+								/>
+							}
+							params={{ aid: specificAgency?.id }}
+							legalLinks={legalLinks}
+						>
+							{(label, url) => (
 								<button
 									type="button"
 									className="button-as-link"
-									data-cy-link={legalLink.url}
-									onClick={() =>
-										window.open(legalLink.url, '_blank')
-									}
+									data-cy-link={url}
+									onClick={() => window.open(url, '_blank')}
 								>
 									<Text
 										className="stageLayout__legalLinksItem"
 										type="infoSmall"
-										text={translate(legalLink.label)}
+										text={label}
 									/>
 								</button>
-							</React.Fragment>
-						))}
+							)}
+						</LegalLinks>
 					</div>
 				)}
 			</div>

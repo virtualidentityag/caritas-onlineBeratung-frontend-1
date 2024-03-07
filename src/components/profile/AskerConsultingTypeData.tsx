@@ -33,6 +33,7 @@ export const AskerConsultingTypeData = () => {
 										text={translate(
 											[
 												`consultingType.${resort.agency.consultingType}.titles.default`,
+												`consultingType.fallback.titles.default`,
 												consultingTypes.find(
 													(cur) =>
 														cur.id ===
@@ -88,10 +89,10 @@ export const AskerConsultingTypeData = () => {
 																			item
 																		]
 																	)
-															  )
+																)
 															: translate(
 																	'profile.noContent'
-															  )}
+																)}
 													</p>
 												</div>
 											)

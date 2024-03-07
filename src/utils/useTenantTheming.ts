@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { apiGetTenantTheming } from '../api/apiGetTenantTheming';
 import { TenantContext, useLocaleData } from '../globalState';
-import { TenantDataInterface } from '../globalState/interfaces/TenantDataInterface';
+import { TenantDataInterface } from '../globalState/interfaces';
 import getLocationVariables from './getLocationVariables';
 import decodeHTML from './decodeHTML';
 import contrast from 'get-contrast';
@@ -130,11 +130,11 @@ const injectCss = ({ primaryColor, secondaryColor }) => {
 				? adjustHSLColor({
 						color: primaryHSL,
 						adjust: primaryHSL.l + 10
-				  }) // lighter
+					}) // lighter
 				: adjustHSLColor({
 						color: primaryHSL,
 						adjust: primaryHSL.l - 1
-				  }) // darker
+					}) // darker
 		};
 		--skin-color-secondary: ${secondaryColor || ''};
 		--skin-color-secondary-light: ${
@@ -142,7 +142,7 @@ const injectCss = ({ primaryColor, secondaryColor }) => {
 				? adjustHSLColor({
 						color: secondaryHSL,
 						adjust: 90
-				  })
+					})
 				: ''
 		};
 		--skin-color-secondary-contrast-safe: ${secondaryColorContrastSafe || ''};
@@ -227,15 +227,23 @@ const useTenantTheming = () => {
 		settings.useTenantService
 	);
 
+	const cypressTenantEnabled = useMemo(
+		() => (window as any).Cypress?.env('TENANT_ENABLED'),
+		[]
+	);
+
 	const onTenantServiceResponse = useCallback(
 		(tenant: TenantDataInterface) => {
-			if (!subdomain) {
+			if (!subdomain && cypressTenantEnabled !== '1') {
 				tenantContext?.setTenant({ settings } as any);
 			} else {
 				// ToDo: See VIC-428 + VIC-427
 				const decodedTenant = JSON.parse(JSON.stringify(tenant));
 
 				decodedTenant.theming.logo = decodeHTML(tenant.theming.logo);
+				decodedTenant.theming.associationLogo = decodeHTML(
+					tenant.theming.associationLogo
+				);
 				decodedTenant.theming.favicon = decodeHTML(
 					tenant.theming.favicon
 				);
@@ -247,7 +255,7 @@ const useTenantTheming = () => {
 			}
 			return;
 		},
-		[settings, subdomain, tenantContext]
+		[settings, subdomain, tenantContext, cypressTenantEnabled]
 	);
 
 	useEffect(() => {

@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import {
-	setProfileWrapperActive,
-	setProfileWrapperInactive
-} from '../app/navigationHandler';
 import { Overlay, OVERLAY_FUNCTIONS, OverlayItem } from '../overlay/Overlay';
 import { Button, BUTTON_TYPES, ButtonItem } from '../button/Button';
 import './appointments.styles.scss';
 import {
+	AgencySpecificContext,
 	NOTIFICATION_TYPE_SUCCESS,
 	NotificationsContext
 } from '../../globalState';
@@ -31,10 +28,12 @@ import { Text } from '../text/Text';
 import { useTranslation } from 'react-i18next';
 import { LegalLinksContext } from '../../globalState/provider/LegalLinksProvider';
 import { ListInfo } from '../listInfo/ListInfo';
+import LegalLinks from '../legalLinks/LegalLinks';
 
 export const Appointments = () => {
 	const { t: translate } = useTranslation();
 	const legalLinks = useContext(LegalLinksContext);
+	const { specificAgency } = useContext(AgencySpecificContext);
 	const { addNotification } = useContext(NotificationsContext);
 
 	const [loading, setLoading] = useState(true);
@@ -50,10 +49,10 @@ export const Appointments = () => {
 				headline: onlineMeeting.id
 					? translate(
 							'appointments.onlineMeeting.overlay.edit.headline'
-					  )
+						)
 					: translate(
 							'appointments.onlineMeeting.overlay.add.headline'
-					  ),
+						),
 				nestedComponent: (
 					<OnlineMeetingForm
 						onChange={onChange}
@@ -139,13 +138,6 @@ export const Appointments = () => {
 	const [overlayItem, setOverlayItem] = useState(null);
 	const [onlineMeeting, setOnlineMeeting] =
 		useState<AppointmentsDataInterface>({});
-
-	useEffect(() => {
-		setProfileWrapperActive();
-		return () => {
-			setProfileWrapperInactive();
-		};
-	}, []);
 
 	const handleOverlay = useCallback(
 		(buttonFunction: string) => {
@@ -320,29 +312,27 @@ export const Appointments = () => {
 				</ScrollableSectionBody>
 				<ScrollableSectionFooter>
 					<div className="profile__footer">
-						{legalLinks.map((legalLink, index) => (
-							<React.Fragment key={legalLink.url}>
-								{index > 0 && (
-									<Text
-										type="infoSmall"
-										className="profile__footer__separator"
-										text=" | "
-									/>
-								)}
-								<a
-									key={legalLink.url}
-									href={legalLink.url}
-									target="_blank"
-									rel="noreferrer"
-								>
+						<LegalLinks
+							legalLinks={legalLinks}
+							params={{ aid: specificAgency?.id }}
+							delimiter={
+								<Text
+									type="infoSmall"
+									className="profile__footer__separator"
+									text=" | "
+								/>
+							}
+						>
+							{(label, url) => (
+								<a href={url} target="_blank" rel="noreferrer">
 									<Text
 										className="profile__footer__item"
 										type="infoSmall"
-										text={translate(legalLink.label)}
+										text={label}
 									/>
 								</a>
-							</React.Fragment>
-						))}
+							)}
+						</LegalLinks>
 					</div>
 				</ScrollableSectionFooter>
 			</ScrollableSection>

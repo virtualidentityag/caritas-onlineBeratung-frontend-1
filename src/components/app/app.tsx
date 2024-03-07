@@ -1,6 +1,5 @@
 import '../../polyfill';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { ComponentType, useState, lazy, Suspense, useContext } from 'react';
 import {
 	BrowserRouter as Router,
@@ -17,14 +16,16 @@ import ErrorBoundary from './ErrorBoundary';
 import { LanguagesProvider } from '../../globalState/provider/LanguagesProvider';
 import { TenantThemingLoader } from './TenantThemingLoader';
 import {
-	AppConfigInterface,
 	AppConfigProvider,
 	InformalProvider,
-	LegalLinkInterface,
 	LocaleProvider,
 	NotificationsContext,
 	TenantProvider
 } from '../../globalState';
+import {
+	AppConfigInterface,
+	LegalLinkInterface
+} from '../../globalState/interfaces';
 import { LegalLinksProvider } from '../../globalState/provider/LegalLinksProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { DevToolbarWrapper } from '../devToolbar/DevToolbar';
@@ -63,7 +64,6 @@ type TExtraRoute = {
 interface AppProps {
 	stageComponent: ComponentType<StageProps>;
 	legalLinks?: Array<LegalLinkInterface>;
-	entryPoint: string;
 	extraRoutes?: TExtraRoute[];
 	spokenLanguages?: string[];
 	fixedLanguages?: string[];
@@ -73,7 +73,6 @@ interface AppProps {
 export const App = ({
 	stageComponent,
 	legalLinks,
-	entryPoint,
 	extraRoutes = [],
 	spokenLanguages = null,
 	fixedLanguages = ['de'],
@@ -100,7 +99,6 @@ export const App = ({
 									>
 										<RouterWrapper
 											extraRoutes={extraRoutes}
-											entryPoint={entryPoint}
 										/>
 									</GlobalComponentContext.Provider>
 								</LegalLinksProvider>
@@ -115,20 +113,17 @@ export const App = ({
 };
 
 interface RouterWrapperProps {
-	entryPoint: string;
 	extraRoutes?: TExtraRoute[];
 }
 
-const RouterWrapper = ({ extraRoutes, entryPoint }: RouterWrapperProps) => {
-	const history = useHistory();
+const RouterWrapper = ({ extraRoutes }: RouterWrapperProps) => {
 	const settings = useAppConfig();
 
 	const [startWebsocket, setStartWebsocket] = useState<boolean>(false);
 	const [disconnectWebsocket, setDisconnectWebsocket] =
 		useState<boolean>(false);
-	const [failedPreCondition, setFailedPreCondition] = useState(
-		preConditionsMet()
-	);
+	const [failedPreCondition, setFailedPreCondition] =
+		useState(preConditionsMet());
 
 	if (failedPreCondition) {
 		return <PreConditions onPreConditionsMet={setFailedPreCondition} />;
@@ -137,8 +132,8 @@ const RouterWrapper = ({ extraRoutes, entryPoint }: RouterWrapperProps) => {
 	return (
 		<Router>
 			<Switch>
-				{entryPoint !== '/' && (
-					<Redirect from="/" to={entryPoint} exact />
+				{settings.urls.landingpage !== '/' && (
+					<Redirect from="/" to={settings.urls.landingpage} exact />
 				)}
 				<Route>
 					<ContextProvider>
@@ -152,7 +147,14 @@ const RouterWrapper = ({ extraRoutes, entryPoint }: RouterWrapperProps) => {
 							<Switch>
 								{extraRoutes.map(
 									({ route, component: Component }) => (
-										<Route {...route}>
+										<Route
+											{...route}
+											key={
+												typeof route.path === 'string'
+													? route.path
+													: route.path.join('-')
+											}
+										>
 											<Component />
 										</Route>
 									)
@@ -165,22 +167,12 @@ const RouterWrapper = ({ extraRoutes, entryPoint }: RouterWrapperProps) => {
 									]}
 								>
 									<UrlParamsProvider>
-										<Registration
-											handleUnmatchConsultingType={() =>
-												history.push('/login')
-											}
-											handleUnmatchConsultant={() =>
-												history.push('/login')
-											}
-										/>
+										<Registration />
 									</UrlParamsProvider>
 								</Route>
 
 								<Route path="/:consultingTypeSlug/warteraum">
 									<WaitingRoomLoader
-										handleUnmatch={() =>
-											history.push('/login')
-										}
 										onAnonymousRegistration={() =>
 											setStartWebsocket(true)
 										}

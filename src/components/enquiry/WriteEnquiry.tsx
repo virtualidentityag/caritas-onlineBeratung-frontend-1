@@ -12,8 +12,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Overlay, OVERLAY_FUNCTIONS, OverlayItem } from '../overlay/Overlay';
 import { BUTTON_TYPES } from '../button/Button';
 import { endpoints } from '../../resources/scripts/endpoints';
-import { buildExtendedSession, STATUS_EMPTY } from '../../globalState';
-import { ActiveSessionContext } from '../../globalState/provider/ActiveSessionProvider';
+import { buildExtendedSession, ActiveSessionProvider } from '../../globalState';
+import { STATUS_EMPTY } from '../../globalState/interfaces';
 
 import {
 	desktopView,
@@ -116,10 +116,11 @@ export const WriteEnquiry: React.FC = () => {
 	const activateListView = () => {
 		document
 			.querySelector('.contentWrapper__list')
-			?.setAttribute('style', 'display: block');
+			?.classList.remove('contentWrapper__list--hidden');
 		document
 			.querySelector('.navigation__wrapper')
 			?.classList.remove('navigation__wrapper--mobileHidden');
+		document.querySelector('.header')?.classList.remove('header--mobile');
 
 		if (window.innerWidth <= 900) {
 			const contentWrapper = document.querySelector(
@@ -134,7 +135,7 @@ export const WriteEnquiry: React.FC = () => {
 	const deactivateListView = () => {
 		document
 			.querySelector('.contentWrapper__list')
-			?.setAttribute('style', 'display: none');
+			?.classList.add('contentWrapper__list--hidden');
 		document
 			.querySelector('.navigation__wrapper')
 			?.classList.add('navigation__wrapper--mobileHidden');
@@ -218,7 +219,7 @@ export const WriteEnquiry: React.FC = () => {
 					/>
 				)}
 			</div>
-			<ActiveSessionContext.Provider value={{ activeSession }}>
+			<ActiveSessionProvider activeSession={activeSession}>
 				<RocketChatUsersOfRoomProvider>
 					<Suspense
 						fallback={
@@ -238,7 +239,7 @@ export const WriteEnquiry: React.FC = () => {
 						/>
 					</Suspense>
 				</RocketChatUsersOfRoomProvider>
-			</ActiveSessionContext.Provider>
+			</ActiveSessionProvider>
 			{overlayActive && (
 				<Overlay
 					item={overlayItem}
