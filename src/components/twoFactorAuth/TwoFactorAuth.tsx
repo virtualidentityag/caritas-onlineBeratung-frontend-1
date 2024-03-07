@@ -55,8 +55,10 @@ export const TWO_FACTOR_TYPES = {
 
 export const TwoFactorAuth = () => {
 	const { t: translate } = useTranslation();
-	const location =
-		useLocation<{ openTwoFactor?: boolean; isEditMode?: boolean }>();
+	const location = useLocation<{
+		openTwoFactor?: boolean;
+		isEditMode?: boolean;
+	}>();
 
 	const { userData, reloadUserData } = useContext(UserDataContext);
 
@@ -284,14 +286,13 @@ export const TwoFactorAuth = () => {
 						handleRadioButton={() => {
 							setTwoFactorType(TWO_FACTOR_TYPES.APP);
 						}}
-						label={translate(
-							'twoFactorAuth.activate.radio.label.app'
-						)}
 						inputId="radio_2fa_app"
 						name="radio_2fa"
 						type="default"
 						value={TWO_FACTOR_TYPES.APP}
-					></RadioButton>
+					>
+						{translate('twoFactorAuth.activate.radio.label.app')}
+					</RadioButton>
 					<Tooltip trigger={<InfoIcon />}>
 						{translate('twoFactorAuth.activate.radio.tooltip.app')}
 					</Tooltip>
@@ -302,14 +303,13 @@ export const TwoFactorAuth = () => {
 						handleRadioButton={() => {
 							setTwoFactorType(TWO_FACTOR_TYPES.EMAIL);
 						}}
-						label={translate(
-							'twoFactorAuth.activate.radio.label.email'
-						)}
 						inputId="radio_2fa_email"
 						name="radio_2fa"
 						type="default"
 						value={TWO_FACTOR_TYPES.EMAIL}
-					></RadioButton>
+					>
+						{translate('twoFactorAuth.activate.radio.label.email')}
+					</RadioButton>
 					<Tooltip trigger={<InfoIcon />}>
 						{translate(
 							'twoFactorAuth.activate.radio.tooltip.email'
@@ -468,7 +468,7 @@ export const TwoFactorAuth = () => {
 								? encode(userData.twoFactorAuth.secret).replace(
 										/={1,8}$/,
 										''
-								  )
+									)
 								: ''
 						}
 						type="standard"
@@ -900,7 +900,7 @@ export const TwoFactorAuth = () => {
 								? translate('twoFactorAuth.switch.active.label')
 								: translate(
 										'twoFactorAuth.switch.deactive.label'
-								  )
+									)
 						}
 						type="standard"
 					/>

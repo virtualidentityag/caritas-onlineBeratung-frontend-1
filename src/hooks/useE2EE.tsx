@@ -16,7 +16,6 @@ import {
 	ALIAS_MESSAGE_TYPES,
 	apiSendAliasMessage
 } from '../api/apiSendAliasMessage';
-import { RocketChatGetUserRolesContext } from '../globalState/provider/RocketChatSytemUsersProvider';
 import { RocketChatUsersOfRoomContext } from '../globalState/provider/RocketChatUsersOfRoomProvider';
 
 export const ENCRYPT_ROOM_STATE_GET_MEMBERS = 'get_members';
@@ -76,7 +75,6 @@ export const useE2EE = (
 	const { subscriptionsReady, subscriptions, roomsReady, rooms } = useContext(
 		RocketChatSubscriptionsContext
 	);
-	const { systemUsers } = useContext(RocketChatGetUserRolesContext);
 	const { reload: reloadUsersOfRoom } = useContext(
 		RocketChatUsersOfRoomContext
 	);
@@ -118,15 +116,9 @@ export const useE2EE = (
 
 			const usersOfRoom = await reloadUsersOfRoom(roomId);
 
-			// Filter system user and users with unencrypted username (Maybe more system users)
+			// Filter active user skip it
 			const filteredMembers = usersOfRoom.filter(
-				(member) =>
-					member.username !== 'System' &&
-					member.username.indexOf('enc.') === 0 &&
-					!systemUsers.find(
-						(systemUser) => systemUser._id === member._id
-					) &&
-					(!skipCurrentUser || member._id !== rcUid)
+				(member) => !skipCurrentUser || member._id !== rcUid
 			);
 
 			let unhandledMembers = filteredMembers.length;
@@ -147,9 +139,8 @@ export const useE2EE = (
 					total: filteredMembers.length
 				});
 
-			const { users } = await apiRocketChatGetUsersOfRoomWithoutKey(
-				roomId
-			);
+			const { users } =
+				await apiRocketChatGetUsersOfRoomWithoutKey(roomId);
 
 			if (users.length <= 0) {
 				onStateChange &&
@@ -223,7 +214,6 @@ export const useE2EE = (
 		[
 			rid,
 			reloadUsersOfRoom,
-			systemUsers,
 			rcUid,
 			keyData.keyID,
 			keyData.sessionKeyExportedString
@@ -308,9 +298,8 @@ export const useE2EE = (
 					return;
 				}
 
-				const [members, unhandled] = await encryptMembers(
-					onStateChange
-				);
+				const [members, unhandled] =
+					await encryptMembers(onStateChange);
 
 				onStateChange &&
 					onStateChange({

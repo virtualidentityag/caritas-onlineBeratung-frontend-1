@@ -89,9 +89,9 @@ $iconSize: 24px;
 	&__username {
 		cursor: pointer;
 		overflow: hidden;
-		flex-grow: 1;
 
 		@include breakpoint($fromLarge) {
+			flex-grow: 1;
 			margin: 0;
 		}
 
@@ -208,6 +208,7 @@ $iconSize: 24px;
 			max-height: 40vh;
 			z-index: 1;
 			border: 1px solid $line-grey;
+
 			@include rounded-drop-shadow;
 			cursor: default;
 
