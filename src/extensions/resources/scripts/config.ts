@@ -4,7 +4,7 @@ import deInformal from '../i18n/overwrites/de@informal/common.json';
 import en from '../../../resources/i18n/en/common.json';
 import enOverwrites from '../i18n/overwrites/en/common.json';
 import enLanguages from '../../../resources/i18n/en/languages.json';
-import enConsultingTypes from '../i18n/overwrites/en/consultingTypes.json';
+import enConsultingTypes from '../i18n/en/consultingTypes.json';
 import { AppConfigInterface } from '../../../globalState/interfaces';
 
 import { config as baseConfig, uiUrl } from '../../../resources/scripts/config';
