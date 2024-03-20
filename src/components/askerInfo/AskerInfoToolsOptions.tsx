@@ -43,7 +43,7 @@ export const AskerInfoToolsOptions = (
 								...tool,
 								sharedWithAdviceSeeker:
 									!tool.sharedWithAdviceSeeker
-						  }
+							}
 						: tool
 				);
 			} else {
@@ -52,11 +52,11 @@ export const AskerInfoToolsOptions = (
 						? {
 								...tool,
 								sharedWithAdviceSeeker: true
-						  }
+							}
 						: {
 								...tool,
 								sharedWithAdviceSeeker: false
-						  }
+							}
 				);
 			}
 			setInfoAboutToolsModal(updatedToolsModal);
@@ -164,11 +164,11 @@ export const AskerInfoToolsOptions = (
 				? {
 						...tool,
 						sharedWithAdviceSeeker: true
-				  }
+					}
 				: {
 						...tool,
 						sharedWithAdviceSeeker: false
-				  };
+					};
 		});
 		setInfoAboutToolsModal(resetTools);
 		setShowModal(false);
@@ -195,15 +195,12 @@ export const AskerInfoToolsOptions = (
 				{infoAboutToolsModal.map((tool: APIToolsInterface) => (
 					<Checkbox
 						key={tool.title}
-						className="textarea__checkbox"
-						item={{
-							inputId: tool.toolId,
-							name: tool.title,
-							labelId: tool.title,
-							label: tool.title,
-							description: tool.description,
-							checked: !!tool.sharedWithAdviceSeeker
-						}}
+						inputId={tool.toolId}
+						name={tool.title}
+						labelId={tool.title}
+						label={tool.title}
+						description={tool.description}
+						checked={!!tool.sharedWithAdviceSeeker}
 						checkboxHandle={(e) =>
 							updateSharedToolsModal(e.target, true)
 						}
@@ -245,15 +242,14 @@ export const AskerInfoToolsOptions = (
 	}, [props.askerId]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
-		<div className="asker-info-tools-options">
-			<Text text={translate('userProfile.tools.title')} type="divider" />
+		<div className="askerInfoToolsOptions">
 			<Text
 				text={translate('userProfile.tools.description')}
 				type="infoSmall"
 			/>
 			<button
 				type="button"
-				className="asker-info-tools-options__button text--tertiary primary button-as-link"
+				className="askerInfoToolsOptions__button text--tertiary primary button-as-link"
 				onClick={() => setShowModal(true)}
 			>
 				<Info />
@@ -278,7 +274,7 @@ export const AskerInfoToolsOptions = (
 			/>
 			{showModal && overlayContent && (
 				<Overlay
-					className="asker-info-tools-options__overlay"
+					className="askerInfoToolsOptions__overlay"
 					item={overlayContent}
 					handleOverlayClose={() => resetToolsAfterCloseModal()}
 					handleOverlay={handleOverlayAction}

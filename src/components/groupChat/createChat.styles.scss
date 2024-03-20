@@ -7,11 +7,10 @@ $inputSpacing: 32px;
 		flex-direction: column;
 		background-color: $background-light;
 		width: 100vw;
-		height: 100vh;
+		height: 100%;
 
 		@include breakpoint($fromLarge) {
 			width: 100%;
-			height: calc(100vh - 96px);
 		}
 	}
 
@@ -116,6 +115,7 @@ $inputSpacing: 32px;
 		align-items: center;
 		height: 100%;
 		margin-top: $grid-base-three;
+		overflow-y: auto;
 
 		.inputField {
 			width: $chat-input-width;
@@ -135,10 +135,23 @@ $inputSpacing: 32px;
 			}
 		}
 	}
-}
 
-.creatChat__name__input {
-	padding-left: $grid-base-three;
+	&__name__input {
+		padding-left: $grid-base-three;
+	}
+
+	&__textareaWrapper {
+		width: $chat-input-width;
+
+		& > .textarea__wrapper {
+			margin: 0;
+		}
+	}
+
+	&__explanation {
+		font-size: 12px;
+		margin: 0 0 $grid-base-four;
+	}
 }
 
 //overwrite component spacings

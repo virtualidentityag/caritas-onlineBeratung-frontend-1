@@ -103,10 +103,12 @@ export interface SessionItemInterface {
 
 export interface GroupChatItemInterface {
 	active: boolean;
+	assignedAgencies: AgencyService.Schemas.AgencyResponseDTO[];
 	attachment: UserService.Schemas.SessionAttachmentDTO;
 	consultingType: number;
 	duration: number;
 	groupId: string;
+	hintMessage: string;
 	id: number;
 	lastMessage: string;
 	lastMessageType?: string;
@@ -122,6 +124,7 @@ export interface GroupChatItemInterface {
 	startTime: string;
 	subscribed: boolean;
 	topic: string;
+	createdAt: string;
 }
 
 export interface SessionUserInterface {

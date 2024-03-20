@@ -26,6 +26,7 @@ export interface UserDataInterface {
 	twoFactorAuth?: TwoFactorAuthInterface;
 	userId: string;
 	userName: string;
+	userRoles: string[];
 	termsAndConditionsConfirmation: string;
 	dataPrivacyConfirmation: string;
 	emailNotifications?: EmailNotificationsInterface;
@@ -34,9 +35,7 @@ export interface UserDataInterface {
 export interface ConsultantDataInterface
 	extends Omit<UserDataInterface, 'userId'> {
 	consultantId: string;
-	agencies: (AgencyDataInterface & {
-		consultingTypeRel?: ConsultingTypeInterface;
-	})[];
+	agencies: AgencyDataInterface[];
 }
 
 export interface AgencyDataInterface {
@@ -51,6 +50,10 @@ export interface AgencyDataInterface {
 	url?: string;
 	external?: boolean;
 	tenantId?: number;
+	agencySpecificPrivacy?: string;
+	consultingTypeRel?: ConsultingTypeInterface;
+	topicIds?: number[];
+	agencyLogo?: string | null;
 }
 
 export interface ConsultingTypeDataInterface {
@@ -65,7 +68,7 @@ export interface TwoFactorAuthInterface {
 	secret: string;
 	qrCode: string;
 	isShown: boolean;
-	type?: typeof TWO_FACTOR_TYPES[keyof typeof TWO_FACTOR_TYPES];
+	type?: (typeof TWO_FACTOR_TYPES)[keyof typeof TWO_FACTOR_TYPES];
 }
 
 export interface AgencyLanguagesInterface {

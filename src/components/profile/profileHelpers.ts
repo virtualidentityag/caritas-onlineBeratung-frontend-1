@@ -1,8 +1,8 @@
+import { getConsultingType } from '../../globalState';
 import {
 	UserDataInterface,
-	ConsultingTypeBasicInterface,
-	getConsultingType
-} from '../../globalState';
+	ConsultingTypeBasicInterface
+} from '../../globalState/interfaces';
 
 export const convertUserDataObjectToArray = (object) => {
 	const array = [];
@@ -44,7 +44,7 @@ export const getConsultingTypesForRegistrationStatus = (
 				? value.data.isRegistered
 				: consultingTypes.find(
 						(cur) => cur.id === parseInt(value.consultingType)
-				  )?.isSubsequentRegistrationAllowed &&
+					)?.isSubsequentRegistrationAllowed &&
 						!value.data.isRegistered;
 		});
 };

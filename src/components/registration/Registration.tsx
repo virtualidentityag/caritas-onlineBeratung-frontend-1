@@ -13,16 +13,9 @@ import useIsFirstVisit from '../../utils/useIsFirstVisit';
 import { useTranslation } from 'react-i18next';
 import { GlobalComponentContext } from '../../globalState/provider/GlobalComponentContext';
 import { UrlParamsContext } from '../../globalState/provider/UrlParamsProvider';
+import { useAppConfig } from '../../hooks/useAppConfig';
 
-interface RegistrationProps {
-	handleUnmatchConsultingType: Function;
-	handleUnmatchConsultant: Function;
-}
-
-export const Registration = ({
-	handleUnmatchConsultingType,
-	handleUnmatchConsultant
-}: RegistrationProps) => {
+export const Registration = () => {
 	const { t: translate } = useTranslation([
 		'common',
 		'consultingTypes',
@@ -34,6 +27,7 @@ export const Registration = ({
 	const agencyId = getUrlParameter('aid');
 	const consultantId = getUrlParameter('cid');
 	const postcodeParameter = getUrlParameter('postcode');
+	const settings = useAppConfig();
 
 	const { setInformal } = useContext(InformalContext);
 	const { Stage } = useContext(GlobalComponentContext);
@@ -47,7 +41,7 @@ export const Registration = ({
 		.join('&');
 
 	const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(
-		!postcodeParameter
+		postcodeParameter === null
 	);
 
 	const [isReady, setIsReady] = useState(false);
@@ -57,7 +51,7 @@ export const Registration = ({
 		window.scrollTo({ top: 0 });
 	};
 
-	const { agency, consultingType, consultant, loaded } =
+	const { agency, consultingType, consultant, topic, loaded } =
 		useContext(UrlParamsContext);
 
 	useEffect(() => {
@@ -65,22 +59,16 @@ export const Registration = ({
 			return;
 		}
 
-		if (!consultingType && !agency && !consultant) {
+		if (!consultingType && !agency && !consultant && !topic) {
 			console.error(
-				'No `consultingType`, `consultant` or `agency` found in URL.'
+				'No `consultingType`, `consultant`, `agency` or `topic` found in URL.'
 			);
+			window.location.href = settings.urls.toRegistration;
 			return;
 		}
 
 		try {
-			if (consultantId) {
-				if (!consultant) {
-					handleUnmatchConsultant();
-					throw new Error(
-						`Unknown consultant with id ${consultantId}`
-					);
-				}
-
+			if (consultant) {
 				// If all consultant agencies are informal then use informal
 				const isInformal = consultant.agencies.every(
 					(agency) => !agency.consultingTypeRel.languageFormal
@@ -97,24 +85,13 @@ export const Registration = ({
 					)} ${translate(
 						[
 							`consultingType.${consultant.agencies[0].consultingTypeRel.id}.titles.long`,
+							`consultingType.fallback.titles.long`,
 							consultant.agencies[0].consultingTypeRel.titles.long
 						],
 						{ ns: 'consultingTypes' }
 					)}`;
 				}
 			} else {
-				if (!consultingType) {
-					handleUnmatchConsultingType();
-					throw new Error(
-						agency
-							? `Unknown consulting type with agency ${translate(
-									[`agency.${agency.id}.name`, agency.name],
-									{ ns: 'agencies' }
-							  )}`
-							: `Unknown consulting type with slug ${consultingTypeSlug}`
-					);
-				}
-
 				if (
 					consultingType.urls?.requiredAidMissingRedirectUrl &&
 					!agency
@@ -132,6 +109,7 @@ export const Registration = ({
 				)} ${translate(
 					[
 						`consultingType.${consultingType.id}.titles.long`,
+						`consultingType.fallback.titles.long`,
 						consultingType.titles.long
 					],
 					{ ns: 'consultingTypes' }
@@ -147,12 +125,11 @@ export const Registration = ({
 		agency,
 		consultant,
 		loaded,
-		consultantId,
-		handleUnmatchConsultant,
-		handleUnmatchConsultingType,
 		consultingTypeSlug,
 		translate,
-		setInformal
+		setInformal,
+		settings.urls.toRegistration,
+		topic
 	]);
 
 	const isFirstVisit = useIsFirstVisit();
@@ -172,10 +149,11 @@ export const Registration = ({
 								? translate(
 										[
 											`consultingType.${consultingType?.id}.titles.welcome`,
+											`consultingType.fallback.titles.welcome`,
 											consultingType?.titles.welcome
 										],
 										{ ns: 'consultingTypes' }
-								  )
+									)
 								: translate('registration.overline')
 						}
 						handleForwardToRegistration={
@@ -189,10 +167,11 @@ export const Registration = ({
 								? translate(
 										[
 											`consultingType.${consultingType?.id}.titles.long`,
+											`consultingType.fallback.titles.long`,
 											consultingType?.titles.long
 										],
 										{ ns: 'consultingTypes' }
-								  )
+									)
 								: null
 						}
 					/>

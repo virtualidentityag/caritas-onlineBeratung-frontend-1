@@ -17,12 +17,15 @@ import {
 	E2EEContext,
 	hasUserAuthority,
 	SessionTypeContext,
-	STATUS_FINISHED,
-	TopicSessionInterface,
 	useConsultingType,
 	UserDataContext,
-	useTenant
+	useTenant,
+	ActiveSessionContext
 } from '../../globalState';
+import {
+	STATUS_FINISHED,
+	TopicSessionInterface
+} from '../../globalState/interfaces';
 import { getGroupChatDate } from '../session/sessionDateHelpers';
 import { markdownToDraft } from 'markdown-draft-js';
 import { convertFromRaw } from 'draft-js';
@@ -41,7 +44,6 @@ import { useSearchParam } from '../../hooks/useSearchParams';
 import { SessionListItemLastMessage } from './SessionListItemLastMessage';
 import { ALIAS_MESSAGE_TYPES } from '../../api/apiSendAliasMessage';
 import { useTranslation } from 'react-i18next';
-import { ActiveSessionContext } from '../../globalState/provider/ActiveSessionProvider';
 
 interface SessionListItemProps {
 	defaultLanguage: string;
@@ -58,8 +60,10 @@ export const SessionListItemComponent = ({
 }: SessionListItemProps) => {
 	const { t: translate } = useTranslation(['common', 'consultingTypes']);
 	const tenantData = useTenant();
-	const { sessionId, rcGroupId: groupIdFromParam } =
-		useParams<{ rcGroupId: string; sessionId: string }>();
+	const { sessionId, rcGroupId: groupIdFromParam } = useParams<{
+		rcGroupId: string;
+		sessionId: string;
+	}>();
 	const sessionIdFromParam = sessionId ? parseInt(sessionId) : null;
 	const history = useHistory();
 
@@ -224,8 +228,8 @@ export const SessionListItemComponent = ({
 		return isLiveChat
 			? prettyPrintTimeDifference(newestDate, Date.now())
 			: prettyDate.str
-			? translate(prettyDate.str)
-			: prettyDate.date;
+				? translate(prettyDate.str)
+				: prettyDate.date;
 	};
 
 	// Hide sessions if consultingType has been switched to group chat.
@@ -267,10 +271,11 @@ export const SessionListItemComponent = ({
 								? translate(
 										[
 											`consultingType.${consultingType.id}.titles.default`,
+											`consultingType.fallback.titles.default`,
 											consultingType.titles.default
 										],
 										{ ns: 'consultingTypes' }
-								  )
+									)
 								: ''}
 						</div>
 						<div className="sessionsListItem__date">
@@ -382,10 +387,11 @@ export const SessionListItemComponent = ({
 								? translate(
 										[
 											`consultingType.${consultingType.id}.titles.default`,
+											`consultingType.fallback.titles.default`,
 											consultingType.titles.default
 										],
 										{ ns: 'consultingTypes' }
-								  ) + ' '
+									) + ' '
 								: ''}
 							{activeSession.item.consultingType !== 1 &&
 							!isAsker &&
