@@ -217,9 +217,11 @@ $message-attachment-color: $secondary !default;
 			align-items: center;
 			background-color: $dark-grey;
 			border-radius: $icon-size;
+			border: none;
 			color: $message-attachment-color;
 			padding: 6px $grid-base-three 5px 12px;
 			max-width: 350px;
+			cursor: pointer;
 
 			&__icon svg {
 				* {
@@ -241,7 +243,7 @@ $message-attachment-color: $secondary !default;
 
 				p {
 					margin: 0;
-					color: var(--text-color-contrast-switch, $secondary);
+					color: var(--skin-color-default, $secondary);
 					line-height: $icon-size;
 					text-decoration: underline;
 
@@ -250,14 +252,11 @@ $message-attachment-color: $secondary !default;
 						color: var(--text-color-contrast-switch, $primary);
 						text-decoration: none;
 					}
-				}
 
-				&:hover p {
-					color: var(--text-color-contrast-switch, $primary);
-				}
-
-				svg * {
-					fill: var(--text-color-contrast-switch, $primary);
+					&:hover {
+						color: var(--skin-color-default, $secondary);
+						opacity: 0.8;
+					}
 				}
 			}
 
