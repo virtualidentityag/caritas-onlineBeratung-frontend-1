@@ -159,7 +159,7 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 			attachmentStatus === DECRYPTION_FINISHED
 		)
 			return translate('e2ee.attachment.save');
-		else if (props.t === 'e2e' && attachmentStatus != DECRYPTION_FINISHED)
+		else if (props.t === 'e2e' && attachmentStatus !== DECRYPTION_FINISHED)
 			return translate(`e2ee.attachment.${attachmentStatus}`);
 		else return translate('attachments.download.label');
 	};
