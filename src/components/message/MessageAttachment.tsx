@@ -193,25 +193,25 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 						{props.attachment.image_size
 							? `| ${
 									(
-								getAttachmentSizeMBForKB(
-									props.t === 'e2e'
-										? Math.floor(
-											(props.attachment
-												.image_size -
-												KEY_ID_LENGTH -
-												MAX_PREFIX_LENGTH -
-												VERSION_SEPERATOR.length -
-												ENCRYPTION_VERSION_ACTIVE.length -
-												100) /
-											2 -
-											VECTOR_LENGTH * 2
-										) * 1000
-										: props.attachment.image_size *
-										1000
-								) / 1000
-							).toFixed(2) +
-							translate('attachments.type.label.mb')
-							}`
+										getAttachmentSizeMBForKB(
+											props.t === 'e2e'
+												? Math.floor(
+														(props.attachment
+															.image_size -
+															KEY_ID_LENGTH -
+															MAX_PREFIX_LENGTH -
+															VERSION_SEPERATOR.length -
+															ENCRYPTION_VERSION_ACTIVE.length -
+															100) /
+															2 -
+															VECTOR_LENGTH * 2
+													) * 1000
+												: props.attachment.image_size *
+														1000
+										) / 1000
+									).toFixed(2) +
+									translate('attachments.type.label.mb')
+								}`
 							: null}
 					</p>
 				</span>
@@ -219,7 +219,7 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 			{props.t === 'e2e' && (
 				<>
 					{encryptedFile &&
-						attachmentStatus === DECRYPTION_FINISHED ? (
+					attachmentStatus === DECRYPTION_FINISHED ? (
 						<a
 							ref={currentDownloadLink}
 							href={encryptedFile}
