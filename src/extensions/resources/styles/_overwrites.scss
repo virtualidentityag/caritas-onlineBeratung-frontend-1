@@ -1,9 +1,11 @@
-.messageItem__message__attachment__download:hover {
-	p,
-	svg * {
-		fill: var(--text-color-contrast-switch, $white);
-		color: var(--text-color-contrast-switch, $white);
-		opacity: 0.8;
+.messageItem__message--myMessage {
+	.messageItem__message__attachment__download:hover {
+		p,
+		svg * {
+			fill: var(--text-color-contrast-switch, $white);
+			color: var(--text-color-contrast-switch, $white);
+			opacity: 0.8;
+		}
 	}
 }
 
