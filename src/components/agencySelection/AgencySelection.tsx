@@ -1,26 +1,20 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useLocaleData, useTenant } from '../../globalState';
 import {
 	AgencyDataInterface,
-	ConsultingTypeBasicInterface,
-	useLocaleData,
-	useTenant
-} from '../../globalState';
+	ConsultingTypeBasicInterface
+} from '../../globalState/interfaces';
 import { apiAgencySelection, FETCH_ERRORS } from '../../api';
 import { InputField, InputFieldItem } from '../inputField/InputField';
 import { VALID_POSTCODE_LENGTH } from './agencySelectionHelpers';
 import './agencySelection.styles';
 import '../profile/profile.styles';
-import { DEFAULT_POSTCODE } from '../registration/prefillPostcode';
-import { RadioButton } from '../radioButton/RadioButton';
 import { Loading } from '../app/Loading';
 import { Text, LABEL_TYPES } from '../text/Text';
-import { AgencyInfo } from './AgencyInfo';
-import { PreselectedAgency } from '../../containers/registration/components/PreSelectedAgency/PreselectedAgency';
 import { Headline } from '../headline/Headline';
 import { parsePlaceholderString } from '../../utils/parsePlaceholderString';
 import { Notice } from '../notice/Notice';
-import { AgencyLanguages } from './AgencyLanguages';
 import {
 	VALIDITY_INITIAL,
 	VALIDITY_INVALID,
@@ -28,6 +22,7 @@ import {
 } from '../registration/registrationHelpers';
 import { useTranslation } from 'react-i18next';
 import { useAppConfig } from '../../hooks/useAppConfig';
+import { AgencyRadioSelect } from '../agencyRadioSelect/AgencyRadioSelect';
 
 export interface AgencySelectionProps {
 	consultingType: ConsultingTypeBasicInterface;
@@ -41,6 +36,8 @@ export interface AgencySelectionProps {
 	initialPostcode?: string;
 	hideExternalAgencies?: boolean;
 	onKeyDown?: Function;
+	age?: number;
+	gender?: string;
 }
 
 export const AgencySelection = (props: AgencySelectionProps) => {
@@ -84,9 +81,10 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 			try {
 				if (autoSelectAgency) {
 					const response = await apiAgencySelection({
-						postcode: DEFAULT_POSTCODE,
 						consultingType: props.consultingType.id,
-						topicId: props?.mainTopicId
+						topicId: props?.mainTopicId,
+						age: props?.age,
+						gender: props?.gender
 					});
 
 					const defaultAgency = response[0];
@@ -101,7 +99,14 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [autoSelectAgency, props.consultingType.id, props?.mainTopicId, locale]);
+	}, [
+		autoSelectAgency,
+		props.consultingType.id,
+		props?.mainTopicId,
+		props?.age,
+		props?.gender,
+		locale
+	]);
 
 	useEffect(() => {
 		if (isSelectedAgencyValidated()) {
@@ -150,7 +155,9 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 							await apiAgencySelection({
 								postcode: selectedPostcode,
 								consultingType: props.consultingType.id,
-								topicId: props?.mainTopicId
+								topicId: props?.mainTopicId,
+								age: props?.age,
+								gender: props?.gender
 							}).finally(() => setIsLoading(false))
 						).filter(
 							(agency) =>
@@ -163,23 +170,21 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 						setProposedAgencies(null);
 					}
 				} catch (err: any) {
-					if (
-						err.message === FETCH_ERRORS.EMPTY &&
-						props.consultingType.id !== null
-					) {
+					if (err.message === FETCH_ERRORS.EMPTY) {
 						setProposedAgencies(null);
-						setPostcodeFallbackLink(
-							parsePlaceholderString(
-								settings.postcodeFallbackUrl,
-								{
-									url: props.consultingType.urls
-										.registrationPostcodeFallbackUrl,
-									postcode: selectedPostcode
-								}
-							)
-						);
+						if (props.consultingType.id !== null) {
+							setPostcodeFallbackLink(
+								parsePlaceholderString(
+									settings.postcodeFallbackUrl,
+									{
+										url: props.consultingType.urls
+											.registrationPostcodeFallbackUrl,
+										postcode: selectedPostcode
+									}
+								)
+							);
+						}
 					}
-					return;
 				}
 			})();
 		} else if (
@@ -194,7 +199,13 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedPostcode, props.consultingType.id, props?.mainTopicId]);
+	}, [
+		selectedPostcode,
+		props.consultingType.id,
+		props?.mainTopicId,
+		props?.age,
+		props?.gender
+	]);
 
 	const postcodeInputItem: InputFieldItem = {
 		name: 'postcode',
@@ -217,12 +228,12 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 		? [
 				'registration.agencyPreselected.intro.point1',
 				'registration.agencyPreselected.intro.point2'
-		  ]
+			]
 		: [
 				'registration.agencySelection.intro.point1',
 				'registration.agencySelection.intro.point2',
 				'registration.agencySelection.intro.point3'
-		  ];
+			];
 
 	return (
 		<div className="agencySelection">
@@ -244,10 +255,10 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 								showPreselectedAgency
 									? translate(
 											'registration.agencyPreselected.headline'
-									  )
+										)
 									: translate(
 											'registration.agencySelection.headline'
-									  )
+										)
 							}
 						/>
 					)}
@@ -257,10 +268,10 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 								showPreselectedAgency
 									? translate(
 											'registration.agencyPreselected.intro.overline'
-									  )
+										)
 									: translate(
 											'registration.agencySelection.intro.overline'
-									  )
+										)
 							}
 							type="standard"
 						/>
@@ -270,10 +281,10 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 									showPreselectedAgency
 										? translate(
 												'registration.agencyPreselected.intro.subline'
-										  )
+											)
 										: translate(
 												'registration.agencySelection.intro.subline'
-										  )
+											)
 								}
 								type="standard"
 							/>
@@ -293,13 +304,15 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 							</ul>
 						</div>
 					</div>
+
 					<InputField
 						item={postcodeInputItem}
 						inputHandle={(e) => handlePostcodeInput(e)}
 						onKeyDown={(e) =>
 							props.onKeyDown ? props.onKeyDown(e, false) : null
 						}
-					></InputField>
+					/>
+
 					{props.agencySelectionNote && (
 						<div data-cy="registration-agency-selection-note">
 							<Text
@@ -310,6 +323,7 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 							/>
 						</div>
 					)}
+
 					{validPostcode() && !preselectedAgency && (
 						<div className="agencySelection__proposedAgencies">
 							<h3>
@@ -357,42 +371,20 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 								)
 							) : (
 								proposedAgencies?.map(
-									(agency: AgencyDataInterface, index) => (
-										<div
-											key={index}
-											className="agencySelection__proposedAgency"
-										>
-											<div className="agencySelection__proposedAgency__container">
-												<RadioButton
-													name="agencySelection"
-													handleRadioButton={() =>
-														setSelectedAgency(
-															agency
-														)
-													}
-													type="smaller"
-													value={agency.id.toString()}
-													checked={index === 0}
-													inputId={agency.id.toString()}
-													label={translate(
-														[
-															`agency.${agency.id}.name`,
-															agency.name
-														],
-														{ ns: 'agencies' }
-													)}
-												/>
-												<AgencyInfo
-													agency={agency}
-													isProfileView={
-														props.isProfileView
-													}
-												/>
-											</div>
-											<AgencyLanguages
-												agencyId={agency.id}
-											/>
-										</div>
+									(proposedAgency: AgencyDataInterface) => (
+										<AgencyRadioSelect
+											key={`agency-${proposedAgency.id}`}
+											agency={proposedAgency}
+											checkedValue={proposedAgencies[0].id.toString()}
+											showTooltipAbove={
+												props.isProfileView
+											}
+											onChange={() =>
+												setSelectedAgency(
+													proposedAgency
+												)
+											}
+										/>
 									)
 								)
 							)}
@@ -401,10 +393,11 @@ export const AgencySelection = (props: AgencySelectionProps) => {
 				</>
 			)}
 			{showPreselectedAgency && (
-				<PreselectedAgency
+				<AgencyRadioSelect
+					agency={preselectedAgency}
+					checkedValue={preselectedAgency.id.toString()}
 					prefix={translate('registration.agency.preselected.prefix')}
-					agencyData={preselectedAgency}
-					isProfileView={props.isProfileView}
+					showTooltipAbove={props.isProfileView}
 				/>
 			)}
 		</div>

@@ -5,17 +5,17 @@ import { Loading } from '../app/Loading';
 import {
 	RocketChatContext,
 	SessionTypeContext,
-	UserDataContext
+	UserDataContext,
+	ActiveSessionProvider
 } from '../../globalState';
 import {
 	desktopView,
 	mobileDetailView,
 	mobileListView
 } from '../app/navigationHandler';
-import { apiGetGroupChatInfo } from '../../api';
+import { apiGetAgencyById, apiGetGroupChatInfo } from '../../api';
 import { SESSION_LIST_TAB, SESSION_LIST_TYPES } from './sessionHelpers';
 import { JoinGroupChatView } from '../groupChat/JoinGroupChatView';
-import { ActiveSessionContext } from '../../globalState/provider/ActiveSessionProvider';
 import { decodeUsername } from '../../utils/encryptionHelpers';
 import { useResponsive } from '../../hooks/useResponsive';
 import './session.styles';
@@ -25,6 +25,8 @@ import { useSession } from '../../hooks/useSession';
 import { SessionStream } from './SessionStream';
 import { AcceptLiveChatView } from './AcceptLiveChatView';
 import { RocketChatUsersOfRoomProvider } from '../../globalState/provider/RocketChatUsersOfRoomProvider';
+import { useSetAtom } from 'jotai';
+import { agencyLogoAtom } from '../../store/agencyLogoAtom';
 
 export const SessionView = () => {
 	const { rcGroupId: groupIdFromParam, sessionId: sessionIdFromParam } =
@@ -42,6 +44,7 @@ export const SessionView = () => {
 	const [readonly, setReadonly] = useState(true);
 	const [forceBannedOverlay, setForceBannedOverlay] = useState(false);
 	const [bannedUsers, setBannedUsers] = useState<string[]>([]);
+	const setAgencyLogo = useSetAtom(agencyLogoAtom);
 
 	const {
 		session: activeSession,
@@ -145,6 +148,26 @@ export const SessionView = () => {
 		history
 	]);
 
+	useEffect(() => {
+		let isCanceled = false;
+		const agencyId = activeSession?.item?.agencyId;
+		if (!agencyId) return;
+
+		(async () => {
+			// TODO: move this to global jotai atom family
+			const agency = await apiGetAgencyById(agencyId);
+
+			if (agency?.agencyLogo && !isCanceled) {
+				setAgencyLogo(agency.agencyLogo);
+			}
+		})();
+
+		return () => {
+			isCanceled = true;
+			setAgencyLogo('');
+		};
+	}, [activeSession?.item?.agencyId, setAgencyLogo]);
+
 	if (loading || !activeSession) {
 		return <Loading />;
 	}
@@ -155,16 +178,17 @@ export const SessionView = () => {
 			bannedUsers.includes(userData.userName))
 	) {
 		return (
-			<ActiveSessionContext.Provider
-				value={{ activeSession, reloadActiveSession }}
+			<ActiveSessionProvider
+				activeSession={activeSession}
+				reloadActiveSession={reloadActiveSession}
 			>
-				<RocketChatUsersOfRoomProvider>
+				<RocketChatUsersOfRoomProvider watch>
 					<JoinGroupChatView
 						forceBannedOverlay={forceBannedOverlay}
 						bannedUsers={bannedUsers}
 					/>
 				</RocketChatUsersOfRoomProvider>
-			</ActiveSessionContext.Provider>
+			</ActiveSessionProvider>
 		);
 	}
 
@@ -174,27 +198,30 @@ export const SessionView = () => {
 		activeSession.isLive
 	) {
 		return (
-			<ActiveSessionContext.Provider
-				value={{ activeSession, reloadActiveSession }}
+			<ActiveSessionProvider
+				activeSession={activeSession}
+				reloadActiveSession={reloadActiveSession}
 			>
-				<RocketChatUsersOfRoomProvider>
+				<RocketChatUsersOfRoomProvider watch>
 					<AcceptLiveChatView bannedUsers={bannedUsers} />
 				</RocketChatUsersOfRoomProvider>
-			</ActiveSessionContext.Provider>
+			</ActiveSessionProvider>
 		);
 	}
 
 	return (
-		<ActiveSessionContext.Provider
-			value={{ activeSession, reloadActiveSession, readActiveSession }}
+		<ActiveSessionProvider
+			activeSession={activeSession}
+			readActiveSession={readActiveSession}
+			reloadActiveSession={reloadActiveSession}
 		>
-			<RocketChatUsersOfRoomProvider>
+			<RocketChatUsersOfRoomProvider watch>
 				<SessionStream
 					readonly={readonly}
 					checkMutedUserForThisSession={checkMutedUserForThisSession}
 					bannedUsers={bannedUsers}
 				/>
 			</RocketChatUsersOfRoomProvider>
-		</ActiveSessionContext.Provider>
+		</ActiveSessionProvider>
 	);
 };

@@ -1,6 +1,6 @@
-import deAgency from '../i18n/de.agency.json';
-import deConsultingTypes from '../i18n/de.consultingTypes.json';
-import { AppConfigInterface } from '../../globalState/interfaces/AppConfig/AppConfigInterface';
+import deAgency from '../i18n/de/agency.json';
+import deConsultingTypes from '../i18n/de/consultingTypes.json';
+import { AppConfigInterface } from '../../globalState/interfaces';
 import {
 	OVERLAY_RELEASE_NOTE,
 	OVERLAY_TWO_FACTOR_NAG
@@ -41,6 +41,7 @@ export const config: AppConfigInterface = {
 		finishedAnonymousChatRedirect:
 			'https://www.caritas.de/hilfeundberatung/hilfeundberatung',
 		home: 'https://www.caritas.de',
+		landingpage: '/login',
 		releases: uiUrl + '/releases',
 		redirectToApp: uiUrl + '/' + APP_PATH,
 		registration: uiUrl + '/registration',
@@ -49,6 +50,12 @@ export const config: AppConfigInterface = {
 		toRegistration: 'https://www.caritas.de/onlineberatung',
 		videoCall: '/videoanruf/:domain/:jwt/:video?/:username?/:e2e?',
 		videoConference: '/videoberatung/:type/:appointmentId'
+	},
+	groupChat: {
+		info: {
+			showCreator: false,
+			showCreationDate: false
+		}
 	},
 	postcodeFallbackUrl: '{url}',
 	jitsi: {
@@ -77,6 +84,11 @@ export const config: AppConfigInterface = {
 			registration: true
 		}
 	],
+	welcomeScreen: {
+		consultingType: {
+			hidden: false
+		}
+	},
 	emails: {
 		notifications: [
 			{
@@ -294,6 +306,8 @@ export const config: AppConfigInterface = {
 		'zu'
 	],
 	i18n: {
+		supportedLngs: ['de', 'de@informal'],
+		preload: ['de', 'de@informal'],
 		resources: {
 			de: {
 				consultingTypes: {
@@ -303,6 +317,12 @@ export const config: AppConfigInterface = {
 					...deAgency
 				}
 			}
+		}
+	},
+	user: {
+		profile: {
+			visibleOnEnquiry: (sessionUserData) =>
+				Object.entries(sessionUserData).length !== 0
 		}
 	}
 };

@@ -2,16 +2,19 @@ import * as React from 'react';
 import { useEffect, useContext, useState, useCallback } from 'react';
 import { Link, Redirect, useParams, useHistory } from 'react-router-dom';
 import {
+	AUTHORITIES,
 	SessionTypeContext,
 	UserDataContext,
-	useTenant
+	hasUserAuthority,
+	useTenant,
+	ActiveSessionContext,
+	ActiveSessionProvider
 } from '../../globalState';
 import { isUserModerator, SESSION_LIST_TAB } from '../session/sessionHelpers';
 import { Button, ButtonItem, BUTTON_TYPES } from '../button/Button';
 import { OVERLAY_FUNCTIONS, Overlay, OverlayItem } from '../overlay/Overlay';
 import {
 	apiGetGroupChatInfo,
-	apiGetGroupMembers,
 	apiPutGroupChat,
 	GROUP_CHAT_API
 } from '../../api';
@@ -32,7 +35,7 @@ import {
 import { decodeUsername } from '../../utils/encryptionHelpers';
 import { ReactComponent as BackIcon } from '../../resources/img/icons/arrow-left.svg';
 import { ReactComponent as GroupChatIcon } from '../../resources/img/icons/speech-bubble.svg';
-import '../profile/profile.styles';
+import './groupChatInfo.styles';
 import { Text } from '../text/Text';
 import { FlyoutMenu } from '../flyoutMenu/FlyoutMenu';
 import { getValueFromCookie } from '../sessionCookie/accessSessionCookie';
@@ -42,9 +45,16 @@ import { Tag } from '../tag/Tag';
 import { useSession } from '../../hooks/useSession';
 import { useSearchParam } from '../../hooks/useSearchParams';
 import { GroupChatCopyLinks } from './GroupChatCopyLinks';
+import { useAppConfig } from '../../hooks/useAppConfig';
 import { useTranslation } from 'react-i18next';
+import { getPrettyDateFromMessageDate } from '../../utils/dateHelpers';
+import {
+	RocketChatUsersOfRoomContext,
+	RocketChatUsersOfRoomProvider
+} from '../../globalState/provider/RocketChatUsersOfRoomProvider';
 
 export const GroupChatInfo = () => {
+	const settings = useAppConfig();
 	const { t: translate } = useTranslation();
 	const history = useHistory();
 	const tenantData = useTenant();
@@ -61,14 +71,10 @@ export const GroupChatInfo = () => {
 	const { userData } = useContext(UserDataContext);
 	const { path: listPath } = useContext(SessionTypeContext);
 
-	const [subscriberList, setSubscriberList] = useState(null);
 	const [overlayItem, setOverlayItem] = useState<OverlayItem>(null);
 	const [overlayActive, setOverlayActive] = useState(false);
 	const [redirectToSessionsList, setRedirectToSessionsList] = useState(false);
-	const [isUserBanOverlayOpen, setIsUserBanOverlayOpen] =
-		useState<boolean>(false);
 	const [isRequestInProgress, setIsRequestInProgress] = useState(false);
-	const [bannedUsers, setBannedUsers] = useState<string[]>([]);
 	const [isV2GroupChat, setIsV2GroupChat] = useState<boolean>(false);
 
 	const { session: activeSession, ready } = useSession(groupIdFromParam);
@@ -99,32 +105,6 @@ export const GroupChatInfo = () => {
 					(sessionListTab ? `?sessionListTab=${sessionListTab}` : '')
 			);
 			return;
-		}
-
-		if (activeSession.item.active) {
-			apiGetGroupMembers(activeSession.item.id)
-				.then((response) => {
-					const subscribers = response.members.map((member) => ({
-						isModerator: isUserModerator({
-							chatItem: activeSession.item,
-							rcUserId: member._id
-						}),
-						...member
-					}));
-					setSubscriberList(subscribers);
-				})
-				.catch((error) => {
-					console.log('error', error);
-				});
-			apiGetGroupChatInfo(activeSession.item.id).then((response) => {
-				if (response.bannedUsers) {
-					const decryptedBannedUsers =
-						response.bannedUsers.map(decodeUsername);
-					setBannedUsers(decryptedBannedUsers);
-				} else {
-					setBannedUsers([]);
-				}
-			});
 		}
 
 		if (activeSession.isGroup && !activeSession.item.consultingType) {
@@ -178,12 +158,40 @@ export const GroupChatInfo = () => {
 		[activeSession?.item.duration, translate]
 	);
 
+	const getCreationDate = useCallback(
+		(date: Date) => {
+			const prettyDate = getPrettyDateFromMessageDate(
+				date.getTime() / 1000,
+				true,
+				true
+			);
+			return `${prettyDate.date ? prettyDate.date : translate(prettyDate.str)} - ${date.getHours()}:${date.getMinutes()}`;
+		},
+		[translate]
+	);
+
 	if (!activeSession) return null;
 
-	const preparedSettings: Array<{ label; value }> = [
+	if (redirectToSessionsList) {
+		return <Redirect to={listPath + getSessionListTab()} />;
+	}
+
+	const showCreator =
+		settings.groupChat?.info?.showCreator &&
+		activeSession?.consultant?.displayName;
+	const showCreateDate =
+		settings.groupChat?.info?.showCreationDate &&
+		activeSession?.item?.createdAt;
+
+	const isCurrentUserModerator = isUserModerator({
+		chatItem: activeSession.item,
+		rcUserId: getValueFromCookie('rc_uid')
+	});
+
+	const preparedSettings: Array<{ label: string; value: string }> = [
 		{
 			label: translate('groupChat.info.settings.topic'),
-			value: activeSession.item.topic
+			value: activeSession.item.topic as string
 		},
 		{
 			label: translate('groupChat.info.settings.startDate'),
@@ -213,220 +221,290 @@ export const GroupChatInfo = () => {
 			value: activeSession.item.repetitive
 				? translate('groupChat.info.settings.repetition.weekly')
 				: translate('groupChat.info.settings.repetition.single')
+		},
+		{
+			label: translate('groupChat.info.settings.agency'),
+			value: activeSession.item?.assignedAgencies?.length
+				? activeSession.item.assignedAgencies[0].name
+				: ''
 		}
 	];
 
-	if (redirectToSessionsList) {
-		return <Redirect to={listPath + getSessionListTab()} />;
+	if (
+		hasUserAuthority(AUTHORITIES.CONSULTANT_DEFAULT, userData) &&
+		activeSession.item.hintMessage
+	) {
+		preparedSettings.push({
+			label: translate('groupChat.info.settings.hintMessage'),
+			value: activeSession.item.hintMessage
+		});
 	}
 
-	const isCurrentUserModerator = isUserModerator({
-		chatItem: activeSession.item,
-		rcUserId: getValueFromCookie('rc_uid')
-	});
+	return (
+		<ActiveSessionProvider activeSession={activeSession}>
+			<RocketChatUsersOfRoomProvider watch>
+				<div className="groupChatInfo__wrapper">
+					<div className="groupChatInfo__header">
+						<div className="groupChatInfo__header__wrapper">
+							<Link
+								to={`${listPath}/${activeSession.item.groupId}/${
+									activeSession.item.id
+								}${getSessionListTab()}`}
+								className="groupChatInfo__header__backButton"
+							>
+								<BackIcon />
+							</Link>
+							<h3 className="groupChatInfo__header__title">
+								{translate('groupChat.info.headline')}
+							</h3>
+						</div>
+						<div className="groupChatInfo__header__metaInfo">
+							<p className="groupChatInfo__header__username">
+								{activeSession.item.topic}
+							</p>
+						</div>
+					</div>
+					<div className="groupChatInfo__innerWrapper">
+						<div className="groupChatInfo__user">
+							<div className="groupChatInfo__icon">
+								<GroupChatIcon className="groupChatInfo__icon--chatInfo" />
+								{activeSession.item.active ? (
+									<span className="groupChatInfo__icon--active"></span>
+								) : null}
+							</div>
+							<h2>{activeSession.item.topic}</h2>
+						</div>
+						{activeSession.item.active &&
+						activeSession.item.subscribed ? (
+							<div className="groupChatInfo__innerWrapper__stopButton">
+								<Button
+									item={stopChatButtonSet}
+									buttonHandle={handleStopGroupChatButton}
+								/>
+							</div>
+						) : null}
+						<div className="groupChatInfo__content">
+							<div className="groupChatInfo__content__item groupChatInfo__data">
+								<Text
+									text={translate(
+										'groupChat.info.subscribers.headline'
+									)}
+									type="divider"
+								/>
+
+								{featureGroupChatV2Enabled && isV2GroupChat && (
+									<div className="groupChatInfo__groupChatContainer">
+										<GroupChatCopyLinks
+											id={activeSession.item.groupId}
+											groupChatId={activeSession.item.id.toString()}
+										/>
+									</div>
+								)}
+								<SubscriberList
+									isCurrentUserModerator={
+										isCurrentUserModerator
+									}
+								/>
+							</div>
+
+							<div className="groupChatInfo__content__item groupChatInfo__data">
+								<Text
+									text={translate(
+										'groupChat.info.settings.headline'
+									)}
+									type="divider"
+								/>
+
+								{(showCreator || showCreateDate) && (
+									<div className="groupChatInfo__data__group">
+										{showCreator && (
+											<div className="groupChatInfo__data__item">
+												<p className="groupChatInfo__data__label">
+													{translate(
+														'groupChat.info.settings.creator'
+													)}
+												</p>
+												<p className="groupChatInfo__data__content">
+													{
+														activeSession.consultant
+															.displayName
+													}
+												</p>
+											</div>
+										)}
+										{showCreateDate && (
+											<div className="groupChatInfo__data__item">
+												<p className="groupChatInfo__data__label">
+													{translate(
+														'groupChat.info.settings.createDate'
+													)}
+												</p>
+												<p className="groupChatInfo__data__content">
+													{getCreationDate(
+														new Date(
+															activeSession.item.createdAt
+														)
+													)}
+												</p>
+											</div>
+										)}
+									</div>
+								)}
+								{preparedSettings.map((item, index) => (
+									<div
+										className="groupChatInfo__data__item"
+										key={index}
+									>
+										<p className="groupChatInfo__data__label">
+											{item.label}
+										</p>
+										<p className="groupChatInfo__data__content">
+											{item.value}
+										</p>
+									</div>
+								))}
+								{isGroupChatOwner(activeSession, userData) &&
+								!activeSession.item.active ? (
+									<Link
+										className="groupChatInfo__innerWrapper__editButton"
+										to={{
+											pathname: `${listPath}/${
+												activeSession.item.groupId
+											}/${
+												activeSession.item.id
+											}/editGroupChat${getSessionListTab()}`,
+											state: {
+												isEditMode: true,
+												prevIsInfoPage: true
+											}
+										}}
+									>
+										<Button
+											item={{
+												label: translate(
+													'groupChat.info.settings.edit'
+												),
+												type: 'LINK',
+												id: 'editGroupChat'
+											}}
+											isLink={true}
+										/>
+									</Link>
+								) : null}
+							</div>
+						</div>
+					</div>
+					{overlayActive ? (
+						<Overlay
+							item={overlayItem}
+							handleOverlay={handleOverlayAction}
+						/>
+					) : null}
+				</div>
+			</RocketChatUsersOfRoomProvider>
+		</ActiveSessionProvider>
+	);
+};
+
+const SubscriberList = ({
+	isCurrentUserModerator
+}: {
+	isCurrentUserModerator: boolean;
+}) => {
+	const { t: translate } = useTranslation();
+
+	const { activeSession } = useContext(ActiveSessionContext);
+	const { users, moderators } = useContext(RocketChatUsersOfRoomContext);
+
+	const [isUserBanOverlayOpen, setIsUserBanOverlayOpen] =
+		useState<boolean>(false);
+	const [bannedUsers, setBannedUsers] = useState<string[]>([]);
+
+	useEffect(() => {
+		if (activeSession.item.active) {
+			apiGetGroupChatInfo(activeSession.item.id).then((response) => {
+				if (response.bannedUsers) {
+					const decryptedBannedUsers =
+						response.bannedUsers.map(decodeUsername);
+					setBannedUsers(decryptedBannedUsers);
+				} else {
+					setBannedUsers([]);
+				}
+			});
+		}
+	}, [activeSession.item.active, activeSession.item.id]);
 
 	return (
-		<div className="profile__wrapper">
-			<div className="profile__header">
-				<div className="profile__header__wrapper">
-					<Link
-						to={`${listPath}/${activeSession.item.groupId}/${
-							activeSession.item.id
-						}${getSessionListTab()}`}
-						className="profile__header__backButton"
+		<>
+			{users ? (
+				users.map((subscriber) => (
+					<div
+						className="groupChatInfo__data__item"
+						key={`subscriber-${subscriber._id}`}
 					>
-						<BackIcon />
-					</Link>
-					<h3 className="profile__header__title profile__header__title--withBackButton">
-						{translate('groupChat.info.headline')}
-					</h3>
-				</div>
-				<div className="profile__header__metaInfo">
-					<p className="profile__header__username profile__header__username--withBackButton">
-						{activeSession.item.topic}
+						<div className="groupChatInfo__data__content groupChatInfo__data__content--subscriber">
+							{subscriber.displayName
+								? decodeUsername(subscriber.displayName)
+								: decodeUsername(subscriber.username)}
+							{isCurrentUserModerator &&
+								!moderators.includes(subscriber._id) && (
+									<>
+										<FlyoutMenu
+											isHidden={bannedUsers.includes(
+												subscriber.username
+											)}
+											position={
+												window.innerWidth <= 900
+													? 'left'
+													: 'right'
+											}
+										>
+											<BanUser
+												userName={decodeUsername(
+													subscriber.username
+												)}
+												rcUserId={subscriber._id}
+												chatId={activeSession.item.id}
+												handleUserBan={(username) => {
+													setBannedUsers([
+														...bannedUsers,
+														username
+													]);
+													setIsUserBanOverlayOpen(
+														true
+													);
+												}}
+											/>
+										</FlyoutMenu>{' '}
+										<BanUserOverlay
+											overlayActive={isUserBanOverlayOpen}
+											userName={decodeUsername(
+												subscriber.username
+											)}
+											handleOverlay={() => {
+												setIsUserBanOverlayOpen(false);
+											}}
+										></BanUserOverlay>
+									</>
+								)}
+							{isCurrentUserModerator &&
+								bannedUsers.includes(subscriber.username) && (
+									<Tag
+										className="bannedUserTag"
+										color="red"
+										text={translate('banUser.is.banned')}
+									/>
+								)}
+						</div>
+					</div>
+				))
+			) : (
+				<div className="groupChatInfo__data__item">
+					<p className="groupChatInfo__data__content groupChatInfo__data__content--empty">
+						{translate('groupChat.info.subscribers.empty')}
 					</p>
 				</div>
-			</div>
-			<div className="profile__innerWrapper">
-				<div className="profile__user">
-					<div className="profile__icon">
-						<GroupChatIcon className="profile__icon--chatInfo" />
-						{activeSession.item.active ? (
-							<span className="profile__icon--active"></span>
-						) : null}
-					</div>
-					<h2>{activeSession.item.topic}</h2>
-				</div>
-				{activeSession.item.active && activeSession.item.subscribed ? (
-					<div className="profile__innerWrapper__stopButton">
-						<Button
-							item={stopChatButtonSet}
-							buttonHandle={handleStopGroupChatButton}
-						/>
-					</div>
-				) : null}
-				<div className="profile__content">
-					<div className="profile__content__item profile__data">
-						<Text
-							text={translate(
-								'groupChat.info.subscribers.headline'
-							)}
-							type="divider"
-						/>
-
-						{featureGroupChatV2Enabled && isV2GroupChat && (
-							<div className="profile__groupChatContainer">
-								<GroupChatCopyLinks
-									id={activeSession.item.groupId}
-									groupChatId={activeSession.item.id.toString()}
-								/>
-							</div>
-						)}
-						{subscriberList ? (
-							subscriberList.map((subscriber, index) => (
-								<div
-									className="profile__data__item"
-									key={index}
-								>
-									<div className="profile__data__content profile__data__content--subscriber">
-										{subscriber.displayName
-											? decodeUsername(
-													subscriber.displayName
-											  )
-											: decodeUsername(
-													subscriber.username
-											  )}
-										{isCurrentUserModerator &&
-											!subscriber.isModerator && (
-												<>
-													<FlyoutMenu
-														isHidden={bannedUsers.includes(
-															subscriber.username
-														)}
-														position={
-															window.innerWidth <=
-															900
-																? 'left'
-																: 'right'
-														}
-													>
-														<BanUser
-															userName={decodeUsername(
-																subscriber.username
-															)}
-															rcUserId={
-																subscriber._id
-															}
-															chatId={
-																activeSession
-																	.item.id
-															}
-															handleUserBan={(
-																username
-															) => {
-																setBannedUsers([
-																	...bannedUsers,
-																	username
-																]);
-																setIsUserBanOverlayOpen(
-																	true
-																);
-															}}
-														/>
-													</FlyoutMenu>{' '}
-													<BanUserOverlay
-														overlayActive={
-															isUserBanOverlayOpen
-														}
-														userName={decodeUsername(
-															subscriber.username
-														)}
-														handleOverlay={() => {
-															setIsUserBanOverlayOpen(
-																false
-															);
-														}}
-													></BanUserOverlay>
-												</>
-											)}
-										{isCurrentUserModerator &&
-											bannedUsers.includes(
-												subscriber.username
-											) && (
-												<Tag
-													className="bannedUserTag"
-													color="red"
-													text={translate(
-														'banUser.is.banned'
-													)}
-												/>
-											)}
-									</div>
-								</div>
-							))
-						) : (
-							<div className="profile__data__item">
-								<p className="profile__data__content profile__data__content--empty">
-									{translate(
-										'groupChat.info.subscribers.empty'
-									)}
-								</p>
-							</div>
-						)}
-					</div>
-
-					<div className="profile__content__item profile__data">
-						<Text
-							text={translate('groupChat.info.settings.headline')}
-							type="divider"
-						/>
-						{preparedSettings.map((item, index) => (
-							<div className="profile__data__item" key={index}>
-								<p className="profile__data__label">
-									{item.label}
-								</p>
-								<p className="profile__data__content">
-									{item.value}
-								</p>
-							</div>
-						))}
-						{isGroupChatOwner(activeSession, userData) &&
-						!activeSession.item.active ? (
-							<Link
-								className="profile__innerWrapper__editButton"
-								to={{
-									pathname: `${listPath}/${
-										activeSession.item.groupId
-									}/${
-										activeSession.item.id
-									}/editGroupChat${getSessionListTab()}`,
-									state: {
-										isEditMode: true,
-										prevIsInfoPage: true
-									}
-								}}
-							>
-								<Button
-									item={{
-										label: translate(
-											'groupChat.info.settings.edit'
-										),
-										type: 'LINK',
-										id: 'editGroupChat'
-									}}
-									isLink={true}
-								/>
-							</Link>
-						) : null}
-					</div>
-				</div>
-			</div>
-			{overlayActive ? (
-				<Overlay
-					item={overlayItem}
-					handleOverlay={handleOverlayAction}
-				/>
-			) : null}
-		</div>
+			)}
+		</>
 	);
 };

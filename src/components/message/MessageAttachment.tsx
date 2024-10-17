@@ -6,7 +6,7 @@ import {
 import { ReactComponent as DownloadIcon } from '../../resources/img/icons/download.svg';
 import { useTranslation } from 'react-i18next';
 import { apiUrl } from '../../resources/scripts/endpoints';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { FETCH_METHODS, fetchData } from '../../api';
 import {
 	decryptAttachment,
@@ -54,6 +54,7 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 	const [attachmentStatus, setAttachmentStatus] = React.useState(
 		props.t === 'e2e' ? ENCRYPTED : NOT_ENCRYPTED
 	);
+	const currentDownloadLink = useRef<any>();
 
 	const decryptFile = useCallback(
 		async (url: string) => {
@@ -151,6 +152,18 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 		return null;
 	}, []);
 
+	const attachmentAriaLabel = () => {
+		if (
+			props.t === 'e2e' &&
+			encryptedFile &&
+			attachmentStatus === DECRYPTION_FINISHED
+		)
+			return translate('e2ee.attachment.save');
+		else if (props.t === 'e2e' && attachmentStatus !== DECRYPTION_FINISHED)
+			return translate(`e2ee.attachment.${attachmentStatus}`);
+		else return translate('attachments.download.label');
+	};
+
 	return (
 		<div
 			className={
@@ -159,7 +172,11 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 					: ''
 			}
 		>
-			<div className="messageItem__message__attachment">
+			<button
+				aria-label={attachmentAriaLabel()}
+				onClick={() => currentDownloadLink.current.click()}
+				className="messageItem__message__attachment"
+			>
 				<span className="messageItem__message__attachment__icon">
 					{attachmentStatus === IS_DECRYPTING ? (
 						<LoadingSpinner />
@@ -188,22 +205,23 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 															100) /
 															2 -
 															VECTOR_LENGTH * 2
-												  ) * 1000
+													) * 1000
 												: props.attachment.image_size *
 														1000
 										) / 1000
 									).toFixed(2) +
 									translate('attachments.type.label.mb')
-							  }`
+								}`
 							: null}
 					</p>
 				</span>
-			</div>
+			</button>
 			{props.t === 'e2e' && (
 				<>
 					{encryptedFile &&
 					attachmentStatus === DECRYPTION_FINISHED ? (
 						<a
+							ref={currentDownloadLink}
 							href={encryptedFile}
 							download={props.file.name}
 							rel="noopener noreferer"
@@ -217,6 +235,7 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 						</a>
 					) : (
 						<button
+							ref={currentDownloadLink}
 							onClick={() =>
 								decryptFile(
 									apiUrl + props.attachment.title_link
@@ -242,6 +261,7 @@ export const MessageAttachment = (props: MessageAttachmentProps) => {
 			)}
 			{props.t !== 'e2e' && (
 				<a
+					ref={currentDownloadLink}
 					href={apiUrl + props.attachment.title_link}
 					rel="noopener noreferer"
 					className="messageItem__message__attachment__download"

@@ -6,6 +6,9 @@ import { AppSettingsInterface } from './AppSettingsInterface';
 import { LegalLinkInterface } from '../LegalLinkInterface';
 import { InitOptions } from 'i18next';
 import { OverlaysConfigInterface } from './OverlaysConfigInterface';
+import { TranslationConfig } from '../TranslationConfig';
+import { GroupChatConfig } from '../GroupChatConfig';
+import { SessionUserDataInterface } from '../SessionsDataInterface';
 
 export interface AppConfigInterface extends AppSettingsInterface {
 	urls: AppConfigUrlsInterface;
@@ -18,12 +21,29 @@ export interface AppConfigInterface extends AppSettingsInterface {
 	i18n: InitOptions;
 	overlays?: OverlaysConfigInterface;
 	releaseToggles?: ReleaseToggles;
+	translation?: TranslationConfig;
 	requestCollector?: {
 		limit?: number;
 		showCorrelationId?: {
 			consultant?: boolean;
 			user?: boolean;
 			other?: boolean;
+		};
+	};
+	groupChat?: GroupChatConfig;
+	registration?: {
+		useConsultingTypeSlug?: boolean;
+	};
+	user?: {
+		profile?: {
+			visibleOnEnquiry:
+				| boolean
+				| ((sessionUserData: SessionUserDataInterface) => boolean);
+		};
+	};
+	welcomeScreen: {
+		consultingType: {
+			hidden: boolean;
 		};
 	};
 }

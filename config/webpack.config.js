@@ -10,7 +10,6 @@ const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
@@ -59,11 +58,6 @@ const imageInlineSizeLimit = parseInt(
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
-// Check if Tailwind config exists
-const useTailwind = fs.existsSync(
-	path.join(paths.appPath, 'tailwind.config.js')
-);
-
 // Get the path to the uncompiled service worker (if it exists).
 const swSrc = paths.swSrc;
 
@@ -96,26 +90,6 @@ const getTemplate = (templatePath) => {
 	}
 	return path.resolve(paths.appSrc, templatePath);
 };
-
-const localAliases = (paths) =>
-	paths
-		// Remove paths which are not overridden
-		.filter((localPath) => {
-			const fullPath = path.resolve(process.cwd(), `./${localPath}`);
-			try {
-				fs.statSync(fullPath);
-				return true;
-			} catch (error) {
-				return false;
-			}
-		})
-		.map(
-			(localPath) =>
-				new webpack.NormalModuleReplacementPlugin(
-					new RegExp(localPath),
-					path.resolve(process.cwd(), `./${localPath}`)
-				)
-		);
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -164,36 +138,22 @@ module.exports = function (webpackEnv) {
 						// https://github.com/facebook/create-react-app/issues/2677
 						ident: 'postcss',
 						config: false,
-						plugins: !useTailwind
-							? [
-									'postcss-flexbugs-fixes',
-									[
-										'postcss-preset-env',
-										{
-											autoprefixer: {
-												flexbox: 'no-2009'
-											},
-											stage: 3
-										}
-									],
-									// Adds PostCSS Normalize as the reset css with default options,
-									// so that it honors browserslist config in package.json
-									// which in turn let's users customize the target behavior as per their needs.
-									'postcss-normalize'
-							  ]
-							: [
-									'tailwindcss',
-									'postcss-flexbugs-fixes',
-									[
-										'postcss-preset-env',
-										{
-											autoprefixer: {
-												flexbox: 'no-2009'
-											},
-											stage: 3
-										}
-									]
-							  ]
+						plugins: [
+							'postcss-flexbugs-fixes',
+							[
+								'postcss-preset-env',
+								{
+									autoprefixer: {
+										flexbox: 'no-2009'
+									},
+									stage: 3
+								}
+							],
+							// Adds PostCSS Normalize as the reset css with default options,
+							// so that it honors browserslist config in package.json
+							// which in turn let's users customize the target behavior as per their needs.
+							'postcss-normalize'
+						]
 					},
 					sourceMap: isEnvProduction
 						? shouldUseSourceMap
@@ -281,7 +241,7 @@ module.exports = function (webpackEnv) {
 							.relative(paths.appSrc, info.absoluteResourcePath)
 							.replace(/\\/g, '/')
 				: isEnvDevelopment &&
-				  ((info) =>
+					((info) =>
 						path
 							.resolve(info.absoluteResourcePath)
 							.replace(/\\/g, '/'))
@@ -657,46 +617,19 @@ module.exports = function (webpackEnv) {
 				chunks: ['app'],
 				filename: 'beratung-hilfe.html'
 			}),
-			new HtmlWebpackPlugin({
-				title: 'Beratung & Hilfe',
-				templateParameters: {
-					type: 'error',
-					errorType: '400'
-				},
-				template: getTemplate('pages/app.html'),
-				chunks: ['error'],
-				filename: 'error.400.html'
-			}),
-			new HtmlWebpackPlugin({
-				title: 'Error Page 401',
-				templateParameters: {
-					type: 'error',
-					errorType: '401'
-				},
-				template: getTemplate('pages/app.html'),
-				chunks: ['error'],
-				filename: 'error.401.html'
-			}),
-			new HtmlWebpackPlugin({
-				title: 'Error Page 404',
-				templateParameters: {
-					type: 'error',
-					errorType: '404'
-				},
-				template: getTemplate('pages/app.html'),
-				chunks: ['error'],
-				filename: 'error.404.html'
-			}),
-			new HtmlWebpackPlugin({
-				title: 'Error Page 500',
-				templateParameters: {
-					type: 'error',
-					errorType: '500'
-				},
-				template: getTemplate('pages/app.html'),
-				chunks: ['error'],
-				filename: 'error.500.html'
-			}),
+			...['400', '401', '404', '500'].map(
+				(errorType) =>
+					new HtmlWebpackPlugin({
+						title: `Error Page ${errorType}`,
+						templateParameters: {
+							type: 'error',
+							errorType: errorType
+						},
+						template: getTemplate('pages/app.html'),
+						chunks: ['error'],
+						filename: `error.${errorType}.html`
+					})
+			),
 			new CopyPlugin({
 				patterns: [
 					{ from: getTemplate('pages/under-construction.html') }
@@ -745,30 +678,6 @@ module.exports = function (webpackEnv) {
 						'static/css/[name].[contenthash:8].chunk.css',
 					ignoreOrder: true // Temporary fix of imported css files
 				}),
-			// Generate an asset manifest file with the following content:
-			// - "files" key: Mapping of all asset filenames to their corresponding
-			//   output file so that tools can pick it up without having to parse
-			//   `index.html`
-			// - "entrypoints" key: Array of files which are included in `index.html`,
-			//   can be used to reconstruct the HTML if necessary
-			// new WebpackManifestPlugin({
-			// 	fileName: 'asset-manifest.json',
-			// 	publicPath: paths.publicUrlOrPath,
-			// 	generate: (seed, files, entrypoints) => {
-			// 		const manifestFiles = files.reduce((manifest, file) => {
-			// 			manifest[file.name] = file.path;
-			// 			return manifest;
-			// 		}, seed);
-			// 		const entrypointFiles = Object.values(entrypoints).filter(
-			// 			(fileName) => !fileName.endsWith('.map')
-			// 		);
-
-			// 		return {
-			// 			files: manifestFiles,
-			// 			entrypoints: entrypointFiles
-			// 		};
-			// 	}
-			// }),
 			// Moment.js is an extremely popular library that bundles large locale files
 			// by default due to how webpack interprets its code. This is a practical
 			// solution that requires the user to opt into importing specific locales.
@@ -916,34 +825,51 @@ module.exports = function (webpackEnv) {
 						fs.existsSync(`${newPath}${originalExt}`) &&
 						!fs.lstatSync(`${newPath}${originalExt}`).isDirectory()
 					) {
-						console.log(
-							`Overwritten ${originalPath} -> ${newPath}${originalExt}`
-						);
+						// Skip override logic if issuer is itself
+						if (
+							result.contextInfo.issuer ===
+							`${newPath}${originalExt}`
+						) {
+							console.log(
+								`Self reference ${originalPath} -> ${newPath}${originalExt}`
+							);
+							return;
+						}
 
 						if (result.createData) {
-							result.createData.resource = `${newPath}${originalExt}`;
-							result.createData.context = path.dirname(
-								`${newPath}.${originalExt}`
+							console.log(
+								`Overwritten ${originalPath} -> ${newPath}${originalExt}`
+							);
+							result.request = result.request.replace(
+								originalPath,
+								`${newPath}${originalExt}`
+							);
+							result.context = path.dirname(
+								`${newPath}${originalExt}`
+							);
+							if (result.createData.request) {
+								result.createData.resource =
+									result.createData.resource.replace(
+										paths.appSrc,
+										paths.appExtensions
+									);
+								result.createData.request =
+									result.createData.request.replace(
+										originalPath,
+										`${newPath}`
+									);
+								result.createData.context = path.dirname(
+									`${newPath}${originalExt}`
+								);
+							}
+						} else {
+							console.log(
+								`No createData ${originalPath} -> ${newPath}${originalExt}`
 							);
 						}
 					}
 				}
-			),
-			...localAliases([
-				'src/resources/img/illustrations/answer.svg',
-				'src/resources/img/illustrations/arrow.svg',
-				'src/resources/img/illustrations/bad-request.svg',
-				'src/resources/img/illustrations/check.svg',
-				'src/resources/img/illustrations/consultant.svg',
-				'src/resources/img/illustrations/envelope-check.svg',
-				'src/resources/img/illustrations/internal-server-error.svg',
-				'src/resources/img/illustrations/not-found.svg',
-				'src/resources/img/illustrations/unauthorized.svg',
-				'src/resources/img/illustrations/waiting.svg',
-				'src/resources/img/illustrations/waving.svg',
-				'src/resources/img/illustrations/welcome.svg',
-				'src/resources/img/illustrations/x.svg'
-			])
+			)
 		].filter(Boolean),
 		// Turn off performance processing because we utilize
 		// our own hints via the FileSizeReporter

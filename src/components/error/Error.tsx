@@ -11,10 +11,11 @@ import '../../resources/styles/styles';
 import './error.styles';
 import { useTranslation } from 'react-i18next';
 import { LocaleSwitch } from '../localeSwitch/LocaleSwitch';
-import { AppConfigProvider } from '../../globalState/provider/AppConfigProvider';
 import { useAppConfig } from '../../hooks/useAppConfig';
-import { AppConfigInterface, LocaleProvider } from '../../globalState';
+import { LocaleProvider, AppConfigProvider } from '../../globalState';
+import { AppConfigInterface } from '../../globalState/interfaces';
 import { useResponsive } from '../../hooks/useResponsive';
+import { MENUPLACEMENT_BOTTOM_LEFT } from '../select/SelectDropdown';
 
 const getStatusCode = () => {
 	const errorRoot = document.getElementById('errorRoot');
@@ -72,7 +73,7 @@ export const ErrorContent = () => {
 	return (
 		<div className={clsx('errorPage', `errorPage--${type}`)}>
 			<header className={`errorPage__header ${!fromL ? 'mobile' : ''}`}>
-				<LocaleSwitch />
+				<LocaleSwitch menuPlacement={MENUPLACEMENT_BOTTOM_LEFT} />
 			</header>
 			<div className="errorPage__main">
 				<span className="errorPage__illustrationWrapper">

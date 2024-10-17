@@ -16,10 +16,7 @@ import {
 import { apiRegistrationNewConsultingTypes } from '../../api';
 import { Overlay, OVERLAY_FUNCTIONS, OverlayItem } from '../overlay/Overlay';
 import { logout } from '../logout/logout';
-import {
-	setProfileWrapperInactive,
-	mobileListView
-} from '../app/navigationHandler';
+import { mobileListView } from '../app/navigationHandler';
 import { AgencySelection } from '../agencySelection/AgencySelection';
 import './profile.styles';
 import { Text, LABEL_TYPES } from '../text/Text';
@@ -117,6 +114,7 @@ export const AskerRegistration: React.FC = () => {
 				label: translate(
 					[
 						`consultingType.${option.id}.titles.registrationDropdown`,
+						`consultingType.fallback.titles.registrationDropdown`,
 						option.label
 					],
 					{ ns: 'consultingTypes' }
@@ -187,7 +185,6 @@ export const AskerRegistration: React.FC = () => {
 		reloadUserData().catch(console.log);
 
 		if (buttonFunction === OVERLAY_FUNCTIONS.REDIRECT) {
-			setProfileWrapperInactive();
 			mobileListView();
 			if (!sessionId) {
 				history.push({
@@ -217,7 +214,7 @@ export const AskerRegistration: React.FC = () => {
 				userData,
 				consultingTypes,
 				REGISTRATION_STATUS_KEYS.REGISTERED
-		  )
+			)
 		: null;
 	const isOnlyRegisteredForGroupChats =
 		registeredConsultingTypes?.length === 1 &&
